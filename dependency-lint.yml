@@ -1,0 +1,3 @@
+requiredModules:
+  files:
+    root: '**/*.{js,cgi}'

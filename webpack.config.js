@@ -10,6 +10,9 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.blend$/, loader: require('webpack-babylonjs-blender') && 'webpack-babylonjs-blender', },
+      // https://webpack.github.io/docs/shimming-modules.html
+      { test: require.resolve('babylonjs'), loader: require('imports-loader') && 'imports-loader?OIMO=babylonjs/Oimo', },
+      { test: require.resolve('babylonjs/Oimo'), loader: require('exports-loader') && 'exports-loader?OIMO', },
     ],
   },
   output: {

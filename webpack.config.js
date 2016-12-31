@@ -6,7 +6,9 @@ const path = require('path');
 const outdir = path.join(__dirname, 'build');
 
 module.exports = {
-  entry: './client/index.js',
+  entry: [
+    './client/index.js',
+  ],
   module: {
     loaders: [
       { test: /\.blend$/, loader: require('webpack-babylonjs-blender') && 'webpack-babylonjs-blender', },

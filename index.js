@@ -28,7 +28,6 @@ const getIndex = (() => {
     <link rel="stylesheet" type="text/css" href="style.css?${encodeURIComponent(cssHash)}"/>
   </head>
   <body>
-    <h1>Faito!</h1>
     <canvas id="render-canvas"/>
     <script src="${encodeURIComponent(manifest['main.js'])}"/>
   </body>

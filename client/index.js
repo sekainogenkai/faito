@@ -3,6 +3,7 @@
 const BABYLON = require('babylonjs');
 
 const engine = new BABYLON.Engine(document.getElementById('render-canvas'), true);
+window.addEventListener('resize', () => engine.resize());
 const scene = new BABYLON.Scene(engine);
 
 scene.enablePhysics(

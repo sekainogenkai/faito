@@ -6,8 +6,11 @@ const engine = new BABYLON.Engine(document.getElementById('render-canvas'), true
 window.addEventListener('resize', () => engine.resize());
 const scene = new BABYLON.Scene(engine);
 
-const camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5,-10), scene);
-camera.setTarget(new BABYLON.Vector3.Zero());
+//controllable camera
+var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 10, new BABYLON.Vector3.Zero(), scene);
+camera.setPosition(new BABYLON.Vector3(0, 15, -30));
+camera.attachControl(scene.getEngine().getRenderingCanvas(), false);
+
 
 const light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), scene);
 

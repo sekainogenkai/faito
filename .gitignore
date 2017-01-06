@@ -5,4 +5,4 @@ node_modules
 build
 *.log
 # Ignore blender backup files.
-.blend?
+*.blend?*

@@ -1,16 +1,7 @@
 import React from 'react';
 import BABYLON from 'babylonjs';
-import Menu from './Menu/Menu';
-
 
 export class BabylonJS extends React.Component {
-  constructor(props) {
-      super(props);
-      this.state = {
-          showMenu: true
-      }
-  }
-    
   get defaultProps() {
     return {
       antialias: true,
@@ -31,19 +22,8 @@ export class BabylonJS extends React.Component {
     this.handleWindowResize = null;
     this.props.onEngineAbandoned(this.engine);
   }
-    
-  hideMenu() {
-      console.log("yo");
-      this.setState({
-          showMenu: false
-      });
-      console.log(this.state.showMenu);
-  }
 
   render() {
-    return <div className="game">
-            <canvas ref={canvas => this.canvas = canvas} />
-            {this.state.showMenu && <Menu yolo="yloolo" hideMenu={this.hideMenu.bind(this)}/> }
-        </div>;
+    return <canvas ref={canvas => this.canvas = canvas} />;
   }
 }

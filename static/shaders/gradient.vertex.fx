@@ -1,3 +1,6 @@
+//Julian Chenard
+//http://pixelcodr.com/tutos/oimo/oimo.html
+
 precision mediump float;
 
 // Attributes

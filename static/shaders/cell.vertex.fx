@@ -1,3 +1,5 @@
+//http://www.babylonjs.com/cyos/
+
 precision highp float;
 
 // Attributes

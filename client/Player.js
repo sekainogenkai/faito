@@ -6,7 +6,7 @@ import BABYLON from 'babylonjs';
 export class Player {
   constructor(game, scene, keys, gamepad) {
     this.game = game;
-    this.scene = scene;
+    this.scene = game.scene;
     this.gamepad = gamepad;
 
     console.log(this.gamepad);

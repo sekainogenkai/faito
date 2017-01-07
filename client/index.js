@@ -4,7 +4,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import BABYLON from 'babylonjs';
 import {BabylonJS} from './react-babylonjs.js';
-import {Player} from './Player';
+import {Hero} from './game/heroes/baseHero';
 import Menu from './menu/Menu';
 
 class Game extends React.Component {
@@ -78,7 +78,7 @@ class Game extends React.Component {
     }
 
     //add a Player
-    var player = new Player(this, this.scene, [87, 83, 65, 68], navigator.getGamepads()[0]);
+    var hero = new Hero(this, 0);
   }
 
   handleEngineAbandoned(engine) {

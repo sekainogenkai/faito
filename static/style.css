@@ -6,11 +6,8 @@ html, body {
     padding : 0;
 }
 
-<<<<<<< HEAD
-#render-canvas, #game-container, div {
-=======
-/* uhh… */
-#game-container, canvas {
+
+game-container, canvas {
 >>>>>>> 5cff24a95fe24d9f5c93c715799f7ad95da7ca25
     width   : 100%;
     height  : 100%;

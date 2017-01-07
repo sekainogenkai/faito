@@ -15,10 +15,15 @@ export class BabylonJS extends React.Component {
     this.props.onEngineCreated(this.engine);
     this.handleWindowResize = () => this.engine.resize();
     window.addEventListener('resize', this.handleWindowResize);
+    // Stylesheets which would result in resizing of the canvas may
+    // still be loading. If we don’t call engine.resize() after, the
+    // engine will render pixelated.
+    window.addEventListener('load', this.handleWindowResize);
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleWindowResize);
+    window.removeEventListener('load', this.handleWindowResize);
     this.handleWindowResize = null;
     this.props.onEngineAbandoned(this.engine);
   }

@@ -25,22 +25,27 @@ class Game extends React.Component {
     engine.runRenderLoop(this.handleRenderLoop = () => this.doRenderLoop());
     this.scene = new BABYLON.Scene(engine);
 
+    // Just a test
+    this.hero = null
+
     this.scene.actionManager = new BABYLON.ActionManager(this.scene);
     this.scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, e => {
+      this.hero.handleKeyDownInput(e)
       switch (e.sourceEvent.key) {
-      case 'Escape':
-        this.setState({
-          menu: true,
-        });
-        break;
+        case 'Escape':
+          this.setState({
+            menu: true,
+          });
+          break;
       }
     }));
     this.scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, e => {
+      this.hero.handleKeyUpInput(e)
       switch (e.sourceEvent.key) {
       };
     }));
 
-    //controllable camera
+    // Controllable camera
     var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 10, new BABYLON.Vector3.Zero(), this.scene);
     camera.setPosition(new BABYLON.Vector3(0, 15, -30));
     camera.attachControl(engine.getRenderingCanvas(), false);
@@ -65,7 +70,10 @@ class Game extends React.Component {
       new BABYLON.OimoJSPlugin());
 
     var g = BABYLON.Mesh.CreateBox("ground", 400, this.scene);
-    g.position.y = -20;
+    var material = new BABYLON.StandardMaterial("green", this.scene);
+    material.diffuseColor = BABYLON.Color3.Green();
+    g.material = material;
+    g.position.y = -10;
     g.scaling.y = 0.01;
     g.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, move:false});
 
@@ -77,8 +85,8 @@ class Game extends React.Component {
       }, x => {/*onprogress*/}, ex => {/*onerror*/});
     }
 
-    //add a Player
-    var hero = new Hero(this, 0);
+    // Add a hero
+    this.hero = new Hero(this, 0);
   }
 
   handleEngineAbandoned(engine) {

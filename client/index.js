@@ -1,8 +1,10 @@
+'use strict';
+
 import React from 'react';
 import {render} from 'react-dom';
 import BABYLON from 'babylonjs';
 import {BabylonJS} from './react-babylonjs.js';
-import Player from './Player';
+import {Player} from './Player';
 
 class Game extends React.Component {
   doRenderLoop() {
@@ -52,7 +54,7 @@ class Game extends React.Component {
     }
 
     //add a Player
-    var player = new Player(this, this.scene, navigator.getGamepads()[0]);
+    var player = new Player(this, this.scene, [87, 83, 65, 68], navigator.getGamepads()[0]);
   }
 
   handleEngineAbandoned(engine) {

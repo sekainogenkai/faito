@@ -6,8 +6,7 @@ html, body {
     padding : 0;
 }
 
-/* uhh… */
-canvas {
+#render-canvas, #game-container, div {
     width   : 100%;
     height  : 100%;
     touch-action: none;

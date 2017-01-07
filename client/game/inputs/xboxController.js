@@ -6,19 +6,19 @@ var gamepadConnected = function (gamepad) {
     padLogs.className = "";
     if (gamepad.index === 0) {
         gamepad.onleftstickchanged(function (values) {
-            leftStickValues.innerHTML = "X: " + values.x + " Y: " + values.y;
+            console.log("left stick:  X: " + values.x + " Y: " + values.y);
         });
         gamepad.onrightstickchanged(function (values) {
-            rightStickValues.innerHTML = "X: " + values.x + " Y: " + values.y;
+            console.log("right stick:   X: " + values.x + " Y: " + values.y);
         });
         if (gamepad instanceof BABYLON.Xbox360Pad) {
             Xbox360Section.className = "";
             xbox360pad = gamepad;
             xbox360pad.onlefttriggerchanged(function (value) {
-                leftTriggerValue.innerHTML = value.toString();
+                console.log("left trigger value " + value.toString());
             });
             xbox360pad.onrighttriggerchanged(function (value) {
-                rightTriggerValue.innerHTML = value.toString();
+                console.log("right trigger value " + value.toString());
             });
             xbox360pad.onbuttondown(function (button) {
                 console.log("gamepad: " + gamepad.index);
@@ -128,12 +128,13 @@ var gamepadConnected = function (gamepad) {
             GenericPadSection.className = "";
             genericpad = gamepad;
             genericpad.onbuttondown(function (buttonIndex) {
-                buttonPressed.innerHTML = "Button " + buttonIndex + " pressed";
+                console.log("Button " + buttonIndex + " pressed");
             });
             genericpad.onbuttonup(function (buttonIndex) {
-                buttonReleased.innerHTML = "Button " + buttonIndex + " released";
+                console.log("Button " + buttonIndex + " released");
             });
         }
     }
 };
+                                  
 var gamepads = new BABYLON.Gamepads(gamepadConnected);

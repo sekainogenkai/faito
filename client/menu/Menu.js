@@ -7,41 +7,33 @@ const styles = {
         position: "absolute",
         top: 0,
         left: 0,
-        minHeight: "100%",
-        minWidth: "100%",
-    },
-    mainMenu: {
+        bottom: 0,
+        right: 0,
+        height: '100%',
+        width: '100%',
+        overflow: 'auto',
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        justifyContent: 'center',
     },
     mainMenuItem: {
         padding: 10,
         backgroundColor: "lightblue",
-        height: 400,
     },
 };
 
 export default class Menu extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state= {
-            
-        };
-    }
-    
-    handleHideMenu(e) {
+    handleHide(e) {
         e.preventDefault();
-        this.props.hideMenu();
+        this.props.onHide();
     }
-    
+
     render() {
         return (
             <div className="menu" style={styles.menu}>
-                <div className="main-menu" style={styles.mainMenu}>
-                    <button style={styles.mainMenuItem} onClick={this.handleHideMenu.bind(this)}>HIDE THE MENU</button>
                     <h2 style={styles.mainMenuItem}>MENU</h2>
-                </div>
+                    <button style={styles.mainMenuItem} onClick={this.handleHide.bind(this)}>HIDE THE MENU</button>
             </div>
         );
     }

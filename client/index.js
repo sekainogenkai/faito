@@ -5,21 +5,45 @@ import {render} from 'react-dom';
 import BABYLON from 'babylonjs';
 import {BabylonJS} from './react-babylonjs.js';
 import {Player} from './Player';
+import Menu from './menu/Menu';
 
 class Game extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      menu: false,
+    };
+  }
+
   doRenderLoop() {
     this.scene.render();
   }
 
   handleEngineCreated(engine) {
+    engine.getRenderingCanvas().focus();
     this.engine = engine;
     engine.runRenderLoop(this.handleRenderLoop = () => this.doRenderLoop());
     this.scene = new BABYLON.Scene(engine);
 
+    this.scene.actionManager = new BABYLON.ActionManager(this.scene);
+    this.scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, e => {
+      switch (e.sourceEvent.key) {
+      case 'Escape':
+        this.setState({
+          menu: true,
+        });
+        break;
+      }
+    }));
+    this.scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, e => {
+      switch (e.sourceEvent.key) {
+      };
+    }));
+
     //controllable camera
     var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 10, new BABYLON.Vector3.Zero(), this.scene);
     camera.setPosition(new BABYLON.Vector3(0, 15, -30));
-    camera.attachControl(this.scene.getEngine().getRenderingCanvas(), false);
+    camera.attachControl(engine.getRenderingCanvas(), false);
 
     const light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), this.scene);
 
@@ -64,7 +88,15 @@ class Game extends React.Component {
   }
 
   render() {
-    return <BabylonJS onEngineCreated={engine => this.handleEngineCreated(engine)} onEngineAbandoned={engine => this.handleEngineAbandoned(engine)}/>;
+    // Hack to ensure canvas is focused.
+    if (!this.state.menu && this.engine) {
+      this.engine.getRenderingCanvas().focus();
+    }
+
+    return <div style={{width: '100%', height: '100%',}}>
+        <BabylonJS onEngineCreated={engine => this.handleEngineCreated(engine)} onEngineAbandoned={engine => this.handleEngineAbandoned(engine)}/>
+        {this.state.menu ? <Menu onHide={() => this.setState({menu: false,})}/> : []}
+      </div>;
   }
 }
 

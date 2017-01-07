@@ -1,8 +1,9 @@
 'use strict';
 
 import BABYLON from 'babylonjs';
+import testPower from './powers/testPower'
 
-export class Hero {
+export default class Hero {
   constructor(game, id){
     this.game = game;
     this.scene = game.scene;
@@ -11,13 +12,18 @@ export class Hero {
     // Create collision mask
     this.mask = BABYLON.Mesh.CreateBox("mask", 5, this.scene);
     this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.001, restitution:1.5});
-    this.drawFrame()
+    var material = new BABYLON.StandardMaterial("blue_material", this.scene);
+    material.diffuseColor = BABYLON.Color3.Blue();
+    this.mask.material = material;
+    //this.drawFrame()
 
+    // Input
     this.Input = {
       AXIS_X : 0,
       AXIS_Y : 0,
       JUMP   : 0
     };
+
     // Calls the update loop
     var _this = this;
     this.scene.registerBeforeRender(function() {
@@ -25,19 +31,24 @@ export class Hero {
     });
   }
 
-  update() {
+  update () {
     //this.mask.applyImpulse(new BABYLON.Vector3(0,0,0.1), this.mask.position);
     this.move();
   }
 
-  move() {
+  move () {
     var s = 3
     this.mask.applyImpulse(new BABYLON.Vector3(s*this.Input.AXIS_X,0,0), this.mask.position);
     this.mask.applyImpulse(new BABYLON.Vector3(0,0,s*this.Input.AXIS_Y), this.mask.position);
 
+    this.mask.applyImpulse(new BABYLON.Vector3(0,s*this.Input.JUMP,0), this.mask.position);
     // Limit rotation and smooth linear velocity
     this.body.linearVelocity.scaleEqual(0.92);
     this.body.angularVelocity.scaleEqual(0);
+  }
+
+  usePower () {
+    var power = new testPower(this.game, this)
   }
 
   handleKeyDownInput (e) {
@@ -56,6 +67,9 @@ export class Hero {
         break;
       case 'Shift':
         this.Input.JUMP = 10;
+        break;
+      case 'Enter':
+        this.usePower();
         break;
     }
   }

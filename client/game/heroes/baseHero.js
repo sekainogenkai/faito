@@ -11,7 +11,7 @@ export default class Hero {
 
     // Create collision mask
     this.mask = BABYLON.Mesh.CreateBox("mask", 5, this.scene);
-    this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.001, restitution:1.5});
+    this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.001, restitution:0.5});
     var material = new BABYLON.StandardMaterial("blue_material", this.scene);
     material.diffuseColor = BABYLON.Color3.Blue();
     this.mask.material = material;
@@ -36,7 +36,7 @@ export default class Hero {
   }
 
   move () {
-    var s = 3
+    var s = 3;
     this.mask.applyImpulse(new BABYLON.Vector3(s*this.Input.AXIS_X,0,0), this.mask.position);
     this.mask.applyImpulse(new BABYLON.Vector3(0,0,s*this.Input.AXIS_Y), this.mask.position);
     this.mask.applyImpulse(new BABYLON.Vector3(0,s*this.Input.JUMP,0), this.mask.position);

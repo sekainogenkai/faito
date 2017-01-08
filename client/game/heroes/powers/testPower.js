@@ -9,7 +9,7 @@ export default class testPower {
       this.player = player;
       // Create collision mask
       this.mask = BABYLON.Mesh.CreateSphere("power", 10, 2, this.scene);
-      this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:100, friction:0.1, restitution:1.5});
+      this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:1});
       var material = new BABYLON.StandardMaterial("red_material", this.scene);
       material.diffuseColor = BABYLON.Color3.Red();
       this.mask.material = material;
@@ -18,7 +18,7 @@ export default class testPower {
       // There has to be a function for this, if only Babylon had better docs
       this.mask.position.x = this.player.mask.position.x;
       this.mask.position.z = this.player.mask.position.z;
-      //this.mask.applyImpulse(new BABYLON.Vector3(0,100,0), this.mask.position);
+      //this.mask.applyImpulse(new BABYLON.Vector3(0,10,0), this.mask.position);
 
       // Add update loop to Babylon
       this.scene.registerBeforeRender(() => {

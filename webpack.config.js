@@ -16,7 +16,7 @@ module.exports = {
       // https://webpack.github.io/docs/shimming-modules.html
       { test: require.resolve('babylonjs'), loader: require('imports-loader') && 'imports-loader?OIMO=babylonjs/Oimo', },
       { test: require.resolve('babylonjs/Oimo'), loader: require('exports-loader') && 'exports-loader?OIMO', },
-      { test: /\.jsx?$/, exclude: /node_modules/, loader: "babel-loader", },
+      { test: /\.jsx?$/, exclude: /node_modules/, loader: require('babel-loader') && "babel-loader", },
     ],
   },
   output: {

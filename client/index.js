@@ -71,7 +71,7 @@ class Game extends React.Component {
 
     // Add a hero
     this.hero = new Hero(this, 0);
-    
+
     // Add ground
     var g = BABYLON.Mesh.CreateBox("ground", 400, this.scene);
     var material = new BABYLON.StandardMaterial("green", this.scene);

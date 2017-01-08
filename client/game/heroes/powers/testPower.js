@@ -14,7 +14,11 @@ export default class testPower {
       material.diffuseColor = BABYLON.Color3.Red();
       this.mask.material = material;
 
-      this.mask.applyImpulse(new BABYLON.Vector3(0,10,0), this.mask.position)
+      // Set the position and apply force
+      // There has to be a function for this, if only Babylon had better docs
+      this.mask.position.x = this.player.mask.position.x;
+      this.mask.position.z = this.player.mask.position.z;
+      //this.mask.applyImpulse(new BABYLON.Vector3(0,100,0), this.mask.position);
 
       // Add update loop to Babylon
       this.scene.registerBeforeRender(() => {
@@ -23,7 +27,7 @@ export default class testPower {
     }
 
     update () {
-      this.body.linearVelocity.scaleEqual(0.92);
+      //this.body.linearVelocity.scaleEqual(0.92);
     }
 
 }

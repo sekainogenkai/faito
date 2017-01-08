@@ -4,7 +4,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import BABYLON from 'babylonjs';
 import {BabylonJS} from './react-babylonjs.js';
-import {Hero} from './game/heroes/baseHero';
+import Hero from './game/heroes/baseHero';
 import Menu from './menu/Menu';
 
 class Game extends React.Component {

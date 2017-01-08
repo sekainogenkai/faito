@@ -15,7 +15,15 @@ export default class testPower {
       this.mask.material = material;
 
       this.mask.applyImpulse(new BABYLON.Vector3(0,10,0), this.mask.position)
+
+      // Add update loop to Babylon
+      this.scene.registerBeforeRender(() => {
+          this.update();
+      });
     }
 
+    update () {
+      this.body.linearVelocity.scaleEqual(0.92);
+    }
 
 }

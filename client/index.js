@@ -69,6 +69,10 @@ class Game extends React.Component {
       new BABYLON.Vector3(0, -200, 0),
       new BABYLON.OimoJSPlugin());
 
+    // Add a hero
+    this.hero = new Hero(this, 0);
+    
+    // Add ground
     var g = BABYLON.Mesh.CreateBox("ground", 400, this.scene);
     var material = new BABYLON.StandardMaterial("green", this.scene);
     material.diffuseColor = BABYLON.Color3.Green();
@@ -76,6 +80,7 @@ class Game extends React.Component {
     g.position.y = -10;
     g.scaling.y = 0.01;
     g.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, move:false});
+    // Add collision check for ground
 
     for (var x in [0,1]) {
       require('../models/heroes/testParts.blend').Append(BABYLON.SceneLoader, this.scene, loadedScene => {
@@ -84,9 +89,6 @@ class Game extends React.Component {
         loadedScene.beginAnimation(this.scene.skeletons[x], 0, 60, true, 2);
       }, x => {/*onprogress*/}, ex => {/*onerror*/});
     }
-
-    // Add a hero
-    this.hero = new Hero(this, 0);
   }
 
   handleEngineAbandoned(engine) {

@@ -24,10 +24,9 @@ export default class Hero {
       JUMP   : 0
     };
 
-    // Calls the update loop
-    var _this = this;
-    this.scene.registerBeforeRender(function() {
-        _this.update();
+    // Add update loop to Babylon
+    this.scene.registerBeforeRender(() => {
+        this.update();
     });
   }
 
@@ -40,8 +39,8 @@ export default class Hero {
     var s = 3
     this.mask.applyImpulse(new BABYLON.Vector3(s*this.Input.AXIS_X,0,0), this.mask.position);
     this.mask.applyImpulse(new BABYLON.Vector3(0,0,s*this.Input.AXIS_Y), this.mask.position);
-
     this.mask.applyImpulse(new BABYLON.Vector3(0,s*this.Input.JUMP,0), this.mask.position);
+
     // Limit rotation and smooth linear velocity
     this.body.linearVelocity.scaleEqual(0.92);
     this.body.angularVelocity.scaleEqual(0);

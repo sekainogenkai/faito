@@ -9,21 +9,24 @@ export default class Hero {
     this.scene = game.scene;
     this.id = id
 
+
     // Create collision mask
     this.mask = BABYLON.Mesh.CreateBox("mask", 5, this.scene);
-    this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.001, restitution:0.5});
+    this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.5, restitution:0.5});
     var material = new BABYLON.StandardMaterial("blue_material", this.scene);
     material.diffuseColor = BABYLON.Color3.Blue();
     this.mask.material = material;
-    //this.drawFrame()
 
+    // Movement variables
+    this.mask.onGround = false;
+    this.jumpHeight = 100;
+    this.speed = 2;
     // Input
     this.Input = {
       AXIS_X : 0,
       AXIS_Y : 0,
       JUMP   : 0
     };
-
     // Add update loop to Babylon
     this.scene.registerBeforeRender(() => {
         this.update();
@@ -31,19 +34,21 @@ export default class Hero {
   }
 
   update () {
-    //this.mask.applyImpulse(new BABYLON.Vector3(0,0,0.1), this.mask.position);
     this.move();
   }
 
   move () {
-    var s = 3;
-    this.mask.applyImpulse(new BABYLON.Vector3(s*this.Input.AXIS_X,0,0), this.mask.position);
-    this.mask.applyImpulse(new BABYLON.Vector3(0,0,s*this.Input.AXIS_Y), this.mask.position);
-    this.mask.applyImpulse(new BABYLON.Vector3(0,s*this.Input.JUMP,0), this.mask.position);
-
+    if (this.mask.onGround && this.Input.JUMP != 0){
+      this.mask.applyImpulse(new BABYLON.Vector3(0,this.Input.JUMP,0), this.mask.position);
+      this.mask.onGround = false;
+      this.mask.material.diffuseColor = BABYLON.Color3.Blue();
+    } else{
+      this.mask.applyImpulse(new BABYLON.Vector3(this.speed*this.Input.AXIS_X,0,0), this.mask.position);
+      this.mask.applyImpulse(new BABYLON.Vector3(0,0,this.speed*this.Input.AXIS_Y), this.mask.position);
+    }
     // Limit rotation and smooth linear velocity
-    this.body.linearVelocity.scaleEqual(0.92);
-    this.body.angularVelocity.scaleEqual(0);
+    //this.body.linearVelocity.scaleEqual(0.92);
+    //this.body.angularVelocity.scaleEqual(0);
   }
 
   usePower () {
@@ -65,7 +70,7 @@ export default class Hero {
         this.Input.AXIS_X = 1;
         break;
       case 'Shift':
-        this.Input.JUMP = 10;
+        this.Input.JUMP = this.jumpHeight;
         break;
       case 'Enter':
         this.usePower();

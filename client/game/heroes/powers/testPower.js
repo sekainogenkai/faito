@@ -3,23 +3,24 @@
 import BABYLON from 'babylonjs';
 
 export default class testPower {
-    constructor(game, player) {
+    constructor(game, hero) {
       this.game = game;
       this.scene = game.scene;
-      this.player = player;
+      this.hero = hero;
+
+      this.speed = 100; // Initial speed
       // Create collision mask
       this.mask = BABYLON.Mesh.CreateSphere("power", 10, 2, this.scene);
-      this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:1});
+      this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:0.9});
       var material = new BABYLON.StandardMaterial("red_material", this.scene);
       material.diffuseColor = BABYLON.Color3.Red();
       this.mask.material = material;
 
       // Set the position and apply force
-      // There has to be a function for this, if only Babylon had better docs
-      this.mask.position.x = this.player.mask.position.x;
-      this.mask.position.z = this.player.mask.position.z;
-      //this.mask.applyImpulse(new BABYLON.Vector3(0,10,0), this.mask.position);
-
+      this.mask.position.x = this.hero.mask.position.x;
+      this.mask.position.z = this.hero.mask.position.z;
+      var initialVec = this.hero.mask.physicsImpostor.getLinearVelocity();
+      this.mask.applyImpulse(initialVec.normalize().scale(this.speed), this.mask.getAbsolutePosition());
       // Add update loop to Babylon
       this.scene.registerBeforeRender(() => {
           this.update();

@@ -30,7 +30,7 @@ class Game extends React.Component {
 
     this.scene.actionManager = new BABYLON.ActionManager(this.scene);
     this.scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, e => {
-      this.hero.handleKeyDownInput(e)
+      this.hero.handleKeyDownInput(e);
       switch (e.sourceEvent.key) {
         case 'Escape':
           this.setState({
@@ -40,7 +40,7 @@ class Game extends React.Component {
       }
     }));
     this.scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, e => {
-      this.hero.handleKeyUpInput(e)
+      this.hero.handleKeyUpInput(e);
       switch (e.sourceEvent.key) {
       };
     }));
@@ -73,14 +73,19 @@ class Game extends React.Component {
     this.hero = new Hero(this, 0);
 
     // Add ground
-    var g = BABYLON.Mesh.CreateGround("ground", 1000, 1000, 20, this.scene);
+    this.ground = BABYLON.Mesh.CreateGround("ground", 1000, 1000, 20, this.scene);
     var material = new BABYLON.StandardMaterial("green", this.scene);
-    material.diffuseColor = BABYLON.Color3.Green();
-    g.material = material;
-    g.position.y = -10;
-    g.scaling.y = 0.01;
-    g.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, move:false});
-    // Add collision check for ground
+    material.diffuseColor = BABYLON.Color3.FromInts(31, 158, 69);
+    this.ground.material = material;
+    this.ground.position.y = -10;
+    this.ground.scaling.y = 0.01;
+    this.ground.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, move:false});
+
+    // Add check for ground
+    this.hero.mask.physicsImpostor.registerOnPhysicsCollide(this.ground.physicsImpostor, function(main, collided) {
+      main.object.material.diffuseColor = new BABYLON.Color3.Red();
+      main.object.onGround = true;
+    });
 
     for (var x in [0,1]) {
       require('../models/heroes/testParts.blend').Append(BABYLON.SceneLoader, this.scene, loadedScene => {

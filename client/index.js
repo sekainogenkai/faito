@@ -92,7 +92,7 @@ class Game extends React.Component {
     });
 
     for (var x in [0,1]) {
-      require('../models/heroes/testParts.blend').Append(BABYLON.SceneLoader, this.scene, loadedScene => {
+      require('../models/heroes/omi.blend').Append(BABYLON.SceneLoader, this.scene, loadedScene => {
         /*onsuccess*/
       //  new BABYLON.PhysicsImpostor(loadedScene.meshes[x], BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, }, scene);
         loadedScene.beginAnimation(this.scene.skeletons[x], 0, 60, true, 2);

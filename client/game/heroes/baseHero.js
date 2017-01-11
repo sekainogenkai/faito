@@ -17,6 +17,11 @@ export default class Hero {
     material.diffuseColor = BABYLON.Color3.Blue();
     this.mask.material = material;
 
+    // Create mesh for onGround collision check
+    this.groundCheck = BABYLON.Mesh.CreateBox("mask", 4, this.scene);
+    this.groundCheck.parent = this.mask;
+    this.groundCheck.position.y = -2.5;
+    this.groundCheck.scaling.y = 0.5;
     // Movement variables
     this.mask.onGround = false;
     this.jumpHeight = 100;
@@ -48,7 +53,7 @@ export default class Hero {
     }
     // Limit rotation and smooth linear velocity
     //this.body.linearVelocity.scaleEqual(0.92);
-    //this.body.angularVelocity.scaleEqual(0);
+    this.body.angularVelocity.scaleEqual(0);
   }
 
   usePower () {
@@ -98,10 +103,27 @@ export default class Hero {
     }
   }
 
-  drawFrame () {
-    // Wireframe Debug
-    var material = new BABYLON.StandardMaterial("material", this.scene);
-    material.wireframe = true;
-    this.mask.material = material;
-  }
+  initCapsuleGeometry (radius, height, SRadius, SHeight) {
+        types = [ 'sphere', 'sphere','sphere'];
+        //types = [ 'sphere', 'cylinder','sphere'];
+        //sizes = [ radius,radius,radius, radius,height,radius, radius,radius,radius ];
+        sizes = [ radius,radius,radius, radius,radius,radius, radius,radius,radius ];
+        positions = [0,0,0,   0,height*0.5,0, 0,height,0];
+        var sRadius = SRadius || 20;
+        var sHeight = SHeight || 10;
+        var o0 = Math.PI*2;
+        var o1 = Math.PI/2;
+        var g = new BABYLON.Geometry();
+        var m0 = new BABYLON.CylinderGeometry(radius, radius, height, sRadius, 1, true);
+        var m1 = new BABYLON.SphereGeometry(radius, sRadius, sHeight, 0, o0, 0, o1);
+        var m2 = new BABYLON.SphereGeometry(radius, sRadius, sHeight, 0, o0, o1, o1);
+        var mtx0 = new BABYLON.Matrix4().makeTranslation(0, 0,0);
+        var mtx1 = new BABYLON.Matrix4().makeTranslation(0, height*0.5,0);
+        var mtx2 = new BABYLON.Matrix4().makeTranslation(0, -height*0.5,0);
+        g.merge( m0, mtx0);
+        g.merge( m1, mtx1);
+        g.merge( m2, mtx2);
+        capsuleGeometry = new BABYLON.BufferGeometry();
+        capsuleGeometry.fromGeometry(g);
+    }
 }

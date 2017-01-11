@@ -52,7 +52,7 @@ class Game extends React.Component {
 
     const light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), this.scene);
 
-    /** SKYBOX **/
+    // Skybox
     BABYLON.Engine.ShadersRepository = "./shaders/";
 
     var skybox = BABYLON.Mesh.CreateSphere("skyBox", 10, 2500, this.scene);
@@ -64,6 +64,10 @@ class Game extends React.Component {
     shader.setColor3("bottomColor", BABYLON.Color3.FromInts(240,240, 255));
     shader.backFaceCulling = false;
     skybox.material = shader;
+
+    // Fog
+    this.scene.fogMode = BABYLON.Scene.FOGMODE_EXP2;
+    this.scene.fogDensity = 0.005;
 
     this.scene.enablePhysics(
       new BABYLON.Vector3(0, -200, 0),
@@ -78,7 +82,7 @@ class Game extends React.Component {
     material.diffuseColor = BABYLON.Color3.FromInts(31, 158, 69);
     this.ground.material = material;
     this.ground.position.y = -10;
-    this.ground.scaling.y = 0.01;
+    this.ground.scaling.y = 0.001;
     this.ground.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, move:false});
 
     // Add check for ground

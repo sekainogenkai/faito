@@ -7,11 +7,16 @@ export default class testPower {
       this.game = game;
       this.scene = game.scene;
       this.hero = hero;
+      this.id = this.hero.id;
 
       this.speed = 100; // Initial speed
+
       // Create collision mask
       this.mask = BABYLON.Mesh.CreateSphere("power", 10, 2, this.scene);
-      this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:0.9});
+      this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:0.9});
+
+      //this.mask.setPhysicsState(BABYLON.PhysicsEngine.NoImpostor); Allows collision but no movement
+
       var material = new BABYLON.StandardMaterial("red_material", this.scene);
       material.diffuseColor = BABYLON.Color3.Red();
       this.mask.material = material;

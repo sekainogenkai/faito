@@ -67,7 +67,8 @@ class Game extends React.Component {
 
     // Fog
     this.scene.fogMode = BABYLON.Scene.FOGMODE_EXP2;
-    this.scene.fogDensity = 0.005;
+    this.scene.fogDensity = 0.0018;
+    this.scene.fogColor = new BABYLON.Color3(240/255, 240/255, 1);
 
     this.scene.enablePhysics(
       new BABYLON.Vector3(0, -200, 0),
@@ -77,7 +78,7 @@ class Game extends React.Component {
     this.hero = new Hero(this, 0);
 
     // Add ground
-    this.ground = BABYLON.Mesh.CreateGround("ground", 1000, 1000, 20, this.scene);
+    this.ground = BABYLON.Mesh.CreateGround("ground", 2500, 2500, 20, this.scene);
     var material = new BABYLON.StandardMaterial("green", this.scene);
     material.diffuseColor = BABYLON.Color3.FromInts(31, 158, 69);
     this.ground.material = material;

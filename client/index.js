@@ -71,7 +71,7 @@ class Game extends React.Component {
     this.scene.fogColor = new BABYLON.Color3(240/255, 240/255, 1);
 
     this.scene.enablePhysics(
-      new BABYLON.Vector3(0, -200, 0),
+      new BABYLON.Vector3(0, -10, 0),
       new BABYLON.CannonJSPlugin());
 
     // Add a hero

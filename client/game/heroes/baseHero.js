@@ -12,7 +12,10 @@ export default class Hero {
 
     // Create collision mask
     this.mask = this.initCapsule(4,4);
-    this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.5, restitution:0.5});
+    this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.001, restitution:0.5});
+    this.body.fixedRotation = true;
+    this.body.updateMassProperties();
+    console.log(this.body)
     var material = new BABYLON.StandardMaterial("blue_material", this.scene);
     material.diffuseColor = BABYLON.Color3.Blue();
     this.mask.material = material;
@@ -24,8 +27,8 @@ export default class Hero {
     this.groundCheck.scaling.y = 0.2;
     // Movement variables
     this.onGround = false;
-    this.jumpHeight = 60;
-    this.speed = 2;
+    this.jumpHeight = 200;
+    this.speed = 10;
     // Input
     this.Input = {
       AXIS_X : 0,

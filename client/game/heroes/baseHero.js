@@ -11,17 +11,17 @@ export default class Hero {
 
 
     // Create collision mask
-    this.mask = BABYLON.Mesh.CreateBox("mask", 5, this.scene);
+    this.mask = this.initCapsule(4,4);
     this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.5, restitution:0.5});
     var material = new BABYLON.StandardMaterial("blue_material", this.scene);
     material.diffuseColor = BABYLON.Color3.Blue();
     this.mask.material = material;
 
     // Create mesh for onGround collision check
-    this.groundCheck = BABYLON.Mesh.CreateBox("mask", 4, this.scene);
+    this.groundCheck = BABYLON.Mesh.CreateBox("mask", 2.5, this.scene);
     this.groundCheck.parent = this.mask;
-    this.groundCheck.position.y = -2.5;
-    this.groundCheck.scaling.y = 0.5;
+    this.groundCheck.position.y = -4;
+    this.groundCheck.scaling.y = 0.2;
     // Movement variables
     this.onGround = false;
     this.jumpHeight = 60;
@@ -108,27 +108,16 @@ export default class Hero {
     }
   }
 
-  initCapsuleGeometry (radius, height, SRadius, SHeight) {
-        types = [ 'sphere', 'sphere','sphere'];
-        //types = [ 'sphere', 'cylinder','sphere'];
-        //sizes = [ radius,radius,radius, radius,height,radius, radius,radius,radius ];
-        sizes = [ radius,radius,radius, radius,radius,radius, radius,radius,radius ];
-        positions = [0,0,0,   0,height*0.5,0, 0,height,0];
-        var sRadius = SRadius || 20;
-        var sHeight = SHeight || 10;
-        var o0 = Math.PI*2;
-        var o1 = Math.PI/2;
-        var g = new BABYLON.Geometry();
-        var m0 = new BABYLON.CylinderGeometry(radius, radius, height, sRadius, 1, true);
-        var m1 = new BABYLON.SphereGeometry(radius, sRadius, sHeight, 0, o0, 0, o1);
-        var m2 = new BABYLON.SphereGeometry(radius, sRadius, sHeight, 0, o0, o1, o1);
-        var mtx0 = new BABYLON.Matrix4().makeTranslation(0, 0,0);
-        var mtx1 = new BABYLON.Matrix4().makeTranslation(0, height*0.5,0);
-        var mtx2 = new BABYLON.Matrix4().makeTranslation(0, -height*0.5,0);
-        g.merge( m0, mtx0);
-        g.merge( m1, mtx1);
-        g.merge( m2, mtx2);
-        capsuleGeometry = new BABYLON.BufferGeometry();
-        capsuleGeometry.fromGeometry(g);
-    }
+  initCapsule (width, height) {
+    // Merges three spheres to create a capsule
+    var m0 = BABYLON.Mesh.CreateSphere("m1", width, height, this.scene);
+    var m1 = BABYLON.Mesh.CreateSphere("m1", width, height, this.scene);
+    var m2 = BABYLON.Mesh.CreateSphere("m1", width, height, this.scene);
+    m0.position.y -= height * 0.5;
+    m1.position.y += height * 0.5;
+    m0.computeWorldMatrix(true);
+	  m1.computeWorldMatrix(true);
+	  m2.computeWorldMatrix(true);
+    return BABYLON.Mesh.MergeMeshes([m0,m1,m2], true);
+  }
 }

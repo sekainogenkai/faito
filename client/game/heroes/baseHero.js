@@ -65,6 +65,19 @@ export default class Hero {
     var power = new testPower(this.game, this)
   }
 
+  initCapsule (width, height) {
+    // Merges three spheres to create a capsule
+    var m0 = BABYLON.Mesh.CreateSphere("m0", width, height, this.scene);
+    var m1 = BABYLON.MeshBuilder.CreateCylinder("m1", {height: height, diameter: width, tessellation: 20},this.scene);
+    var m2 = BABYLON.Mesh.CreateSphere("m2", width, height, this.scene);
+    m0.position.y -= height * 0.5;
+    m2.position.y += height * 0.5;
+    m0.computeWorldMatrix(true);
+	  m1.computeWorldMatrix(true);
+	  m2.computeWorldMatrix(true);
+    return BABYLON.Mesh.MergeMeshes([m0,m1,m2], true);
+  }
+
   handleKeyDownInput (e) {
     switch (e.sourceEvent.key) {
       case 'w':
@@ -106,18 +119,5 @@ export default class Hero {
         this.Input.JUMP = 0;
         break;
     }
-  }
-
-  initCapsule (width, height) {
-    // Merges three spheres to create a capsule
-    var m0 = BABYLON.Mesh.CreateSphere("m1", width, height, this.scene);
-    var m1 = BABYLON.Mesh.CreateSphere("m1", width, height, this.scene);
-    var m2 = BABYLON.Mesh.CreateSphere("m1", width, height, this.scene);
-    m0.position.y -= height * 0.5;
-    m1.position.y += height * 0.5;
-    m0.computeWorldMatrix(true);
-	  m1.computeWorldMatrix(true);
-	  m2.computeWorldMatrix(true);
-    return BABYLON.Mesh.MergeMeshes([m0,m1,m2], true);
   }
 }

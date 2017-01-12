@@ -23,8 +23,8 @@ export default class Hero {
     this.groundCheck.position.y = -2.5;
     this.groundCheck.scaling.y = 0.5;
     // Movement variables
-    this.mask.onGround = false;
-    this.jumpHeight = 100;
+    this.onGround = false;
+    this.jumpHeight = 60;
     this.speed = 2;
     // Input
     this.Input = {
@@ -40,12 +40,17 @@ export default class Hero {
 
   update () {
     this.move();
+    // Check for ground
+    if (this.groundCheck.intersectsMesh(this.game.ground, true) && this.Input.JUMP === 0){
+      this.mask.material.diffuseColor = new BABYLON.Color3.Red();
+      this.onGround = true;
+    }
   }
 
   move () {
-    if (this.mask.onGround && this.Input.JUMP != 0){
+    if (this.onGround && this.Input.JUMP != 0){
       this.mask.applyImpulse(new BABYLON.Vector3(0,this.Input.JUMP,0), this.mask.position);
-      this.mask.onGround = false;
+      this.onGround = false;
       this.mask.material.diffuseColor = BABYLON.Color3.Blue();
     } else{
       this.mask.applyImpulse(new BABYLON.Vector3(this.speed*this.Input.AXIS_X,0,0), this.mask.position);

@@ -86,12 +86,6 @@ class Game extends React.Component {
     this.ground.scaling.y = 0.001;
     this.ground.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, move:false});
 
-    // Add check for ground
-    this.hero.mask.physicsImpostor.registerOnPhysicsCollide(this.ground.physicsImpostor, function(main, collided) {
-      main.object.material.diffuseColor = new BABYLON.Color3.Red();
-      main.object.onGround = true;
-    });
-
     for (var x in [0,1]) {
       require('../models/heroes/omi.blend').Append(BABYLON.SceneLoader, this.scene, loadedScene => {
         /*onsuccess*/

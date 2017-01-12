@@ -58,7 +58,7 @@ export default class Hero {
     }
     // Limit rotation and smooth linear velocity
     //this.body.linearVelocity.scaleEqual(0.92);
-    this.body.angularVelocity.scaleEqual(0);
+    //this.body.angularVelocity.scaleEqual(0);
   }
 
   usePower () {

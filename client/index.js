@@ -72,7 +72,7 @@ class Game extends React.Component {
 
     this.scene.enablePhysics(
       new BABYLON.Vector3(0, -200, 0),
-      new BABYLON.OimoJSPlugin());
+      new BABYLON.CannonJSPlugin());
 
     // Add a hero
     this.hero = new Hero(this, 0);

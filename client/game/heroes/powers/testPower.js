@@ -9,7 +9,7 @@ export default class testPower {
       this.hero = hero;
       this.id = this.hero.id;
 
-      this.speed = 100; // Initial speed
+      this.speed = 300; // Initial speed
 
       // Create collision mask
       this.mask = BABYLON.Mesh.CreateSphere("power", 10, 2, this.scene);

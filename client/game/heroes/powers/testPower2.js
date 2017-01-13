@@ -1,6 +1,7 @@
 'use strict';
 
 import BABYLON from 'babylonjs';
+import {freezeHero} from './powerUtils/movementUtils';
 
 export default class testPower {
     constructor(game, hero) {
@@ -31,8 +32,11 @@ export default class testPower {
       this.scene.registerBeforeRender(() => {
           this.update();
       });
-      // return false if 
-    
+        
+      freezeHero(this.hero);
+        
+      // return false if
+      return true;
     }
 
     update () {

@@ -34,6 +34,9 @@ export default class testPower {
       this.scene.registerBeforeRender(() => {
           this.update();
       });
+        
+      // return false if power is done
+      return false;
     }
 
     update () {

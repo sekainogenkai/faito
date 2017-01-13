@@ -136,19 +136,19 @@ export default class Hero {
   }
 
   useAttackPower1 () {
-    this.attackPower1.usePower();
+      this.attackPower1Pressed = this.attackPower1.usePower();
   }
     
   useAttackPower2 () {
-      this.attackPower2.usePower();
+      this.attackPower2Pressed = this.attackPower2.usePower();
   }
     
   useAttackPower3 () {
-      this.attackPower3.usePower();
+      this.attackPower3Pressed = this.attackPower3.usePower();
   }
     
   useAttackPower4 () {
-      this.attackPower4.usePower();
+      this.attackPower4Pressed = this.attackPower4.usePower();
   }
 
   handleKeyDownInput (e) {

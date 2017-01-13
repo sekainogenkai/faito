@@ -37,6 +37,13 @@ export default class Hero {
       AXIS_Y : 0,
       JUMP   : 0
     };
+      
+    // InitializeControls
+    // TODO add more than just power
+    this.attackPower1Pressed = false;
+    this.attackPower2Pressed = false;
+    this.attackPower3Pressed = false;
+    this.attackPower4Pressed = false;
     
     // InitializePowers
     this.attackPower1 = new attackPower1(game, this);
@@ -89,6 +96,8 @@ export default class Hero {
       this.onGround = true;
     }
     this.move();
+      
+    this.powers();
   }
 
   move () {
@@ -111,16 +120,25 @@ export default class Hero {
         this.onGround = false;
         this.mask.material.diffuseColor = BABYLON.Color3.Blue();
     }
-      
-    /*
-    if (this.onGround && this.Input.JUMP != 0){
-      this.mask.applyImpulse(new BABYLON.Vector3(0,this.Input.JUMP,0), this.mask.position);
-      this.onGround = false;
-      this.mask.material.diffuseColor = BABYLON.Color3.Blue();
-    } else{
-      this.mask.applyImpulse(new BABYLON.Vector3(this.speed*this.Input.AXIS_X,0,0), this.mask.position);
-      this.mask.applyImpulse(new BABYLON.Vector3(0,0,this.speed*this.Input.AXIS_Y), this.mask.position);
-    }*/
+  }
+    
+  // Currently prioritizes the first power
+  powers () {
+    if (this.attackPower1Pressed) {
+      this.useAttackPower1();
+    } else if (this.attackPower2Pressed) {
+      this.useAttackPower2();
+    } else if (this.attackPower3Pressed) {
+      this.useAttackPower3();
+    } else if (this.attackPower4Pressed) {
+      this.useAttackPower4();
+    }
+    // InitializeControls
+    // TODO add more than just power
+    this.attackPower1Pressed = false;
+    this.attackPower2Pressed = false;
+    this.attackPower3Pressed = false;
+    this.attackPower4Pressed = false;
   }
 
   useAttackPower1 () {
@@ -135,7 +153,7 @@ export default class Hero {
       this.attackPower3.usePower();
   }
     
-  useAttackPower4() {
+  useAttackPower4 () {
       this.attackPower4.usePower();
   }
 
@@ -157,16 +175,16 @@ export default class Hero {
         this.Input.JUMP = this.jumpStrength;
         break;
       case 'u':
-        this.useAttackPower1();
+        this.attackPower1Pressed = true;
         break;
       case 'i':
-        this.useAttackPower2();
+        this.attackPower2Pressed = true;
         break;
       case 'o':
-        this.useAttackPower3();
+        this.attackPower3Pressed = true;
         break;
       case 'p':
-        this.useAttackPower4();
+        this.attackPower4Pressed = true;
         break;
     }
   }

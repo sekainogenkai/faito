@@ -6,7 +6,7 @@ import testPower2 from './powers/testPower2'
     
 export default class Hero {
   constructor(game, id, speed=10, airSpeed=5, jumpStrength=120, 
-              attackPower1=testPower, attackPower2=testPower, attackPower3=testPower, attackPower4=testPower,
+              attackPower1=testPower, attackPower2=testPower2, attackPower3=testPower, attackPower4=testPower,
              defensePower1=testPower, defensePower2=testPower, defensePower3=testPower, defensePower4=testPower){
     this.game = game;
     this.scene = game.scene;
@@ -96,7 +96,7 @@ export default class Hero {
       this.onGround = true;
     }
     this.move();
-      
+    
     this.powers();
   }
 
@@ -133,12 +133,6 @@ export default class Hero {
     } else if (this.attackPower4Pressed) {
       this.useAttackPower4();
     }
-    // InitializeControls
-    // TODO add more than just power
-    this.attackPower1Pressed = false;
-    this.attackPower2Pressed = false;
-    this.attackPower3Pressed = false;
-    this.attackPower4Pressed = false;
   }
 
   useAttackPower1 () {
@@ -205,6 +199,18 @@ export default class Hero {
         break;
       case 'Shift':
         this.Input.JUMP = 0;
+        break;
+      case 'u':
+        this.attackPower1Pressed = false;
+        break;
+      case 'i':
+        this.attackPower2Pressed = false;
+        break;
+      case 'o':
+        this.attackPower3Pressed = false;
+        break;
+      case 'p':
+        this.attackPower4Pressed = false;
         break;
     }
   }

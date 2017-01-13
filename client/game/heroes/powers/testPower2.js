@@ -18,8 +18,8 @@ export default class testPower {
       this.mask = BABYLON.Mesh.CreateSphere("power", 10, 2, this.scene);
       this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:0.9});
         
-      var material = new BABYLON.StandardMaterial("red_material", this.scene);
-      material.diffuseColor = BABYLON.Color3.Red();
+      var material = new BABYLON.StandardMaterial("blue_material", this.scene);
+      material.diffuseColor = BABYLON.Color3.Blue();
       this.mask.material = material;
 
       // Set the position and apply force
@@ -31,6 +31,8 @@ export default class testPower {
       this.scene.registerBeforeRender(() => {
           this.update();
       });
+      // return false if 
+    
     }
 
     update () {

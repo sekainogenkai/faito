@@ -8,10 +8,7 @@ export default class testPower {
       this.scene = game.scene;
       this.hero = hero;
       this.id = this.hero.id;
-
       this.speed = 300; // Initial speed
-
-      
 
       //this.mask.setPhysicsState(BABYLON.PhysicsEngine.NoImpostor); Allows collision but no movement
     }

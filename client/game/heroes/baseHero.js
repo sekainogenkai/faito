@@ -2,13 +2,15 @@
 
 import BABYLON from 'babylonjs';
 import testPower from './powers/testPower'
-
+import testPower2 from './powers/testPower2'
+    
 export default class Hero {
-  constructor(game, id){
+  constructor(game, id, speed=10, airSpeed=5, jumpStrength=120, 
+              attackPower1=testPower, attackPower2=testPower, attackPower3=testPower, attackPower4=testPower,
+             defensePower1=testPower, defensePower2=testPower, defensePower3=testPower, defensePower4=testPower){
     this.game = game;
     this.scene = game.scene;
     this.id = id
-
 
     // Create collision mask
     this.mask = this.initCapsule(4,4);
@@ -25,8 +27,9 @@ export default class Hero {
     
     // Movement variables
     this.onGround = false;
-    this.jumpHeight = 120;
-    this.speed = 10;
+    this.jumpStrength = jumpStrength;
+    this.speed = speed;
+    this.airSpeed = airSpeed;
     
     // Input
     this.Input = {
@@ -34,6 +37,18 @@ export default class Hero {
       AXIS_Y : 0,
       JUMP   : 0
     };
+    
+    // InitializePowers
+    this.attackPower1 = new attackPower1(game, this);
+    this.attackPower2 = new attackPower2(game, this);
+    this.attackPower3 = new attackPower3(game, this);
+    this.attackPower4 = new attackPower4(game, this);
+    
+    this.defensePower1 = new defensePower1(game, this);
+    this.defensePower2 = new defensePower2(game, this);
+    this.defensePower3 = new defensePower3(game, this);
+    this.defensePower4 = new defensePower4(game, this);
+    
     // Add update loop to Babylon
     this.scene.registerBeforeRender(() => {
         this.update();
@@ -84,7 +99,7 @@ export default class Hero {
     if (this.onGround) {
         movementVector = normalizedMovementVector.scale(this.speed);
     } else {
-        movementVector = normalizedMovementVector.scale(this.speed / 2);
+        movementVector = normalizedMovementVector.scale(this.airSpeed);
     }
     // movement
     //console.log(movementVector);
@@ -108,8 +123,20 @@ export default class Hero {
     }*/
   }
 
-  usePower () {
-    var power = new testPower(this.game, this)
+  useAttackPower1 () {
+    this.attackPower1.usePower();
+  }
+    
+  useAttackPower2 () {
+      this.attackPower2.usePower();
+  }
+    
+  useAttackPower3 () {
+      this.attackPower3.usePower();
+  }
+    
+  useAttackPower4() {
+      this.attackPower4.usePower();
   }
 
   handleKeyDownInput (e) {
@@ -127,10 +154,19 @@ export default class Hero {
         this.Input.AXIS_X = 1;
         break;
       case 'Shift':
-        this.Input.JUMP = this.jumpHeight;
+        this.Input.JUMP = this.jumpStrength;
         break;
-      case 'Enter':
-        this.usePower();
+      case 'u':
+        this.useAttackPower1();
+        break;
+      case 'i':
+        this.useAttackPower2();
+        break;
+      case 'o':
+        this.useAttackPower3();
+        break;
+      case 'p':
+        this.useAttackPower4();
         break;
     }
   }

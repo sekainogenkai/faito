@@ -6,7 +6,7 @@ import testPower2 from './powers/testPower2';
 
 export default class Hero {
   constructor(
-    game, name, speed=15, airSpeed=5, jumpStrength=120,
+    game, name, speed=15, airSpeed=5, jumpStrength=200,
     attackPower1=testPower, attackPower2=testPower2, attackPower3=testPower, attackPower4=testPower,
     defensePower1=testPower, defensePower2=testPower, defensePower3=testPower, defensePower4=testPower){
     this.game = game;
@@ -177,10 +177,10 @@ export default class Hero {
   }
 
   handleJoyChanged(joyVector) {
-    console.log(joyVector);
+    //console.log(joyVector);
     this.Input.AXIS_Y = joyVector.y;
     this.Input.AXIS_X = joyVector.x;
-    console.log(this.Input);
+    //console.log(this.Input);
   }
 
   _handleButton(button, pressed) {
@@ -189,7 +189,7 @@ export default class Hero {
     case Buttons.B: this.attackPower2Pressed = pressed; break;
     case Buttons.X: this.attackPower3Pressed = pressed; break;
     case Buttons.Y: this.attackPower4Pressed = pressed; break;
-    case 'Shift': // TODO: controllers do not yet know how to produce this.
+    case Buttons.RB: // TODO: controllers do not yet know how to produce this.
       this.Input.JUMP = this.jumpStrength;
       break;
     }

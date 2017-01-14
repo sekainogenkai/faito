@@ -14,6 +14,7 @@ const buttonMap = [
   Buttons.X,
   Buttons.Y,
   Buttons.Menu, // Start on XBox controller
+  Buttons.RB,
 ];
 
 class GamepadInput extends EventEmitter {

@@ -8,6 +8,7 @@ const keyButtonMap = {
   'i': Buttons.B,
   'o': Buttons.X,
   'p': Buttons.Y,
+  'Shift': Buttons.RB,
 };
 
 const keyJoyMap = {

@@ -6,7 +6,7 @@ import testPower2 from './powers/testPower2';
 
 export default class Hero {
   constructor(
-    game, name, speed=15, airSpeed=5, jumpStrength=120,
+    game, name, speed=15, airSpeed=5, jumpStrength=20,
     attackPower1=testPower, attackPower2=testPower2, attackPower3=testPower, attackPower4=testPower,
     defensePower1=testPower, defensePower2=testPower, defensePower3=testPower, defensePower4=testPower){
     this.game = game;
@@ -57,6 +57,8 @@ export default class Hero {
     this.attackPower2Pressed = false;
     this.attackPower3Pressed = false;
     this.attackPower4Pressed = false;
+      
+    this.jumpPressed = false;
 
     // InitializePowers
     this.attackPower1 = new attackPower1(game, this);
@@ -98,16 +100,24 @@ export default class Hero {
     // Create mesh for onGround collision check
     this.groundCheck = BABYLON.Mesh.CreateBox("mask", 2.5, this.scene);
     this.groundCheck.parent = this.mask;
-    this.groundCheck.position.y = -4;
-    this.groundCheck.scaling.y = 0.2;
+    this.groundCheck.position.y = -3;
+    this.groundCheck.scaling.y = 0.4;
+  }
+    
+  checkGroundCheck() {
+    // Check for ground
+    if (this.groundCheck.intersectsMesh(this.game.ground, true)){
+      this.mesh.material.diffuseColor = new BABYLON.Color3.Red();
+      this.onGround = true;
+    } else {
+        this.onGround = false;
+    }
   }
 
   update () {
-    // Check for ground
-    if (this.groundCheck.intersectsMesh(this.game.ground, true) && this.Input.JUMP === 0){
-      this.mesh.material.diffuseColor = new BABYLON.Color3.Red();
-      this.onGround = true;
-    }
+    
+    this.checkGroundCheck();
+      
     if (this.moveBool) {
         this.move();
     }
@@ -137,12 +147,14 @@ export default class Hero {
     // Player rotation
     this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.body.velocity.x, this.body.velocity.z), 0, 0);
     // Jump
-    if (this.onGround && this.Input.JUMP) {
-        movementVector.add(new BABYLON.Vector3(0,this.Input.JUMP,0));
-        this.onGround = false;
-        this.mask.material.diffuseColor = BABYLON.Color3.Blue();
+    console.log('jump', this.jumpPressed);
+    if (this.onGround && this.jumpPressed) {
+        console.log("jump!");
+        movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
+        this.mesh.material.diffuseColor = BABYLON.Color3.Blue();
     }
     // apply movement at the very end.
+    console.log('ONGROUND:', this.onGround);
     this.mask.applyImpulse(movementVector, this.mask.position);
   }
 
@@ -189,10 +201,10 @@ export default class Hero {
   }
 
   handleJoyChanged(joyVector) {
-    console.log(joyVector);
+    //console.log(joyVector);
     this.Input.AXIS_Y = joyVector.y;
     this.Input.AXIS_X = joyVector.x;
-    console.log(this.Input);
+    //console.log(this.Input);
   }
 
   _handleButton(button, pressed) {
@@ -201,8 +213,8 @@ export default class Hero {
     case Buttons.B: this.attackPower2Pressed = pressed; break;
     case Buttons.X: this.attackPower3Pressed = pressed; break;
     case Buttons.Y: this.attackPower4Pressed = pressed; break;
-    case 'Shift': // TODO: controllers do not yet know how to produce this.
-      this.Input.JUMP = this.jumpStrength;
+    case Buttons.RB: // TODO: controllers do not yet know how to produce this.
+      this.jumpPressed = pressed;
       break;
     }
   }

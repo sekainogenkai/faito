@@ -14,14 +14,23 @@ export default class Hero {
     this.name = name;
 
     // Create collision mask
-    this.mask = this.initCapsule(4,4);
+    this.mask = this.initCapsule(2,4);
+    this.mask.isVisible = false;
+
+    // Add the mesh
+    this.mesh = this.scene.meshes[2].clone(this.name);
+    this.mesh.id = this.name;
+    this.mesh.parent = this.mask;
+    this.mesh.position.y = -3;
+    // Add material for debug
+    var material = new BABYLON.StandardMaterial("blue_material", this.scene);
+    material.diffuseColor = BABYLON.Color3.Blue();
+    this.mesh.material = material;
+
+    // Create the physics body using mask TODO: Make the Impostor a capsule
     this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.02, restitution:0.5});
 
     this.updateMassProperties();
-
-    var material = new BABYLON.StandardMaterial("blue_material", this.scene);
-    material.diffuseColor = BABYLON.Color3.Blue();
-    this.mask.material = material;
 
     this.initGroundCheck();
 
@@ -65,9 +74,9 @@ export default class Hero {
 
   initCapsule (width, height) {
     // Merges three spheres to create a capsule
-    var m0 = BABYLON.Mesh.CreateSphere("m0", width, height, this.scene);
+    var m0 = BABYLON.Mesh.CreateSphere("m0", width, width, this.scene);
     var m1 = BABYLON.MeshBuilder.CreateCylinder("m1", {height: height, diameter: width, tessellation: 20},this.scene);
-    var m2 = BABYLON.Mesh.CreateSphere("m2", width, height, this.scene);
+    var m2 = BABYLON.Mesh.CreateSphere("m2", width, width, this.scene);
     m0.position.y -= height * 0.5;
     m2.position.y += height * 0.5;
     m0.computeWorldMatrix(true);
@@ -93,7 +102,7 @@ export default class Hero {
   update () {
     // Check for ground
     if (this.groundCheck.intersectsMesh(this.game.ground, true) && this.Input.JUMP === 0){
-      this.mask.material.diffuseColor = new BABYLON.Color3.Red();
+      this.mesh.material.diffuseColor = new BABYLON.Color3.Red();
       this.onGround = true;
     }
     if (this.moveBool) {

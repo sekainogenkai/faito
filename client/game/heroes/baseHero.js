@@ -48,7 +48,11 @@ export default class Hero {
     this.Input = {
       AXIS_X : 0,
       AXIS_Y : 0,
-      JUMP   : 0
+      JUMP : false,
+      ATTACK1: false,
+      ATTACK2: false,
+      ATTACK3: false,
+      ATTACK4: false,
     };
 
     // InitializeControls
@@ -160,31 +164,31 @@ export default class Hero {
 
   // Currently prioritizes the first power
   powers () {
-    if (this.attackPower1Pressed) {
+    if (this.Input.ATTACK1) {
       this.useAttackPower1();
-    } else if (this.attackPower2Pressed) {
+    } else if (this.Input.ATTACK2) {
       this.useAttackPower2();
-    } else if (this.attackPower3Pressed) {
+    } else if (this.Input.ATTACK3) {
       this.useAttackPower3();
-    } else if (this.attackPower4Pressed) {
+    } else if (this.Input.ATTACK4) {
       this.useAttackPower4();
     }
   }
 
   useAttackPower1 () {
-      this.attackPower1Pressed = this.attackPower1.usePower();
+      this.attackPower1.usePower();
   }
 
   useAttackPower2 () {
-      this.attackPower2Pressed = this.attackPower2.usePower();
+      this.attackPower2.usePower();
   }
 
   useAttackPower3 () {
-      this.attackPower3Pressed = this.attackPower3.usePower();
+      this.attackPower3.usePower();
   }
 
   useAttackPower4 () {
-      this.attackPower4Pressed = this.attackPower4.usePower();
+      this.attackPower4.usePower();
   }
 
   setPlayer(player) {
@@ -209,10 +213,10 @@ export default class Hero {
 
   _handleButton(button, pressed) {
     switch (button) {
-    case Buttons.A: this.attackPower1Pressed = pressed; break;
-    case Buttons.B: this.attackPower2Pressed = pressed; break;
-    case Buttons.X: this.attackPower3Pressed = pressed; break;
-    case Buttons.Y: this.attackPower4Pressed = pressed; break;
+    case Buttons.A: this.Input.ATTACK1 = pressed; break;
+    case Buttons.B: this.Input.ATTACK2 = pressed; break;
+    case Buttons.X: this.Input.ATTACK3 = pressed; break;
+    case Buttons.Y: this.Input.ATTACK4 = pressed; break;
     case Buttons.RB: // TODO: controllers do not yet know how to produce this.
       this.jumpPressed = pressed;
       break;

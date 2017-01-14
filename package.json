@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack --bail",
     "test": "npm run build && mocha && dependency-lint",
     "start": "node index.cgi"
   },

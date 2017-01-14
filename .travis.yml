@@ -1,3 +1,13 @@
 language: node_js
 node_js:
   - "7"
+
+sudo: required
+dist: trusty
+before_install:
+  # https://launchpad.net/~thomas-schiex/+archive/ubuntu/blender
+  - sudo add-apt-repository ppa:thomas-schiex/blender -y
+  - sudo apt-get update
+  - sudo apt-get install blender -y
+before_script:
+  - node_modules/.bin/node-babylonjs-blender-install

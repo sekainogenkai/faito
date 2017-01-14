@@ -27,6 +27,7 @@ export default class testPower {
 
       // Add the mask to the shadowGenerator
       this.game.shadowGenerator.getShadowMap().renderList.push(this.mask);
+      this.mask.receiveShadows = true;
 
       // Set the position and apply force
       this.mask.position.x = this.hero.mask.position.x;

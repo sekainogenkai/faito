@@ -25,9 +25,19 @@ export default class Hero {
     this.mesh.position.y = -3;
     // Add the player mesh to the shadowGenerator
     this.game.shadowGenerator.getShadowMap().renderList.push(this.mesh);
+    this.mesh.receiveShadows = true;
     // Add material for debug
     var material = new BABYLON.StandardMaterial("blue_material", this.scene);
     material.diffuseColor = BABYLON.Color3.Blue();
+    /*
+    var material = new BABYLON.ShaderMaterial("cellShading", this.scene, "cell", {
+      uniforms: ["world", "viewProjection"]
+    });
+    material.setVector3("vLightPosition", this.game.light.position)
+            .setFloats("ToonThresholds", [0.95, 0.5, 0.2, 0.03])
+            .setFloats("ToonBrightnessLevels", [1.0, 0.8, 0.6, 0.35, 0.01])
+            .setColor3("vLightColor", this.game.light.diffuse);
+            */
     this.mesh.material = material;
 
     // Create the physics body using mask TODO: Make the Impostor a capsule
@@ -57,7 +67,7 @@ export default class Hero {
     this.attackPower2Pressed = false;
     this.attackPower3Pressed = false;
     this.attackPower4Pressed = false;
-      
+
     this.jumpPressed = false;
 
     // InitializePowers
@@ -103,7 +113,7 @@ export default class Hero {
     this.groundCheck.position.y = -3;
     this.groundCheck.scaling.y = 0.4;
   }
-    
+
   checkGroundCheck() {
     // Check for ground
     if (this.groundCheck.intersectsMesh(this.game.ground, true)){
@@ -115,9 +125,9 @@ export default class Hero {
   }
 
   update () {
-    
+
     this.checkGroundCheck();
-      
+
     if (this.moveBool) {
         this.move();
     }
@@ -147,14 +157,14 @@ export default class Hero {
     // Player rotation
     this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.body.velocity.x, this.body.velocity.z), 0, 0);
     // Jump
-    console.log('jump', this.jumpPressed);
+    //console.log('jump', this.jumpPressed);
     if (this.onGround && this.jumpPressed) {
         console.log("jump!");
         movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
         this.mesh.material.diffuseColor = BABYLON.Color3.Blue();
     }
     // apply movement at the very end.
-    console.log('ONGROUND:', this.onGround);
+    //console.log('ONGROUND:', this.onGround);
     this.mask.applyImpulse(movementVector, this.mask.position);
   }
 

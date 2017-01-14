@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 import {Buttons, Manager as InputManager} from './game/input';
-import {LocalPlayer} from './player';
+import {LocalPlayer} from './game/player';
 import React from 'react';
 import {render} from 'react-dom';
 import BABYLON from 'babylonjs';

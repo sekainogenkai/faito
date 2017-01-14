@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import {EventSubscriptionContext} from './event-util';
+import {EventSubscriptionContext} from '../event-util';
 
 /**
  * A local player.

@@ -137,7 +137,7 @@ export default class Hero {
     if (this.onGround && this.Input.JUMP) {
         movementVector.add(new BABYLON.Vector3(0,this.Input.JUMP,0));
         this.onGround = false;
-        this.mask.material.diffuseColor = BABYLON.Color3.Blue();
+        this.mesh.material.diffuseColor = BABYLON.Color3.Blue();
     }
     // apply movement at the very end.
     this.mask.applyImpulse(movementVector, this.mask.position);

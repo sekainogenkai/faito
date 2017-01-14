@@ -1,140 +1,85 @@
-var xbox360pad;
-var genericpad;
+import BABYLON from 'babylonjs';
+import EventEmitter from 'events';
+import {Buttons} from '../input.js';
 
-var gamepadConnected = function (gamepad) {
-    startingInstructions.className = "hidden";
-    padLogs.className = "";
-    if (gamepad.index === 0) {
-        gamepad.onleftstickchanged(function (values) {
-            console.log("left stick:  X: " + values.x + " Y: " + values.y);
-        });
-        gamepad.onrightstickchanged(function (values) {
-            console.log("right stick:   X: " + values.x + " Y: " + values.y);
-        });
-        if (gamepad instanceof BABYLON.Xbox360Pad) {
-            Xbox360Section.className = "";
-            xbox360pad = gamepad;
-            xbox360pad.onlefttriggerchanged(function (value) {
-                console.log("left trigger value " + value.toString());
-            });
-            xbox360pad.onrighttriggerchanged(function (value) {
-                console.log("right trigger value " + value.toString());
-            });
-            xbox360pad.onbuttondown(function (button) {
-                console.log("gamepad: " + gamepad.index);
-                switch (button) {
-                    case 0:
-                        console.log("A pressed");
-                        break;
-                    case 1:
-                        console.log("B pressed");
-                        break;
-                    case 2:
-                        console.log("X pressed");
-                        break;
-                    case 3:
-                        console.log("Y pressed");
-                        break;
-                    case 5:
-                        console.log("Back pressed");
-                        break;
-                    case 4:
-                        console.log("Start pressed");
-                        break;
-                    case 6:
-                        console.log("LB pressed");
-                        break;
-                    case 7:
-                        console.log("RB pressed");
-                        break;
-                    case 8:
-                        console.log("LeftStick pressed");
-                        break;
-                    case 9:
-                        console.log("RightStick pressed");
-                        break;
-                }
-            });
-            xbox360pad.onbuttonup(function (button) {
-                console.log("gamepad: " + gamepad.index);
-                switch (button) {
-                    case 0:
-                        console.log("A released");
-                        break;
-                    case 1:
-                        console.log("B released");
-                        break;
-                    case 2:
-                        console.log("X released");
-                        break;
-                    case 3:
-                        console.log("Y released");
-                        break;
-                    case 5:
-                        console.log("Back released");
-                        break;
-                    case 4:
-                        console.log("Start released");
-                        break;
-                    case 6:
-                        console.log("LB released");
-                        break;
-                    case 7:
-                        console.log("RB released");
-                        break;
-                    case 8:
-                        console.log("LeftStick released");
-                        break;
-                    case 9:
-                        console.log("RightStick released");
-                        break;
-                }
-            });
-            xbox360pad.ondpaddown(function (button) {
-                console.log("gamepad: " + gamepad.index);
-                switch (button) {
-                    case 1:
-                        console.log("Down pressed");
-                        break;
-                    case 2:
-                        console.log("Left pressed");
-                        break;
-                    case 3:
-                        console.log("Right pressed");
-                        break;
-                    case 0:
-                        console.log("Up pressed");
-                        break;
-                }
-            });
-            xbox360pad.ondpadup(function (button) {
-                console.log("gamepad: " + gamepad.index);
-                switch (button) {
-                    case 1:
-                        console.log("Down released");
-                        break;
-                    case 2:
-                        console.log("Left released");
-                        break;
-                    case 3:
-                        console.log("Right released");
-                        break;
-                    case 0:
-                        console.log("Up released");
-                        break;
-                }
-            });
-        } else {
-            GenericPadSection.className = "";
-            genericpad = gamepad;
-            genericpad.onbuttondown(function (buttonIndex) {
-                console.log("Button " + buttonIndex + " pressed");
-            });
-            genericpad.onbuttonup(function (buttonIndex) {
-                console.log("Button " + buttonIndex + " released");
-            });
-        }
+// TODO: Make this configurable. Perhaps have a “learn mode” API:
+// beginButtonLearn(), exportLearnedState(), loadLearnedState() so
+// that mappings can be set in the menu and saved to persisted storage
+// somehow. Biggest problem is matching saved state to a particular
+// controller when there are multiple controllers plugged in because
+// controller names/ids might not be unique/reliable.
+const buttonMap = [
+  Buttons.A,
+  Buttons.B,
+  Buttons.X,
+  Buttons.Y,
+  Buttons.Menu, // Start on XBox controller
+];
+
+class GamepadInput extends EventEmitter {
+  constructor(gamepad) {
+    super();
+  }
+
+  setGamepad(gamepad) {
+    if (this.gamepad) {
+      // Clear existing.
+      this.gamepad.onbuttondown(null);
+      this.gamepad.onbuttonup(null);
+      this.gamepad.onleftstickchanged(null);
+      this.gamepad.onrightstickchanged(null);
+      this.gamepad.onleftstickchanged(null);
     }
+    this.gamepad = gamepad;
+    this.name = `${gamepad.id} ${gamepad.index}`;
+    const buildButtonHandler = eventName => {
+      return buttonIndex => {
+        const button = buttonMap[buttonIndex];
+        if (button) {
+          this.emit(eventName, button);
+        } else {
+          console.warn(`Ignoring button ${buttonIndex}`);
+        }
+      };
+    };
+    gamepad.onbuttondown(buildButtonHandler('buttondown'));
+    gamepad.onbuttonup(buildButtonHandler('buttonup'));
+    let xIsZeroed = false;
+    let yIsZeroed = false;
+    const joyVector = new BABYLON.Vector2(0, 0);
+    gamepad.onleftstickchanged(values => {
+      // Treat stuff close to 0 as 0 so that when the player intends
+      // their character to be at rest the character is actually at
+      // rest.
+      const zeroSensitivity = 0.05;
+      const willXBeZeroed = values.x > -zeroSensitivity && values.x < zeroSensitivity;
+      const willYBeZeroed = values.y > -zeroSensitivity && values.y < zeroSensitivity;
+      if (!willXBeZeroed || !willYBeZeroed || willXBeZeroed != xIsZeroed || willYBeZeroed != yIsZeroed) {
+        xIsZeroed = willXBeZeroed;
+        yIsZeroed = willYBeZeroed;
+        joyVector.x = willXBeZeroed ? 0 : values.x;
+        joyVector.y = willYBeZeroed ? 0 : -values.y; // For some reason stick uses inverted y (airplane?)
+        this.emit('joychanged', joyVector);
+      }
+    });
+  }
 };
-                                  
-var gamepads = new BABYLON.Gamepads(gamepadConnected);
+
+export default class GamepadInputManager {
+  constructor(game) {
+    // Keep track of known identifiers because apparently they can
+    // reconnect without warning.
+    const knownGamepads = [];
+
+    new BABYLON.Gamepads(gamepad => {
+      const existing = knownGamepads[gamepad.index];
+      if (existing) {
+        existing.setGamepad(gamepad);
+      } else {
+        const added = knownGamepads[gamepad.index] = new GamepadInput();
+        added.setGamepad(gamepad);
+        game.addInput(added);
+      }
+    });
+  }
+};

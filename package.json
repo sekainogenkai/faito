@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --bail",
-    "test": "npm run build && mocha && dependency-lint",
+    "test": "npm run build && mocha --recursive && dependency-lint",
     "start": "node index.cgi"
   },
   "repository": {

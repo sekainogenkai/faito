@@ -1,16 +1,17 @@
-'use strict';
-
 import BABYLON from 'babylonjs';
-import testPower from './powers/testPower'
-import testPower2 from './powers/testPower2'
+import {EventSubscriptionContext} from '../../event-util';
+import {Buttons} from '../input';
+import testPower from './powers/testPower';
+import testPower2 from './powers/testPower2';
 
 export default class Hero {
-  constructor(game, id, speed=10, airSpeed=5, jumpStrength=120,
-              attackPower1=testPower, attackPower2=testPower2, attackPower3=testPower, attackPower4=testPower,
-             defensePower1=testPower, defensePower2=testPower, defensePower3=testPower, defensePower4=testPower){
+  constructor(
+    game, name, speed=10, airSpeed=5, jumpStrength=120,
+    attackPower1=testPower, attackPower2=testPower2, attackPower3=testPower, attackPower4=testPower,
+    defensePower1=testPower, defensePower2=testPower, defensePower3=testPower, defensePower4=testPower){
     this.game = game;
     this.scene = game.scene;
-    this.id = id
+    this.name = name;
 
     // Create collision mask
     this.mask = this.initCapsule(4,4);
@@ -150,67 +151,43 @@ export default class Hero {
       this.attackPower4Pressed = this.attackPower4.usePower();
   }
 
-  handleKeyDownInput (e) {
-    switch (e.sourceEvent.key) {
-      case 'w':
-        this.Input.AXIS_Y = 1;
-        break;
-      case 's':
-        this.Input.AXIS_Y = -1;
-        break;
-      case 'a':
-        this.Input.AXIS_X = -1;
-        break;
-      case 'd':
-        this.Input.AXIS_X = 1;
-        break;
-      case 'Shift':
-        this.Input.JUMP = this.jumpStrength;
-        break;
-      case 'u':
-        this.attackPower1Pressed = true;
-        break;
-      case 'i':
-        this.attackPower2Pressed = true;
-        break;
-      case 'o':
-        this.attackPower3Pressed = true;
-        break;
-      case 'p':
-        this.attackPower4Pressed = true;
-        break;
+  setPlayer(player) {
+    (this._inputSubscriptions || {destroy: () => {}}).destroy();
+    if (!player) {
+      return;
+    }
+    this._inputSubscriptions = new EventSubscriptionContext(player.input)
+      .on('end', () => this.setPlayer())
+      .on('joychanged', joyVector => this.handleJoyChanged(joyVector))
+      .on('buttondown', button => this.handleButtonDown(button))
+      .on('buttonup', button => this.handleButtonUp(button))
+    ;
+  }
+
+  handleJoyChanged(joyVector) {
+    console.log(joyVector);
+    this.Input.AXIS_Y = joyVector.y;
+    this.Input.AXIS_X = joyVector.x;
+    console.log(this.Input);
+  }
+
+  _handleButton(button, pressed) {
+    switch (button) {
+    case Buttons.A: this.attackPower1Pressed = pressed; break;
+    case Buttons.B: this.attackPower2Pressed = pressed; break;
+    case Buttons.X: this.attackPower3Pressed = pressed; break;
+    case Buttons.Y: this.attackPower4Pressed = pressed; break;
+    case 'Shift': // TODO: controllers do not yet know how to produce this.
+      this.Input.JUMP = this.jumpStrength;
+      break;
     }
   }
 
-  handleKeyUpInput (e) {
-    switch (e.sourceEvent.key) {
-      case 'w':
-        this.Input.AXIS_Y = 0;
-        break;
-      case 's':
-        this.Input.AXIS_Y = 0;
-        break;
-      case 'a':
-        this.Input.AXIS_X = 0;
-        break;
-      case 'd':
-        this.Input.AXIS_X = 0;
-        break;
-      case 'Shift':
-        this.Input.JUMP = 0;
-        break;
-      case 'u':
-        this.attackPower1Pressed = false;
-        break;
-      case 'i':
-        this.attackPower2Pressed = false;
-        break;
-      case 'o':
-        this.attackPower3Pressed = false;
-        break;
-      case 'p':
-        this.attackPower4Pressed = false;
-        break;
-    }
+  handleButtonDown(button) {
+    this._handleButton(button, true);
+  }
+
+  handleButtonUp(button) {
+    this._handleButton(button, false);
   }
 }

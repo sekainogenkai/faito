@@ -1,5 +1,6 @@
-'use strict';
-
+import EventEmitter from 'events';
+import {Buttons, Manager as InputManager} from './game/input';
+import {LocalPlayer} from './player';
 import React from 'react';
 import {render} from 'react-dom';
 import BABYLON from 'babylonjs';
@@ -7,43 +8,71 @@ import {BabylonJS} from './react-babylonjs.js';
 import Hero from './game/heroes/baseHero';
 import Menu from './menu/Menu';
 
-class Game extends React.Component {
+class Game extends EventEmitter {
   constructor() {
     super();
-    this.state = {
-      menu: false,
-    };
+    this.players = [];
+    this.heroes = [];
+    this.on('playerschanged', () => this.handlePlayersChanged());
+  }
+
+  addInput(input) {
+    const i = this.players.concat(undefined).indexOf(undefined);
+    const player = this.players[i] = new LocalPlayer(`Player ${i}`, input);
+    console.log(`Added player ${player.name} (${input.name})`);
+    player.on('end', () => {
+      this.players[i] = undefined;
+      player.destroy();
+      this.emit('playerschanged');
+    });
+    // TODO: Need to decide how to do routing of input when menu is
+    // shown. E.g., joystick should control menu and not heroes when
+    // menu is shown and switch back. Maybe instead of having heroes
+    // bind to the inputs directly we could just have an input router
+    // which just forwards the events to whatever is active at the
+    // moment. Could even just pass the player a faked out
+    // router-controlled input which the router forwards to. But the
+    // levels of indirection!
+    player.input.on('buttondown', button => {
+      console.log(`input emitted ${button}`);
+      if (button === Buttons.Menu) {
+        this.setState({menu: true,});
+      }
+    });
+    this.emit('playerschanged');
   }
 
   doRenderLoop() {
     this.scene.render();
   }
 
-  handleEngineCreated(engine) {
-    engine.getRenderingCanvas().focus();
+  handlePlayersChanged() {
+    // For now, create a hero now. In the future, hero creation will
+    // be up to the current game mode (no such thing exists yet
+    // though).
+    for (const i in this.players) {
+      const player = this.players[i];
+      if (player) {
+        // Assert hero.
+        if (!this.heroes[i]) {
+          const hero = this.heroes[i] = new Hero(this, `${player.name}のヒーロー`);
+          hero.setPlayer(player);
+        }
+      } else { // if (player)
+        // Assert no hero.
+        const hero = this.heroes[i];
+        if (hero) {
+          hero.destory();
+          this.heroes[i] = undefined;
+        }
+      }
+    }
+  }
+
+  setEngine(engine) {
     this.engine = engine;
     engine.runRenderLoop(this.handleRenderLoop = () => this.doRenderLoop());
     this.scene = new BABYLON.Scene(engine);
-
-    // Just a test
-    this.hero = null
-
-    this.scene.actionManager = new BABYLON.ActionManager(this.scene);
-    this.scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, e => {
-      this.hero.handleKeyDownInput(e);
-      switch (e.sourceEvent.key) {
-        case 'Escape':
-          this.setState({
-            menu: true,
-          });
-          break;
-      }
-    }));
-    this.scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, e => {
-      this.hero.handleKeyUpInput(e);
-      switch (e.sourceEvent.key) {
-      };
-    }));
 
     // Controllable camera
     var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 10, new BABYLON.Vector3.Zero(), this.scene);
@@ -74,9 +103,6 @@ class Game extends React.Component {
       new BABYLON.Vector3(0, -10, 0),
       new BABYLON.CannonJSPlugin());
 
-    // Add a hero
-    this.hero = new Hero(this, 0);
-
     // Add ground
     this.ground = BABYLON.Mesh.CreateGround("ground", 2500, 2500, 20, this.scene);
     var material = new BABYLON.StandardMaterial("green", this.scene);
@@ -93,20 +119,34 @@ class Game extends React.Component {
         loadedScene.beginAnimation(this.scene.skeletons[x], 0, 60, true, 2);
       }, x => {/*onprogress*/}, ex => {/*onerror*/});
     }
+
+    new InputManager(this);
   }
 
-  handleEngineAbandoned(engine) {
+  abandonEngine(engine) {
     this.engine.stopRenderLoop(this.handleRenderLoop);
     this.handleRenderLoop = null;
     this.engine = null;
   }
+}
+
+class Ui extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      menu: false,
+    };
+  }
+
+  handleEngineCreated(engine) {
+    this.props.game.setEngine(engine);
+  }
+
+  handleEngineAbandoned(engine) {
+    this.props.game.abandonEngine(engine);
+  }
 
   render() {
-    // Hack to ensure canvas is focused.
-    if (!this.state.menu && this.engine) {
-      this.engine.getRenderingCanvas().focus();
-    }
-
     return <div style={{width: '100%', height: '100%',}}>
         <BabylonJS onEngineCreated={engine => this.handleEngineCreated(engine)} onEngineAbandoned={engine => this.handleEngineAbandoned(engine)}/>
         {this.state.menu ? <Menu onHide={() => this.setState({menu: false,})}/> : []}
@@ -114,4 +154,4 @@ class Game extends React.Component {
   }
 }
 
-render(<Game/>, document.getElementById("game-container"));
+render(<Ui game={new Game()}/>, document.getElementById("game-container"));

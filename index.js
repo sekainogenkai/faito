@@ -26,7 +26,6 @@ const getIndex = (() => {
     <title>Faito!</title>
     <meta name="viewport" content="initial-scale=1"/>
     <link rel="stylesheet" type="text/css" href="style.css?${encodeURIComponent(cssHash)}"/>
-    <script src="cannon.js"></script>
   </head>
   <body>
     <div id="game-container"/>

@@ -14,8 +14,11 @@ module.exports = {
     loaders: [
       { test: /\.blend$/, loader: require('babylonjs-blender-loader') && 'babylonjs-blender-loader', },
       // https://webpack.github.io/docs/shimming-modules.html
-      { test: require.resolve('babylonjs'), loader: require('imports-loader') && 'imports-loader?OIMO=babylonjs/Oimo', },
-      { test: require.resolve('babylonjs/Oimo'), loader: require('exports-loader') && 'exports-loader?OIMO', },
+      { test: require.resolve('babylonjs'), loader: require('imports-loader') && require('cannon') && 'imports-loader?CANNON=cannon', },
+      // It’s babylonjs’s fault of saying “window.CANNON !== unefined”
+      // instead of “typeof CANNON !== 'undefined'” when checking for
+      // cannon that we have to expose cannon.
+      { test: require.resolve('cannon'), loader: require('expose-loader') && 'expose-loader?CANNON' },
       { test: /\.jsx?$/, exclude: /node_modules/, loader: "babel-loader", },
     ],
   },

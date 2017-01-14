@@ -6,7 +6,7 @@ import testPower2 from './powers/testPower2';
 
 export default class Hero {
   constructor(
-    game, name, speed=10, airSpeed=5, jumpStrength=120,
+    game, name, speed=15, airSpeed=5, jumpStrength=120,
     attackPower1=testPower, attackPower2=testPower2, attackPower3=testPower, attackPower4=testPower,
     defensePower1=testPower, defensePower2=testPower, defensePower3=testPower, defensePower4=testPower){
     this.game = game;
@@ -30,6 +30,7 @@ export default class Hero {
     this.jumpStrength = jumpStrength;
     this.speed = speed;
     this.airSpeed = airSpeed;
+    this.moveBool = true;
 
     // Input
     this.Input = {
@@ -95,31 +96,42 @@ export default class Hero {
       this.mask.material.diffuseColor = new BABYLON.Color3.Red();
       this.onGround = true;
     }
-    this.move();
-
+    if (this.moveBool) {
+        this.move();
+    }
     this.powers();
+  }
+
+  // use this to make xbox controller movement is smoove and doesn't go over the speed limit    
+  getScaleSpeed (movementVector, speed) {
+      //console.log('movementvector strength:', movementVector.length());
+      return speed * Math.min(1, movementVector.length());
   }
 
   move () {
     // Movement on ground
     // get normalized vector
-    var movementVector = new BABYLON.Vector3(this.speed*this.Input.AXIS_X,0,this.speed*this.Input.AXIS_Y);
-    var normalizedMovementVector = movementVector.normalize();
+    
+    var movementVector = new BABYLON.Vector3(this.Input.AXIS_X,0,this.Input.AXIS_Y);
+      //console.log('xbox move:', this.Input.AXIS_X, ', ', this.Input.AXIS_Y, ', scaleSpeed:', Math.min(1, movementVector.length()));
+    var normalizedMovementVector = movementVector.clone().normalize();
+    //console.log('scale speed:', this.getScaleSpeed(movementVector, this.speed));
     if (this.onGround) {
-        movementVector = normalizedMovementVector.scale(this.speed);
+        movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.speed));
     } else {
-        movementVector = normalizedMovementVector.scale(this.airSpeed);
+        movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.airSpeed));
     }
     // movement
-    //console.log(movementVector);
-    this.mask.applyImpulse(movementVector, this.mask.position);
+    // Player rotation
     this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.body.velocity.x, this.body.velocity.z), 0, 0);
     // Jump
     if (this.onGround && this.Input.JUMP) {
-        this.mask.applyImpulse(new BABYLON.Vector3(0,this.Input.JUMP,0), this.mask.position);
+        movementVector.add(new BABYLON.Vector3(0,this.Input.JUMP,0));
         this.onGround = false;
         this.mask.material.diffuseColor = BABYLON.Color3.Blue();
     }
+    // apply movement at the very end.
+    this.mask.applyImpulse(movementVector, this.mask.position);
   }
 
   // Currently prioritizes the first power

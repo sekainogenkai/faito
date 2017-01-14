@@ -51,7 +51,7 @@ class GamepadInput extends EventEmitter {
       // Treat stuff close to 0 as 0 so that when the player intends
       // their character to be at rest the character is actually at
       // rest.
-      const zeroSensitivity = 0.05;
+      const zeroSensitivity = 0.15;
       const willXBeZeroed = values.x > -zeroSensitivity && values.x < zeroSensitivity;
       const willYBeZeroed = values.y > -zeroSensitivity && values.y < zeroSensitivity;
       if (!willXBeZeroed || !willYBeZeroed || willXBeZeroed != xIsZeroed || willYBeZeroed != yIsZeroed) {

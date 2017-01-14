@@ -94,16 +94,16 @@ var gamepadConnected = function (gamepad) {
                 console.log("gamepad: " + gamepad.index);
                 switch (button) {
                     case 1:
-                        console.log("Down pressed";
+                        console.log("Down pressed");
                         break;
                     case 2:
-                        console.log("Left pressed";
+                        console.log("Left pressed");
                         break;
                     case 3:
-                        console.log("Right pressed";
+                        console.log("Right pressed");
                         break;
                     case 0:
-                        console.log("Up pressed";
+                        console.log("Up pressed");
                         break;
                 }
             });

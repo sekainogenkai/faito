@@ -1,3 +1,15 @@
+ignoreErrors:
+  unused:
+    - babel-preset-es2015
+    - babel-preset-react
 requiredModules:
   files:
     root: '**/*.{js,cgi}'
+    ignore:
+      - build/**/*
+      - node_modules/**/*
+  transpilers:
+    - extension: .js
+      fnName: transform
+      module: babel-core
+      resultKey: code

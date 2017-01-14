@@ -19,7 +19,7 @@ module.exports = {
       // instead of “typeof CANNON !== 'undefined'” when checking for
       // cannon that we have to expose cannon.
       { test: require.resolve('cannon'), loader: require('expose-loader') && 'expose-loader?CANNON' },
-      { test: /\.jsx?$/, exclude: /node_modules/, loader: require('babel-loader') && "babel-loader", },
+      { test: /\.jsx?$/, exclude: /node_modules/, loader: require('babel-core') && require('babel-loader') && "babel-loader", },
     ],
   },
   output: {

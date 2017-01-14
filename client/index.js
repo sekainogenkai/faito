@@ -121,7 +121,7 @@ class Game extends EventEmitter {
     }
 
     // Add shadow generator
-    this.shadowGenerator = new BABYLON.ShadowGenerator(1000, this.light);
+    this.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,9), this.light);
     // Just add the mesh
     this.shadowGenerator.getShadowMap().renderList.push(this.scene.meshes[2]);
     this.ground.receiveShadows = true;

@@ -151,14 +151,14 @@ export default class Hero {
     // Player rotation
     this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.body.velocity.x, this.body.velocity.z), 0, 0);
     // Jump
-    console.log('jump', this.jumpPressed);
+    //console.log('jump', this.jumpPressed);
     if (this.onGround && this.jumpPressed) {
-        console.log("jump!");
+        //console.log("jump!");
         movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
         this.mesh.material.diffuseColor = BABYLON.Color3.Blue();
     }
     // apply movement at the very end.
-    console.log('ONGROUND:', this.onGround);
+    //console.log('ONGROUND:', this.onGround);
     this.mask.applyImpulse(movementVector, this.mask.position);
   }
 

@@ -18,10 +18,13 @@ export default class Hero {
     this.mask.isVisible = false;
 
     // Add the mesh
-    this.mesh = this.scene.meshes[2].clone(this.name);
+    this.mesh = this.scene.meshes[2].clone(this.name); // 2 is the index of the player mesh
+    this.mesh.isVisible = true;
     this.mesh.id = this.name;
     this.mesh.parent = this.mask;
     this.mesh.position.y = -3;
+    // Add the player mesh to the shadowGenerator
+    this.game.shadowGenerator.getShadowMap().renderList.push(this.mesh);
     // Add material for debug
     var material = new BABYLON.StandardMaterial("blue_material", this.scene);
     material.diffuseColor = BABYLON.Color3.Blue();
@@ -111,7 +114,7 @@ export default class Hero {
     this.powers();
   }
 
-  // use this to make xbox controller movement is smoove and doesn't go over the speed limit    
+  // use this to make xbox controller movement is smoove and doesn't go over the speed limit
   getScaleSpeed (movementVector, speed) {
       //console.log('movementvector strength:', movementVector.length());
       return speed * Math.min(1, movementVector.length());
@@ -120,7 +123,7 @@ export default class Hero {
   move () {
     // Movement on ground
     // get normalized vector
-    
+
     var movementVector = new BABYLON.Vector3(this.Input.AXIS_X,0,this.Input.AXIS_Y);
       //console.log('xbox move:', this.Input.AXIS_X, ', ', this.Input.AXIS_Y, ', scaleSpeed:', Math.min(1, movementVector.length()));
     var normalizedMovementVector = movementVector.clone().normalize();

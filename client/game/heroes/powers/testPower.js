@@ -11,19 +11,22 @@ export default class testPower {
 
       this.speed = 300; // Initial speed
 
-      
+
 
       //this.mask.setPhysicsState(BABYLON.PhysicsEngine.NoImpostor); Allows collision but no movement
     }
-    
+
     usePower() {
       // Create collision mask
       this.mask = BABYLON.Mesh.CreateSphere("power", 10, 2, this.scene);
       this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:0.9});
-        
+
       var material = new BABYLON.StandardMaterial("red_material", this.scene);
       material.diffuseColor = BABYLON.Color3.Red();
       this.mask.material = material;
+
+      // Add the mask to the shadowGenerator
+      this.game.shadowGenerator.getShadowMap().renderList.push(this.mask);
 
       // Set the position and apply force
       this.mask.position.x = this.hero.mask.position.x;
@@ -34,7 +37,7 @@ export default class testPower {
       this.scene.registerBeforeRender(() => {
           this.update();
       });
-        
+
       // return false if power is done
       return false;
     }

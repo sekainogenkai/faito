@@ -79,7 +79,7 @@ class Game extends EventEmitter {
     camera.setPosition(new BABYLON.Vector3(0, 15, -30));
     camera.attachControl(engine.getRenderingCanvas(), false);
 
-    const light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), this.scene);
+    this.light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(1, -2, 1), this.scene);
 
     // Skybox
     BABYLON.Engine.ShadersRepository = "./shaders/";
@@ -119,6 +119,12 @@ class Game extends EventEmitter {
         loadedScene.beginAnimation(this.scene.skeletons[x], 0, 60, true, 2);
       }, x => {/*onprogress*/}, ex => {/*onerror*/});
     }
+
+    // Add shadow generator
+    this.shadowGenerator = new BABYLON.ShadowGenerator(1000, this.light);
+    // Just add the mesh
+    this.shadowGenerator.getShadowMap().renderList.push(this.scene.meshes[2]);
+    this.ground.receiveShadows = true;
 
     new InputManager(this);
   }

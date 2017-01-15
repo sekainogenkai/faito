@@ -59,7 +59,6 @@ export default class Hero {
       AXIS_X : 0,
       AXIS_Y : 0,
       JUMP : false,
-      ATTACK1: false,
       ATTACK2: false,
       ATTACK3: false,
       ATTACK4: false,
@@ -174,9 +173,7 @@ export default class Hero {
 
   // Currently prioritizes the first power
   powers () {
-    if (this.Input.ATTACK1) {
-      this.useAttackPower1();
-    } else if (this.Input.ATTACK2) {
+    if (this.Input.ATTACK2) {
       this.useAttackPower2();
     } else if (this.Input.ATTACK3) {
       this.useAttackPower3();
@@ -223,7 +220,6 @@ export default class Hero {
 
   _handleButton(button, pressed) {
     switch (button) {
-    case Buttons.A: this.Input.ATTACK1 = pressed; break;
     case Buttons.B: this.Input.ATTACK2 = pressed; break;
     case Buttons.X: this.Input.ATTACK3 = pressed; break;
     case Buttons.Y: this.Input.ATTACK4 = pressed; break;
@@ -235,6 +231,9 @@ export default class Hero {
 
   handleButtonDown(button) {
     this._handleButton(button, true);
+    switch (button) {
+    case Buttons.A: this.useAttackPower1(); break;
+    }
   }
 
   handleButtonUp(button) {

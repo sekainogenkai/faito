@@ -6,7 +6,7 @@ import testPower2 from './powers/testPower2';
 
 export default class Hero {
   constructor(
-    game, name, speed=15, airSpeed=5, jumpStrength=20,
+    game, name, speed=30, airSpeed=15, jumpStrength=20,
     attackPower1=testPower, attackPower2=testPower2, attackPower3=testPower, attackPower4=testPower,
     defensePower1=testPower, defensePower2=testPower, defensePower3=testPower, defensePower4=testPower){
     this.game = game;
@@ -41,7 +41,7 @@ export default class Hero {
     this.mesh.material = material;
 
     // Create the physics body using mask TODO: Make the Impostor a capsule
-    this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.02, restitution:0.5});
+    this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.05, restitution:0.5});
 
     this.updateMassProperties();
 
@@ -105,8 +105,9 @@ export default class Hero {
   }
 
   updateMassProperties() {
-    this.body.linearDamping = .2;
+    this.body.linearDamping = .9;
     this.body.fixedRotation = true;
+    this.body.sleepSpeedLimit = 20;
     this.body.updateMassProperties();
   }
 
@@ -145,9 +146,7 @@ export default class Hero {
   }
 
   move () {
-    // Movement on ground
     // get normalized vector
-
     var movementVector = new BABYLON.Vector3(this.Input.AXIS_X,0,this.Input.AXIS_Y);
       //console.log('xbox move:', this.Input.AXIS_X, ', ', this.Input.AXIS_Y, ', scaleSpeed:', Math.min(1, movementVector.length()));
     var normalizedMovementVector = movementVector.clone().normalize();
@@ -157,9 +156,7 @@ export default class Hero {
     } else {
         movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.airSpeed));
     }
-    // movement
-    // Player rotation
-    this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.body.velocity.x, this.body.velocity.z), 0, 0);
+    
     // Jump
     //console.log('jump', this.jumpPressed);
     if (this.onGround && this.jumpPressed) {
@@ -170,6 +167,15 @@ export default class Hero {
     // apply movement at the very end.
     //console.log('ONGROUND:', this.onGround);
     this.mask.applyImpulse(movementVector, this.mask.position);
+      
+    if (this.body.velocity.length() > 2 && (this.Input.AXIS_X || this.Input.AXIS_Y) ) {
+        this.setRotation();
+    }
+  }
+    
+  setRotation () {
+    // Player rotation
+    this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.body.velocity.x, this.body.velocity.z), 0, 0);
   }
 
   // Currently prioritizes the first power

@@ -50,16 +50,16 @@ export default class testPower extends BasePower {
         ball.registerBeforeRender(update);
         this.hero.setJoyTarget(this);
     }
-    
+
     buttonUp(i) {
         if (this.ball) {
-            this.ball.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:0.9});
+            this.ball.setPhysicsState(BABYLON.PhysicsEngine.SphereImpostor, {mass:10, friction:0.1, restitution:0.9});
             this.ball.userData[joySymbol] = null;
             this.ball = null;
             this.hero.setJoyTarget();
         }
     }
-    
+
     joyChanged(joy) {
         if (this.ball) {
             this.ball.userData[joySymbol] = joy;

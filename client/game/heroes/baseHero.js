@@ -109,12 +109,14 @@ export default class Hero {
   initGroundCheck() {
     // Create mesh for onGround collision check
     this.groundCheck = BABYLON.Mesh.CreateBox("mask", 2.5, this.game.scene);
+    this.groundCheck.isVisible = false;
     this.groundCheck.parent = this.mask;
     this.groundCheck.position.y = -3;
     this.groundCheck.scaling.y = 0.2;
   }
 
   checkGroundCheck() {
+    //TODO: http://schteppe.github.io/cannon.js/examples/threejs_voxel_fps.html use this jump check logic
     // Check for ground
     var jumpableMeshes = this.game.scene.getMeshesByTags("checkJump")
     this.onGround = false;
@@ -156,10 +158,10 @@ export default class Hero {
 
     // Jump
     if (this.onGround && this.Input.JUMP && this.jumpTimer == 0) {
-      //console.log("jump!");
-      movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
-      this.mesh.material.diffuseColor = BABYLON.Color3.Blue();
-      this.jumpTimer = this.jumpTimerStart;
+        //console.log("jump!");
+        movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
+        this.mesh.material.diffuseColor = BABYLON.Color3.Blue();
+        this.jumpTimer = this.jumpTimerStart;
     }else if (this.jumpTimer > 0) {
       this.jumpTimer -= 1;
     }

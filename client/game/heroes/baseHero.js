@@ -4,21 +4,23 @@ import {Buttons} from '../input';
 import testPower from './powers/testPower';
 import testPower2 from './powers/testPower2';
 
+const maxMana = 400;
+
 export default class Hero {
   constructor(
-    game, name, speed=30, airSpeed=15, jumpStrength=20,
-    attackPower1=testPower, attackPower2=testPower2, attackPower3=testPower, attackPower4=testPower,
-    defensePower1=testPower, defensePower2=testPower, defensePower3=testPower, defensePower4=testPower){
+    game, name, speed=30, airSpeed=10, jumpStrength=50,
+    attack1=testPower, attack2=testPower2, attack3=testPower, attack4=testPower,
+    defense1=testPower, defense2=testPower, defense3=testPower, defense4=testPower){
     this.game = game;
-    this.scene = game.scene;
     this.name = name;
+      this._mana = maxMana;
 
     // Create collision mask
     this.mask = this.initCapsule(2,4);
     this.mask.isVisible = false;
 
     // Add the mesh
-    this.mesh = this.scene.meshes[2].clone(this.name); // 2 is the index of the player mesh
+    this.mesh = game.scene.meshes[2].clone(this.name); // 2 is the index of the player mesh
     this.mesh.isVisible = true;
     this.mesh.id = this.name;
     this.mesh.parent = this.mask;
@@ -27,7 +29,7 @@ export default class Hero {
     this.game.shadowGenerator.getShadowMap().renderList.push(this.mesh);
     this.mesh.receiveShadows = true;
     // Add material for debug
-    var material = new BABYLON.StandardMaterial("blue_material", this.scene);
+    var material = new BABYLON.StandardMaterial("blue_material", game.scene);
     material.diffuseColor = BABYLON.Color3.Blue();
     /*
     var material = new BABYLON.ShaderMaterial("cellShading", this.scene, "cell", {
@@ -59,42 +61,31 @@ export default class Hero {
       AXIS_X : 0,
       AXIS_Y : 0,
       JUMP : false,
-      ATTACK2: false,
-      ATTACK3: false,
-      ATTACK4: false,
     };
 
-    // InitializeControls
-    // TODO add more than just power
-    this.attackPower1Pressed = false;
-    this.attackPower2Pressed = false;
-    this.attackPower3Pressed = false;
-    this.attackPower4Pressed = false;
-
-    this.jumpPressed = false;
 
     // InitializePowers
-    this.attackPower1 = new attackPower1(game, this);
-    this.attackPower2 = new attackPower2(game, this);
-    this.attackPower3 = new attackPower3(game, this);
-    this.attackPower4 = new attackPower4(game, this);
+    this.attack1 = new attack1(game, this);
+    this.attack2 = new attack2(game, this);
+    this.attack3 = new attack3(game, this);
+    this.attack4 = new attack4(game, this);
 
-    this.defensePower1 = new defensePower1(game, this);
-    this.defensePower2 = new defensePower2(game, this);
-    this.defensePower3 = new defensePower3(game, this);
-    this.defensePower4 = new defensePower4(game, this);
+    this.defense1 = new defense1(game, this);
+    this.defense2 = new defense2(game, this);
+    this.defense3 = new defense3(game, this);
+    this.defense4 = new defense4(game, this);
 
     // Add update loop to Babylon
-    this.scene.registerBeforeRender(() => {
+    this.mesh.registerBeforeRender(() => {
         this.update();
     });
   }
 
   initCapsule (width, height) {
     // Merges three spheres to create a capsule
-    var m0 = BABYLON.Mesh.CreateSphere("m0", width, width, this.scene);
-    var m1 = BABYLON.MeshBuilder.CreateCylinder("m1", {height: height, diameter: width, tessellation: 20},this.scene);
-    var m2 = BABYLON.Mesh.CreateSphere("m2", width, width, this.scene);
+    var m0 = BABYLON.Mesh.CreateSphere("m0", width, width, this.game.scene);
+    var m1 = BABYLON.MeshBuilder.CreateCylinder("m1", {height: height, diameter: width, tessellation: 20},this.game.scene);
+    var m2 = BABYLON.Mesh.CreateSphere("m2", width, width, this.game.scene);
     m0.position.y -= height * 0.5;
     m2.position.y += height * 0.5;
     m0.computeWorldMatrix(true);
@@ -104,7 +95,7 @@ export default class Hero {
   }
 
   updateMassProperties() {
-    this.body.linearDamping = .9;
+    this.body.linearDamping = .8;
     this.body.fixedRotation = true;
     this.body.sleepSpeedLimit = 20;
     this.body.updateMassProperties();
@@ -112,7 +103,7 @@ export default class Hero {
 
   initGroundCheck() {
     // Create mesh for onGround collision check
-    this.groundCheck = BABYLON.Mesh.CreateBox("mask", 2.5, this.scene);
+    this.groundCheck = BABYLON.Mesh.CreateBox("mask", 2.5, this.game.scene);
     this.groundCheck.parent = this.mask;
     this.groundCheck.position.y = -3;
     this.groundCheck.scaling.y = 0.4;
@@ -129,13 +120,13 @@ export default class Hero {
   }
 
   update () {
-
     this.checkGroundCheck();
 
-    if (this.moveBool) {
+      if (this.moveBool) {
         this.move();
     }
-    this.powers();
+      
+      this._manageMana();
   }
 
   // use this to make xbox controller movement is smoove and doesn't go over the speed limit
@@ -157,8 +148,7 @@ export default class Hero {
     }
     
     // Jump
-    //console.log('jump', this.jumpPressed);
-    if (this.onGround && this.jumpPressed) {
+    if (this.onGround && this.Input.JUMP) {
         //console.log("jump!");
         movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
         this.mesh.material.diffuseColor = BABYLON.Color3.Blue();
@@ -175,33 +165,6 @@ export default class Hero {
   setRotation () {
     // Player rotation
     this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.body.velocity.x, this.body.velocity.z), 0, 0);
-  }
-
-  // Currently prioritizes the first power
-  powers () {
-    if (this.Input.ATTACK2) {
-      this.useAttackPower2();
-    } else if (this.Input.ATTACK3) {
-      this.useAttackPower3();
-    } else if (this.Input.ATTACK4) {
-      this.useAttackPower4();
-    }
-  }
-
-  useAttackPower1 () {
-      this.attackPower1.usePower();
-  }
-
-  useAttackPower2 () {
-      this.attackPower2.usePower();
-  }
-
-  useAttackPower3 () {
-      this.attackPower3.usePower();
-  }
-
-  useAttackPower4 () {
-      this.attackPower4.usePower();
   }
 
   setPlayer(player) {
@@ -226,23 +189,44 @@ export default class Hero {
 
   _handleButton(button, pressed) {
     switch (button) {
-    case Buttons.B: this.Input.ATTACK2 = pressed; break;
-    case Buttons.X: this.Input.ATTACK3 = pressed; break;
-    case Buttons.Y: this.Input.ATTACK4 = pressed; break;
-    case Buttons.RB: // TODO: controllers do not yet know how to produce this.
-      this.jumpPressed = pressed;
-      break;
+        case Buttons.RB: this.Input.JUMP = pressed; break;
     }
   }
 
   handleButtonDown(button) {
     this._handleButton(button, true);
     switch (button) {
-    case Buttons.A: this.useAttackPower1(); break;
+        case Buttons.A: this.attack1.buttonDown(); break;
+        case Buttons.B: this.attack2.buttonDown(); break;
+        case Buttons.X: this.attack3.buttonDown(); break;
+        case Buttons.Y: this.attack4.buttonDown(); break;
     }
   }
 
   handleButtonUp(button) {
     this._handleButton(button, false);
+    switch (button) {
+        case Buttons.A: this.attack1.buttonUp(); break;
+        case Buttons.B: this.attack2.buttonUp(); break;
+        case Buttons.X: this.attack3.buttonUp(); break;
+        case Buttons.Y: this.attack4.buttonUp(); break;
+    }
   }
+    
+    _manageMana() {
+        if (this._mana < maxMana) {
+            this._mana = Math.min(maxMana, this._mana + 1);
+        }
+    }
+    
+    /**
+     * Returns false if there is insufficient mana.
+     */
+    consumeMana(amount) {
+        if (this._mana < amount) {
+            return false;
+        }
+        this._mana -= amount;
+        return true;
+    }
 }

@@ -1,50 +1,35 @@
-'use strict';
-
+import BasePower from './BasePower';
 import BABYLON from 'babylonjs';
+import {configureAutoRemove} from './powerUtils/movementUtils';
 
-export default class testPower {
+export default class testPower extends BasePower {
     constructor(game, hero) {
-      this.game = game;
-      this.scene = game.scene;
-      this.hero = hero;
-      this.id = this.hero.id;
+        super(game, hero);
 
-      this.speed = 300; // Initial speed
-
-
-
-      //this.mask.setPhysicsState(BABYLON.PhysicsEngine.NoImpostor); Allows collision but no movement
+        //this.mask.setPhysicsState(BABYLON.PhysicsEngine.NoImpostor); Allows collision but no movement
     }
+    
+    buttonDown(i) {
+        if (!this.hero.consumeMana(300)) {
+            return;
+        }
+        // Create collision mask
+        this.mask = BABYLON.Mesh.CreateSphere("power", 10, 2, this.game.scene);
+        this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:0.9});
 
-    usePower() {
-      // Create collision mask
-      this.mask = BABYLON.Mesh.CreateSphere("power", 10, 2, this.scene);
-      this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:0.9});
+        var material = new BABYLON.StandardMaterial("red_material", this.game.scene);
+        material.diffuseColor = BABYLON.Color3.Red();
+        this.mask.material = material;
 
-      var material = new BABYLON.StandardMaterial("red_material", this.scene);
-      material.diffuseColor = BABYLON.Color3.Red();
-      this.mask.material = material;
+        // Add the mask to the shadowGenerator
+        this.game.shadowGenerator.getShadowMap().renderList.push(this.mask);
+        this.mask.receiveShadows = true;
 
-      // Add the mask to the shadowGenerator
-      this.game.shadowGenerator.getShadowMap().renderList.push(this.mask);
-      this.mask.receiveShadows = true;
-
-      // Set the position and apply force
-      this.mask.position.x = this.hero.mask.position.x;
-      this.mask.position.z = this.hero.mask.position.z;
-      var initialVec = this.hero.mask.physicsImpostor.getLinearVelocity();
-      this.mask.applyImpulse(initialVec.normalize().scale(this.speed), this.mask.getAbsolutePosition());
-      // Add update loop to Babylon
-      this.scene.registerBeforeRender(() => {
-          this.update();
-      });
-
-      // return false if power is done
-      return false;
+        // Set the position and apply force
+        this.mask.position.x = this.hero.mask.position.x;
+        this.mask.position.z = this.hero.mask.position.z;
+        var initialVec = this.hero.mask.physicsImpostor.getLinearVelocity();
+        this.mask.applyImpulse(initialVec.normalize().scale(300), this.mask.getAbsolutePosition());
+        configureAutoRemove(this.mask, 2);
     }
-
-    update () {
-      //this.body.linearVelocity.scaleEqual(0.92);
-    }
-
 }

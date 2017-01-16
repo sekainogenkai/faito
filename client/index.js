@@ -111,6 +111,8 @@ class Game extends EventEmitter {
     this.ground.position.y = -10;
     this.ground.scaling.y = 0.001;
     this.ground.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, move:false});
+    BABYLON.Tags.EnableFor(this.ground);
+    BABYLON.Tags.AddTagsTo(this.ground, "checkJump");
 
     for (var x in [0,1]) {
       require('../models/heroes/omi.blend').Append(BABYLON.SceneLoader, this.scene, loadedScene => {

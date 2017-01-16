@@ -51,7 +51,7 @@ export default class testPower extends BasePower {
 
         this.ball = null;
         //this.mask.setPhysicsState(BABYLON.PhysicsEngine.NoImpostor); Allows collision but no movement
-        
+
         this._directionVec = new BABYLON.Vector3(0, 0, 0);
     }
 
@@ -77,7 +77,7 @@ export default class testPower extends BasePower {
         ball.applyImpulse(initialVec.normalize().scale(300), ball.getAbsolutePosition());
         configureAutoRemove(ball, 6);
         ball.userData = ball.userData || {};
-        
+
         this.hero.mask.rotationQuaternion.toRotationMatrix(matrix);
         BABYLON.Vector3.TransformCoordinatesToRef(initialDirectionVec, matrix, this._directionVec);
         this._directionVec.scaleInPlace(0.5);
@@ -85,11 +85,13 @@ export default class testPower extends BasePower {
 
         ball.registerBeforeRender(updateBall);
     }
-    
+
     buttonUp(i) {
         if (this.ball) {
             // Place a wall.
             const wall = BABYLON.Mesh.CreateBox('wall', wallHeight, this.game.scene);
+            BABYLON.Tags.EnableFor(wall);
+            BABYLON.Tags.AddTagsTo(wall, "checkJump");
             wall.position.copyFrom(this.ball.position);
             wall.userData = wall.userData || {};
             wall.userData[wallAnimationTargetYSymbol] = wall.position.y - wallHeight/2;

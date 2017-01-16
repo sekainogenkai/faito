@@ -6,11 +6,11 @@ import testPower2 from './powers/testPower2';
 import testPower3 from './powers/testPower3';
 
 const zeroVector2 = new BABYLON.Vector2(0, 0);
-const maxMana = 1200;
+const maxMana = 5000000;
 
 export default class Hero {
   constructor(
-    game, name, speed=30, airSpeed=10, jumpStrength=50,
+    game, name, speed=30, airSpeed=10, jumpStrength=250,
     attack1=testPower, attack2=testPower2, attack3=testPower3, attack4=testPower,
     defense1=testPower, defense2=testPower, defense3=testPower, defense4=testPower){
     this.game = game;
@@ -109,7 +109,7 @@ export default class Hero {
     this.groundCheck = BABYLON.Mesh.CreateBox("mask", 2.5, this.game.scene);
     this.groundCheck.parent = this.mask;
     this.groundCheck.position.y = -3;
-    this.groundCheck.scaling.y = 0.4;
+    this.groundCheck.scaling.y = 0.2;
   }
 
   checkGroundCheck() {
@@ -160,7 +160,7 @@ export default class Hero {
     //console.log('ONGROUND:', this.onGround);
     this.mask.applyImpulse(movementVector, this.mask.position);
       
-    if (this.body.velocity.length() > 2 && (this.Input.AXIS_X || this.Input.AXIS_Y) ) {
+    if (this.body.velocity.length() > 1 && (this.Input.AXIS_X || this.Input.AXIS_Y) ) {
         this.setRotation();
     }
   }

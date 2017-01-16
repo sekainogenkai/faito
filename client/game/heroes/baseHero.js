@@ -114,11 +114,13 @@ export default class Hero {
 
   checkGroundCheck() {
     // Check for ground
-    if (this.groundCheck.intersectsMesh(this.game.ground, true)){
-      this.mesh.material.diffuseColor = new BABYLON.Color3.Red();
-      this.onGround = true;
-    } else {
-        this.onGround = false;
+    var jumpableMeshes = this.game.scene.getMeshesByTags("checkJump")
+    this.onGround = false;
+    for (var i in jumpableMeshes) {
+      if (this.groundCheck.intersectsMesh(jumpableMeshes[i], true)){
+        this.mesh.material.diffuseColor = new BABYLON.Color3.Red();
+        this.onGround = true;
+      }
     }
   }
 
@@ -128,7 +130,7 @@ export default class Hero {
       if (this.moveBool) {
         this.move();
     }
-      
+
       this._manageMana();
   }
 
@@ -149,7 +151,7 @@ export default class Hero {
     } else {
         movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.airSpeed));
     }
-    
+
     // Jump
     if (this.onGround && this.Input.JUMP) {
         //console.log("jump!");
@@ -159,12 +161,12 @@ export default class Hero {
     // apply movement at the very end.
     //console.log('ONGROUND:', this.onGround);
     this.mask.applyImpulse(movementVector, this.mask.position);
-      
+
     if (this.body.velocity.length() > 1 && (this.Input.AXIS_X || this.Input.AXIS_Y) ) {
         this.setRotation();
     }
   }
-    
+
   setRotation () {
     // Player rotation
     this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.body.velocity.x, this.body.velocity.z), 0, 0);
@@ -222,13 +224,13 @@ export default class Hero {
         case Buttons.Y: this.attack4.buttonUp(0); break;
     }
   }
-    
+
     _manageMana() {
         if (this._mana < maxMana) {
             this._mana = Math.min(maxMana, this._mana + 1);
         }
     }
-    
+
     /**
      * Returns false if there is insufficient mana.
      */
@@ -239,7 +241,7 @@ export default class Hero {
         this._mana -= amount;
         return true;
     }
-    
+
     /**
      * Sets the joy target. The joy target must have a joyChanged
      * function accepting a Vector2. If null the hero will start

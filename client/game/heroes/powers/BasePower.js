@@ -3,10 +3,10 @@ export default class BasePower {
       this.game = game;
       this.hero = hero;
     }
-    
+
     buttonDown(i) {
     }
-    
+
     buttonUp(i) {
     }
 }

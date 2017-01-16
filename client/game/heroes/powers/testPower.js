@@ -1,6 +1,6 @@
 import BasePower from './BasePower';
 import BABYLON from 'babylonjs';
-import {configureAutoRemove} from './powerUtils/movementUtils';
+import {configureAutoRemove} from './powerUtils/mainUtils';
 
 export default class testPower extends BasePower {
     constructor(game, hero) {

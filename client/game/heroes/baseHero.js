@@ -55,6 +55,8 @@ export default class Hero {
     // Movement variables
     this.onGround = false;
     this.jumpStrength = jumpStrength;
+    this.jumpTimerStart = 20
+    this.jumpTimer = this.jumpTimerStart;
     this.speed = speed;
     this.airSpeed = airSpeed;
     this.moveBool = true;
@@ -153,10 +155,13 @@ export default class Hero {
     }
 
     // Jump
-    if (this.onGround && this.Input.JUMP) {
-        //console.log("jump!");
-        movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
-        this.mesh.material.diffuseColor = BABYLON.Color3.Blue();
+    if (this.onGround && this.Input.JUMP && this.jumpTimer == 0) {
+      //console.log("jump!");
+      movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
+      this.mesh.material.diffuseColor = BABYLON.Color3.Blue();
+      this.jumpTimer = this.jumpTimerStart;
+    }else if (this.jumpTimer > 0) {
+      this.jumpTimer -= 1;
     }
     // apply movement at the very end.
     //console.log('ONGROUND:', this.onGround);

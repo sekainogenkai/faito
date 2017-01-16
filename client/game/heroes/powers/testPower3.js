@@ -1,6 +1,6 @@
 import BasePower from './BasePower';
 import BABYLON from 'babylonjs';
-import {secondsToTicks, configureAutoRemove} from './powerUtils/movementUtils';
+import {secondsToTicks, configureAutoRemove} from './powerUtils/mainUtils';
 
 const initialDirectionVec = new BABYLON.Vector3(0, 0, 1);
 const matrix = new BABYLON.Matrix();

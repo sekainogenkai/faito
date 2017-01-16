@@ -4,7 +4,8 @@ import {Buttons} from '../input';
 import testPower from './powers/testPower';
 import testPower2 from './powers/testPower2';
 
-const maxMana = 400;
+const zeroVector2 = new BABYLON.Vector2(0, 0);
+const maxMana = 1200;
 
 export default class Hero {
   constructor(
@@ -14,6 +15,7 @@ export default class Hero {
     this.game = game;
     this.name = name;
       this._mana = maxMana;
+      this._joyTarget = this;
 
     // Create collision mask
     this.mask = this.initCapsule(2,4);
@@ -181,11 +183,18 @@ export default class Hero {
   }
 
   handleJoyChanged(joyVector) {
-    //console.log(joyVector);
-    this.Input.AXIS_Y = joyVector.y;
-    this.Input.AXIS_X = joyVector.x;
-    //console.log(this.Input);
+      this._joyTarget.joyChanged(joyVector);
   }
+
+    /**
+     * Allow the hero to act as a joy target. When this gets
+     * called, that means that the hero itself should respond
+     * to joy and, e.g., move.
+     */
+    joyChanged(joyVector) {
+        this.Input.AXIS_Y = joyVector.y;
+        this.Input.AXIS_X = joyVector.x;
+    }
 
   _handleButton(button, pressed) {
     switch (button) {
@@ -196,20 +205,20 @@ export default class Hero {
   handleButtonDown(button) {
     this._handleButton(button, true);
     switch (button) {
-        case Buttons.A: this.attack1.buttonDown(); break;
-        case Buttons.B: this.attack2.buttonDown(); break;
-        case Buttons.X: this.attack3.buttonDown(); break;
-        case Buttons.Y: this.attack4.buttonDown(); break;
+        case Buttons.A: this.attack1.buttonDown(0); break;
+        case Buttons.B: this.attack2.buttonDown(0); break;
+        case Buttons.X: this.attack3.buttonDown(0); break;
+        case Buttons.Y: this.attack4.buttonDown(0); break;
     }
   }
 
   handleButtonUp(button) {
     this._handleButton(button, false);
     switch (button) {
-        case Buttons.A: this.attack1.buttonUp(); break;
-        case Buttons.B: this.attack2.buttonUp(); break;
-        case Buttons.X: this.attack3.buttonUp(); break;
-        case Buttons.Y: this.attack4.buttonUp(); break;
+        case Buttons.A: this.attack1.buttonUp(0); break;
+        case Buttons.B: this.attack2.buttonUp(0); break;
+        case Buttons.X: this.attack3.buttonUp(0); break;
+        case Buttons.Y: this.attack4.buttonUp(0); break;
     }
   }
     
@@ -228,5 +237,21 @@ export default class Hero {
         }
         this._mana -= amount;
         return true;
+    }
+    
+    /**
+     * Sets the joy target. The joy target must have a joyChanged
+     * function accepting a Vector2. If null the hero will start
+     * responding to joy again.
+     */
+    setJoyTarget(target) {
+        target = target || this;
+        // Send 0 to original target to set it to rest or whatever
+        // instead of leaving it stuck at other value. For existing,
+        // will stop movement in the hero.
+        this.handleJoyChanged(zeroVector2);
+        this._joyTarget = target;
+        // Emit 0 to help target with preinitializing itself.
+        this.handleJoyChanged(zeroVector2);
     }
 }

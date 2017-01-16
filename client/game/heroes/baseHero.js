@@ -3,6 +3,7 @@ import {EventSubscriptionContext} from '../../event-util';
 import {Buttons} from '../input';
 import testPower from './powers/testPower';
 import testPower2 from './powers/testPower2';
+import testPower3 from './powers/testPower3';
 
 const zeroVector2 = new BABYLON.Vector2(0, 0);
 const maxMana = 1200;
@@ -10,7 +11,7 @@ const maxMana = 1200;
 export default class Hero {
   constructor(
     game, name, speed=30, airSpeed=10, jumpStrength=50,
-    attack1=testPower, attack2=testPower2, attack3=testPower, attack4=testPower,
+    attack1=testPower, attack2=testPower2, attack3=testPower3, attack4=testPower,
     defense1=testPower, defense2=testPower, defense3=testPower, defense4=testPower){
     this.game = game;
     this.name = name;

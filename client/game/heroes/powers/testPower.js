@@ -8,7 +8,7 @@ export default class testPower extends BasePower {
 
         //this.mask.setPhysicsState(BABYLON.PhysicsEngine.NoImpostor); Allows collision but no movement
     }
-    
+
     buttonDown(i) {
         if (!this.hero.consumeMana(300)) {
             return;
@@ -27,9 +27,10 @@ export default class testPower extends BasePower {
 
         // Set the position and apply force
         this.mask.position.x = this.hero.mask.position.x;
+        this.mask.position.y = 10;
         this.mask.position.z = this.hero.mask.position.z;
         var initialVec = this.hero.mask.physicsImpostor.getLinearVelocity();
-        this.mask.applyImpulse(initialVec.normalize().scale(300), this.mask.getAbsolutePosition());
+        this.mask.applyImpulse(initialVec.normalize().scale(100), this.mask.getAbsolutePosition());
         configureAutoRemove(this.mask, 2);
     }
 }

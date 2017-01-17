@@ -76,11 +76,10 @@ class Game extends EventEmitter {
 
     // Controllable camera
     var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 10, new BABYLON.Vector3.Zero(), this.scene);
-    camera.setPosition(new BABYLON.Vector3(0, 15, -30));
+    camera.setPosition(new BABYLON.Vector3(0, 40, -40));
     camera.attachControl(engine.getRenderingCanvas(), false);
 
     this.light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(0, -2, 0), this.scene);
-
     // Skybox
     BABYLON.Engine.ShadersRepository = "./shaders/";
 
@@ -99,6 +98,10 @@ class Game extends EventEmitter {
     this.scene.fogDensity = 0.0018;
     this.scene.fogColor = new BABYLON.Color3(240/255, 240/255, 1);
 
+    // Add shadow generator
+    this.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,9), this.light);
+    this.shadowGenerator.setDarkness(0.5) ;
+
     this.scene.enablePhysics(
       new BABYLON.Vector3(0, -10, 0),
       new BABYLON.CannonJSPlugin());
@@ -108,11 +111,12 @@ class Game extends EventEmitter {
     var material = new BABYLON.StandardMaterial("green", this.scene);
     material.diffuseColor = BABYLON.Color3.FromInts(31, 158, 69);
     this.ground.material = material;
-    this.ground.position.y = -10;
-    this.ground.scaling.y = 0.001;
     this.ground.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, move:false});
     BABYLON.Tags.EnableFor(this.ground);
     BABYLON.Tags.AddTagsTo(this.ground, "checkJump");
+    // Just add the mesh
+    this.shadowGenerator.getShadowMap().renderList.push(this.scene.meshes[2]);
+    this.ground.receiveShadows = true;
 
     for (var x in [0,1]) {
       require('../models/heroes/omi.blend').Append(BABYLON.SceneLoader, this.scene, loadedScene => {
@@ -121,12 +125,6 @@ class Game extends EventEmitter {
         loadedScene.beginAnimation(this.scene.skeletons[x], 0, 120, true, 2);
       }, x => {/*onprogress*/}, ex => {/*onerror*/});
     }
-
-    // Add shadow generator
-    this.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,9), this.light);
-    // Just add the mesh
-    this.shadowGenerator.getShadowMap().renderList.push(this.scene.meshes[2]);
-    this.ground.receiveShadows = true;
 
     new InputManager(this);
   }

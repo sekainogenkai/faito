@@ -95,7 +95,7 @@ export default class Hero {
       }, 4000);
       
       this.currentAnimation = null;
-      
+      this.currentAnimatable = null;
       /**
       this.walk = new BABYLON.Animation(game.scene.meshes[2])
       this.run = **/
@@ -109,15 +109,22 @@ export default class Hero {
   
   startAnimation (animation) {
       this.currentAnimation = animation;
-      this.game.scene.beginAnimation(this.mesh.skeleton, animation.from+1, animation.to, true, 1);
+      this.currentAnimatable = this.game.scene.beginAnimation(this.mesh.skeleton, animation.from+1, animation.to, true, 1);
   }
     
   animations () {
       // walk animation
-      if (this.body.velocity.length() < 5) {
+      var magnitude = this.body.velocity.length();
+      console.log("magnitude:", magnitude);
+      if (magnitude < .08 && magnitude < .0999) {
+          console.log("surprise");
+      }
+      if (magnitude < 5) {
           this.startAnimationNew(this.walkAnimation);
-      } else if (this.body.velocity.length() > 5) {
+          this.currentAnimatable.speedRatio = magnitude/2;
+      } else if (magnitude > 5) {
           this.startAnimationNew(this.runAnimation);
+          this.currentAnimatable.speedRatio = magnitude/50;
       }
   }
 
@@ -165,12 +172,13 @@ export default class Hero {
 
   update () {
     this.checkGroundCheck();
+      
+    this.animations();
 
     if (this.moveBool) {
         this.move();
     }
       
-    this.animations();
 
     this._manageMana();
   }

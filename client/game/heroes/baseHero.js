@@ -90,7 +90,7 @@ export default class Hero {
       this.walkAnimation = this.mesh.skeleton.getAnimationRange('walk');
       this.runAnimation = this.mesh.skeleton.getAnimationRange('run');
       this.jumpAnimation = this.mesh.skeleton.getAnimationRange('jump');
-      this.powerAnimation = this.mesh.skeleton.getAnimationRange('power');
+      this.powerAnimation = this.mesh.skeleton.getAnimationRange('ability');
       const animatable = this.game.scene.beginAnimation(this.mesh.skeleton, 0, 120, true, 2);
       setTimeout(() => {
           animatable.speedRatio /= 8;
@@ -98,32 +98,44 @@ export default class Hero {
 
       this.currentAnimation = null;
       this.currentAnimatable = null;
+      
+      this.animatePower = false;
       /**
       this.walk = new BABYLON.Animation(game.scene.meshes[2])
       this.run = **/
   }
-
-  startAnimationNew(animation) {
+    
+  startAnimationNew(animation, loop=true) {
       if (this.currentAnimation != animation) {
-          this.startAnimation(animation);
+          this.startAnimation(animation, loop);
       }
   }
-
-  startAnimation (animation) {
+  
+  startAnimation (animation, loop=true) {
       this.currentAnimation = animation;
-      this.currentAnimatable = this.game.scene.beginAnimation(this.mesh.skeleton, animation.from+1, animation.to, true, 1);
+      this.currentAnimatable = this.game.scene.beginAnimation(this.mesh.skeleton, animation.from+1, animation.to, loop, 1);
       this.currentAnimatable.enableBlending(.1);
   }
-
+      
   animations () {
-      // walk animation
-      var magnitude = this.body.velocity.length();
-      if (magnitude < 5) {
-          this.startAnimationNew(this.walkAnimation);
-          this.currentAnimatable.speedRatio = magnitude/2;
-      } else if (magnitude > 5) {
-          this.startAnimationNew(this.runAnimation);
-          this.currentAnimatable.speedRatio = magnitude/50;
+      if (this.onGround) {
+          // walk animation
+          var magnitude = 
+              Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.z * this.body.velocity.z);
+          //console.log("mag: ", magnitude);
+          if (magnitude < 2 && this.animatePower) {// Power animation
+              this.startAnimationNew(this.powerAnimation, false);
+              this.currentAnimatable.speedRatio = 1.5;
+          } else if (magnitude < 5) { // Walk animation
+              this.startAnimationNew(this.walkAnimation);
+              this.currentAnimatable.speedRatio = .25 * magnitude;
+          } else if (magnitude > 5) { // Run animation
+              this.startAnimationNew(this.runAnimation);
+              this.currentAnimatable.speedRatio = .9 + .01 * magnitude;
+          }
+      } else {
+          this.startAnimationNew(this.jumpAnimation, false);
+          this.currentAnimatable.speedRatio = 4;
       }
   }
 
@@ -259,20 +271,20 @@ export default class Hero {
   handleButtonDown(button) {
     this._handleButton(button, true);
     switch (button) {
-        case Buttons.A: this.attack1.buttonDown(0); break;
-        case Buttons.B: this.attack2.buttonDown(0); break;
-        case Buttons.X: this.attack3.buttonDown(0); break;
-        case Buttons.Y: this.attack4.buttonDown(0); break;
+        case Buttons.A: this.attack1.buttonDown(0); this.animatePower=true; break;
+        case Buttons.B: this.attack2.buttonDown(0); this.animatePower=true; break;
+        case Buttons.X: this.attack3.buttonDown(0); this.animatePower=true; break;
+        case Buttons.Y: this.attack4.buttonDown(0); this.animatePower=true; break;
     }
   }
 
   handleButtonUp(button) {
     this._handleButton(button, false);
     switch (button) {
-        case Buttons.A: this.attack1.buttonUp(0); break;
-        case Buttons.B: this.attack2.buttonUp(0); break;
-        case Buttons.X: this.attack3.buttonUp(0); break;
-        case Buttons.Y: this.attack4.buttonUp(0); break;
+        case Buttons.A: this.attack1.buttonUp(0); this.animatePower=false; break;
+        case Buttons.B: this.attack2.buttonUp(0); this.animatePower=false; break;
+        case Buttons.X: this.attack3.buttonUp(0); this.animatePower=false; break;
+        case Buttons.Y: this.attack4.buttonUp(0); this.animatePower=false; break;
     }
   }
 

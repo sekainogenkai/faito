@@ -128,10 +128,10 @@ export default class Hero {
               this.currentAnimatable.speedRatio = 1.5;
           } else if (magnitude < 5) { // Walk animation
               this.startAnimationNew(this.walkAnimation);
-              this.currentAnimatable.speedRatio = magnitude/2;
+              this.currentAnimatable.speedRatio = .25 * magnitude;
           } else if (magnitude > 5) { // Run animation
               this.startAnimationNew(this.runAnimation);
-              this.currentAnimatable.speedRatio = magnitude/50;
+              this.currentAnimatable.speedRatio = .9 + .01 * magnitude;
           }
       } else {
           this.startAnimationNew(this.jumpAnimation, false);

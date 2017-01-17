@@ -25,7 +25,7 @@ export default class Hero {
     require(`../../../models/heroes/${meshFileName}.blend`).ImportMesh(BABYLON.SceneLoader, null, this.game.scene, loadedMeshes => {
         // Add the mesh
         this.mesh = loadedMeshes[0];//.clone(this.name); // 2 is the index of the player mesh
-        console.log("the player mesh", this.mesh);
+        // console.log("the player mesh", this.mesh);
         this.mesh.isVisible = true;
         this.mesh.id = this.name;
         this.mesh.parent = this.mask;
@@ -84,7 +84,7 @@ export default class Hero {
   }
     
   initAnimations () {
-      console.log('animation range', this.mesh.skeleton.getAnimationRange('run'));
+      //console.log('animation range', this.mesh.skeleton.getAnimationRange('run'));
       this.walkAnimation = this.mesh.skeleton.getAnimationRange('walk');
       this.runAnimation = this.mesh.skeleton.getAnimationRange('run');
       this.jumpAnimation = this.mesh.skeleton.getAnimationRange('jump');
@@ -110,15 +110,12 @@ export default class Hero {
   startAnimation (animation) {
       this.currentAnimation = animation;
       this.currentAnimatable = this.game.scene.beginAnimation(this.mesh.skeleton, animation.from+1, animation.to, true, 1);
+      this.currentAnimatable.enableBlending(.1);
   }
     
   animations () {
       // walk animation
       var magnitude = this.body.velocity.length();
-      console.log("magnitude:", magnitude);
-      if (magnitude < .08 && magnitude < .0999) {
-          console.log("surprise");
-      }
       if (magnitude < 5) {
           this.startAnimationNew(this.walkAnimation);
           this.currentAnimatable.speedRatio = magnitude/2;
@@ -173,12 +170,12 @@ export default class Hero {
   update () {
     this.checkGroundCheck();
       
-    this.animations();
 
     if (this.moveBool) {
         this.move();
     }
       
+    this.animations();
 
     this._manageMana();
   }

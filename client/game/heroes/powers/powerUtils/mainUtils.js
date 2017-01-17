@@ -9,8 +9,13 @@ const remainingDelaySymbol = Symbol('remainingDelay');
  * Removes mesh after some delay.
  */
 const autoRemove = mesh => {
-    if (!mesh.userData[remainingDelaySymbol]--) {
-        mesh.dispose();
+    mesh.userData[remainingDelaySymbol]--
+    if (mesh.userData[remainingDelaySymbol] < 0) {
+        mesh.physicsImpostor.physicsBody.collisionFilterGroup = 4;
+        if (mesh.position.y < -mesh.getBoundingInfo().boundingBox.extendSize.y){
+          mesh.dispose();
+          console.log('mesh disposed')
+        }
     }
 };
 

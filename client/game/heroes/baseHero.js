@@ -45,7 +45,7 @@ export default class Hero {
     // Create the physics body using mask TODO: Make the Impostor a capsule
     this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.05, restitution:0.5});
     this.body.collisionFilterGroup = this.game.collisionGroupNormal;
-    this.body.collisionFilterMask = this.game.collisionGroupGround | this.game.collisionGroupNormal;
+    this.body.collisionFilterMask = this.game.collisionGroupGround | this.game.collisionGroupNormal | this.game.collisionGroupFall;
 
     this.updateMassProperties();
 

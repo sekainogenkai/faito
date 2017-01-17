@@ -101,7 +101,7 @@ export default class testPower extends BasePower {
             wall.userData[wallGameReferenceSymbol] = this.game;
             wall.registerAfterRender(updateWall);
             wall.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:0, friction:0.1, restitution:0.9});
-            wall.physicsImpostor.physicsBody.collisionFilterGroup = this.game.collisionGroupNormal;
+            wall.physicsImpostor.physicsBody.collisionFilterGroup = this.game.collisionGroupGround;
             wall.physicsImpostor.physicsBody.collisionFilterMask = this.game.collisionGroupNormal;
             // Add the wall to the shadowGenerator
             this.game.shadowGenerator.getShadowMap().renderList.push(wall);

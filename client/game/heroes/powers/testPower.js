@@ -14,7 +14,7 @@ export default class testPower extends BasePower {
             return;
         }
         // Create collision ball
-        this.ball = BABYLON.Mesh.CreateSphere("power", 10, 2, this.game.scene);
+        this.ball = BABYLON.Mesh.CreateBox("power", 3, this.game.scene);
         this.ball.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:0.9});
         this.ball.physicsImpostor.physicsBody.collisionFilterGroup = this.game.collisionGroupNormal;
         this.ball.physicsImpostor.physicsBody.collisionFilterMask = this.game.collisionGroupNormal | this.game.collisionGroupGround;

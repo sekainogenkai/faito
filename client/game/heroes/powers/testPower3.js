@@ -98,6 +98,9 @@ export default class testPower extends BasePower {
             wall.position.y -= wallHeight;
             wall.userData[wallRemainingAnimationSymbol] = wallAnimationLength;
             wall.registerAfterRender(updateWall);
+            // Add the wall to the shadowGenerator
+            this.game.shadowGenerator.getShadowMap().renderList.push(wall);
+            wall.receiveShadows = true;
 
             this.ball.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:0.9});
             this.ball.userData[directionSymbol] = null;

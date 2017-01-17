@@ -79,7 +79,7 @@ class Game extends EventEmitter {
     camera.setPosition(new BABYLON.Vector3(0, 15, -30));
     camera.attachControl(engine.getRenderingCanvas(), false);
 
-    this.light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(1, -2, 1), this.scene);
+    this.light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(0, -2, 0), this.scene);
 
     // Skybox
     BABYLON.Engine.ShadersRepository = "./shaders/";

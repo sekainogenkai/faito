@@ -122,7 +122,7 @@ class Game extends EventEmitter {
       require('../models/heroes/omi.blend').Append(BABYLON.SceneLoader, this.scene, loadedScene => {
         /*onsuccess*/
       //  new BABYLON.PhysicsImpostor(loadedScene.meshes[x], BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, }, scene);
-        loadedScene.beginAnimation(this.scene.skeletons[x], 0, 60, true, 2);
+        loadedScene.beginAnimation(this.scene.skeletons[x], 0, 120, true, 2);
       }, x => {/*onprogress*/}, ex => {/*onerror*/});
     }
 

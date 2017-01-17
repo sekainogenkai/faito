@@ -10,7 +10,7 @@ const maxMana = 5000000;
 
 export default class Hero {
   constructor(
-    game, name, speed=30, airSpeed=10, jumpStrength=250,
+    game, name, meshFile='omi', speed=30, airSpeed=10, jumpStrength=250,
     attack1=testPower, attack2=testPower2, attack3=testPower3, attack4=testPower,
     defense1=testPower, defense2=testPower, defense3=testPower, defense4=testPower){
     this.game = game;
@@ -23,7 +23,8 @@ export default class Hero {
     this.mask.isVisible = false;
 
     // Add the mesh
-    this.mesh = game.scene.meshes[2].clone(this.name); // 2 is the index of the player mesh
+    this.mesh = this.game.scene.getMeshesByTags("omi")[0];//.clone(this.name); // 2 is the index of the player mesh
+    console.log("the player mesh", this.mesh);
     this.mesh.isVisible = true;
     this.mesh.id = this.name;
     this.mesh.parent = this.mask;
@@ -34,15 +35,6 @@ export default class Hero {
     // Add material for debug
     var material = new BABYLON.StandardMaterial("blue_material", game.scene);
     material.diffuseColor = BABYLON.Color3.Blue();
-    /*
-    var material = new BABYLON.ShaderMaterial("cellShading", this.scene, "cell", {
-      uniforms: ["world", "viewProjection"]
-    });
-    material.setVector3("vLightPosition", this.game.light.position)
-            .setFloats("ToonThresholds", [0.95, 0.5, 0.2, 0.03])
-            .setFloats("ToonBrightnessLevels", [1.0, 0.8, 0.6, 0.35, 0.01])
-            .setColor3("vLightColor", this.game.light.diffuse);
-            */
     this.mesh.material = material;
 
     // Create the physics body using mask TODO: Make the Impostor a capsule
@@ -51,6 +43,8 @@ export default class Hero {
     this.updateMassProperties();
 
     this.initGroundCheck();
+      
+    this.initAnimations();
 
     // Movement variables
     this.onGround = false;
@@ -65,7 +59,6 @@ export default class Hero {
       AXIS_Y : 0,
       JUMP : false,
     };
-
 
     // InitializePowers
     this.attack1 = new attack1(game, this);
@@ -82,6 +75,19 @@ export default class Hero {
     this.mesh.registerBeforeRender(() => {
         this.update();
     });
+  }
+    
+  initAnimations () {
+      console.log(this.game.scene.meshes[2]);
+      console.log('tagged omi: ', this.game.scene.getMeshesByTags("omi"));
+      console.log('tagged omi skeletonL:', this.game.scene.getMeshesByTags("omi")[0]._skeleton);
+      console.log('scene skeletons', this.game.scene.skeletons[0]);
+      //this.walkAnimation = new BABYLON.
+      console.log('the mesh: ', this.mesh);
+      this.game.scene.beginAnimation(this.game.scene.getMeshesByTags('omi')[0]._skeleton, 0, 120, true, 2);
+      /**
+      this.walk = new BABYLON.Animation(game.scene.meshes[2])
+      this.run = **/
   }
 
   initCapsule (width, height) {

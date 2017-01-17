@@ -10,7 +10,7 @@ const maxMana = 5000000;
 
 export default class Hero {
   constructor(
-    game, name, meshFile='omi', speed=30, airSpeed=10, jumpStrength=250,
+    game, name, meshFileName='omi', speed=30, airSpeed=10, jumpStrength=250,
     attack1=testPower, attack2=testPower2, attack3=testPower3, attack4=testPower,
     defense1=testPower, defense2=testPower, defense3=testPower, defense4=testPower){
     this.game = game;
@@ -22,20 +22,25 @@ export default class Hero {
     this.mask = this.initCapsule(2,4);
     this.mask.isVisible = false;
 
-    // Add the mesh
-    this.mesh = this.game.scene.getMeshesByTags("omi")[0];//.clone(this.name); // 2 is the index of the player mesh
-    console.log("the player mesh", this.mesh);
-    this.mesh.isVisible = true;
-    this.mesh.id = this.name;
-    this.mesh.parent = this.mask;
-    this.mesh.position.y = -3;
-    // Add the player mesh to the shadowGenerator
-    this.game.shadowGenerator.getShadowMap().renderList.push(this.mesh);
-    this.mesh.receiveShadows = true;
-    // Add material for debug
-    var material = new BABYLON.StandardMaterial("blue_material", game.scene);
-    material.diffuseColor = BABYLON.Color3.Blue();
-    this.mesh.material = material;
+    require(`../../../models/heroes/${meshFileName}.blend`).ImportMesh(BABYLON.SceneLoader, null, this.game.scene, loadedMeshes => {
+        // Add the mesh
+        this.mesh = loadedMeshes[0];//.clone(this.name); // 2 is the index of the player mesh
+        console.log("the player mesh", this.mesh);
+        this.mesh.isVisible = true;
+        this.mesh.id = this.name;
+        this.mesh.parent = this.mask;
+        this.mesh.position.y = -3;
+        // Add the player mesh to the shadowGenerator
+        this.game.shadowGenerator.getShadowMap().renderList.push(this.mesh);
+        this.mesh.receiveShadows = true;
+        // Add material for debug
+        var material = new BABYLON.StandardMaterial("blue_material", game.scene);
+        material.diffuseColor = BABYLON.Color3.Blue();
+        this.mesh.material = material;
+        
+        this.initAnimations();
+    });
+    
 
     // Create the physics body using mask TODO: Make the Impostor a capsule
     this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.05, restitution:0.5});
@@ -44,7 +49,6 @@ export default class Hero {
 
     this.initGroundCheck();
       
-    this.initAnimations();
 
     // Movement variables
     this.onGround = false;
@@ -80,16 +84,41 @@ export default class Hero {
   }
     
   initAnimations () {
-      console.log(this.game.scene.meshes[2]);
-      console.log('tagged omi: ', this.game.scene.getMeshesByTags("omi"));
-      console.log('tagged omi skeletonL:', this.game.scene.getMeshesByTags("omi")[0]._skeleton);
-      console.log('scene skeletons', this.game.scene.skeletons[0]);
-      //this.walkAnimation = new BABYLON.
-      console.log('the mesh: ', this.mesh);
-      this.game.scene.beginAnimation(this.game.scene.getMeshesByTags('omi')[0]._skeleton, 0, 120, true, 2);
+      console.log('animation range', this.mesh.skeleton.getAnimationRange('run'));
+      this.walkAnimation = this.mesh.skeleton.getAnimationRange('walk');
+      this.runAnimation = this.mesh.skeleton.getAnimationRange('run');
+      this.jumpAnimation = this.mesh.skeleton.getAnimationRange('jump');
+      this.powerAnimation = this.mesh.skeleton.getAnimationRange('power');
+      const animatable = this.game.scene.beginAnimation(this.mesh.skeleton, 0, 120, true, 2);
+      setTimeout(() => {
+          animatable.speedRatio /= 8;
+      }, 4000);
+      
+      this.currentAnimation = null;
+      
       /**
       this.walk = new BABYLON.Animation(game.scene.meshes[2])
       this.run = **/
+  }
+  
+  startAnimationNew(animation) {
+      if (this.currentAnimation != animation) {
+          this.startAnimation(animation);
+      }
+  }
+  
+  startAnimation (animation) {
+      this.currentAnimation = animation;
+      this.game.scene.beginAnimation(this.mesh.skeleton, animation.from+1, animation.to, true, 1);
+  }
+    
+  animations () {
+      // walk animation
+      if (this.body.velocity.length() < 5) {
+          this.startAnimationNew(this.walkAnimation);
+      } else if (this.body.velocity.length() > 5) {
+          this.startAnimationNew(this.runAnimation);
+      }
   }
 
   initCapsule (width, height) {
@@ -137,11 +166,13 @@ export default class Hero {
   update () {
     this.checkGroundCheck();
 
-      if (this.moveBool) {
+    if (this.moveBool) {
         this.move();
     }
+      
+    this.animations();
 
-      this._manageMana();
+    this._manageMana();
   }
 
   // use this to make xbox controller movement is smoove and doesn't go over the speed limit

@@ -41,6 +41,7 @@ export default class testPower extends BasePower {
 
         // Set the position and apply force
         ball.position.x = this.hero.mask.position.x;
+        ball.position.y = 10;
         ball.position.z = this.hero.mask.position.z;
         var initialVec = this.hero.mask.physicsImpostor.getLinearVelocity();
         ball.applyImpulse(initialVec.normalize().scale(300), ball.getAbsolutePosition());

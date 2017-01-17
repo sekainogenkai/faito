@@ -31,7 +31,7 @@ const updateWall = mesh => {
         } else {
             mesh.userData[wallRemainingAnimationSymbol] = undefined;
             mesh.userData[wallRemainingLifeSymbol] = wallLifeTime;
-            mesh.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:0.9});
+            mesh.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:0, friction:0.1, restitution:0.9});
         }
     }
 
@@ -94,8 +94,8 @@ export default class testPower extends BasePower {
             BABYLON.Tags.AddTagsTo(wall, "checkJump");
             wall.position.copyFrom(this.ball.position);
             wall.userData = wall.userData || {};
-            wall.userData[wallAnimationTargetYSymbol] = wall.position.y - wallHeight/2;
-            wall.position.y -= wallHeight;
+            wall.userData[wallAnimationTargetYSymbol] = wallHeight/2;
+            wall.position.y = - wallHeight/2;
             wall.userData[wallRemainingAnimationSymbol] = wallAnimationLength;
             wall.registerAfterRender(updateWall);
             // Add the wall to the shadowGenerator

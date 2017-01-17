@@ -19,6 +19,7 @@ const wallLifeTime = secondsToTicks(4);
 const wallRemainingLifeSymbol = Symbol('wallRemainingLife');
 const wallRemainingAnimationSymbol = Symbol('wallRemainingAnimation');
 const wallAnimationTargetYSymbol = Symbol('wallTargetY');
+const wallGameReferenceSymbol = Symbol('wallGameReference');
 const wallAnimationLength = secondsToTicks(0.25);
 const wallHeight = 8;
 // The animator for the wall.
@@ -31,7 +32,7 @@ const updateWall = mesh => {
         } else {
             mesh.userData[wallRemainingAnimationSymbol] = undefined;
             mesh.userData[wallRemainingLifeSymbol] = wallLifeTime;
-            mesh.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:0, friction:0.1, restitution:0.9});
+            mesh.physicsImpostor.physicsBody.collisionFilterMask = mesh.userData[wallGameReferenceSymbol].collisionGroupGround | mesh.userData[wallGameReferenceSymbol].collisionGroupNormal;
         }
     }
 
@@ -97,7 +98,11 @@ export default class testPower extends BasePower {
             wall.userData[wallAnimationTargetYSymbol] = wallHeight/2;
             wall.position.y = - wallHeight/2;
             wall.userData[wallRemainingAnimationSymbol] = wallAnimationLength;
+            wall.userData[wallGameReferenceSymbol] = this.game;
             wall.registerAfterRender(updateWall);
+            wall.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:0, friction:0.1, restitution:0.9});
+            wall.physicsImpostor.physicsBody.collisionFilterGroup = this.game.collisionGroupNormal;
+            wall.physicsImpostor.physicsBody.collisionFilterMask = this.game.collisionGroupNormal;
             // Add the wall to the shadowGenerator
             this.game.shadowGenerator.getShadowMap().renderList.push(wall);
             wall.receiveShadows = true;

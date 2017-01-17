@@ -105,6 +105,10 @@ class Game extends EventEmitter {
     this.scene.enablePhysics(
       new BABYLON.Vector3(0, -10, 0),
       new BABYLON.CannonJSPlugin());
+    // Add collision groups, groups must be powers of 2: http://schteppe.github.io/cannon.js/demos/collisionFilter.html
+    this.collisionGroupNormal = 1;
+    this.collisionGroupGround = 2;
+    this.collisionGroupFall = 4;
 
     // Add ground
     this.ground = BABYLON.Mesh.CreateGround("ground", 2500, 2500, 20, this.scene);
@@ -112,9 +116,11 @@ class Game extends EventEmitter {
     material.diffuseColor = BABYLON.Color3.FromInts(31, 158, 69);
     this.ground.material = material;
     this.ground.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, move:false});
+    this.ground.physicsImpostor.physicsBody
     BABYLON.Tags.EnableFor(this.ground);
     BABYLON.Tags.AddTagsTo(this.ground, "checkJump");
-    // Just add the mesh
+    this.ground.physicsImpostor.physicsBody.collisionFilterGroup = this.collisionGroupGround;
+    this.ground.physicsImpostor.physicsBody.collisionFilterMask = this.collisionGroupNormal | this.collisionGroupGround;
     this.shadowGenerator.getShadowMap().renderList.push(this.scene.meshes[2]);
     this.ground.receiveShadows = true;
 

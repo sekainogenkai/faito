@@ -37,18 +37,20 @@ export default class Hero {
         var material = new BABYLON.StandardMaterial("blue_material", game.scene);
         material.diffuseColor = BABYLON.Color3.Blue();
         this.mesh.material = material;
-        
+
         this.initAnimations();
     });
-    
+
 
     // Create the physics body using mask TODO: Make the Impostor a capsule
     this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.05, restitution:0.5});
+    this.body.collisionFilterGroup = this.game.collisionGroupNormal;
+    this.body.collisionFilterMask = this.game.collisionGroupGround | this.game.collisionGroupNormal;
 
     this.updateMassProperties();
 
     this.initGroundCheck();
-      
+
 
     // Movement variables
     this.onGround = false;
@@ -82,7 +84,7 @@ export default class Hero {
         this.update();
     });
   }
-    
+
   initAnimations () {
       //console.log('animation range', this.mesh.skeleton.getAnimationRange('run'));
       this.walkAnimation = this.mesh.skeleton.getAnimationRange('walk');
@@ -93,26 +95,26 @@ export default class Hero {
       setTimeout(() => {
           animatable.speedRatio /= 8;
       }, 4000);
-      
+
       this.currentAnimation = null;
       this.currentAnimatable = null;
       /**
       this.walk = new BABYLON.Animation(game.scene.meshes[2])
       this.run = **/
   }
-  
+
   startAnimationNew(animation) {
       if (this.currentAnimation != animation) {
           this.startAnimation(animation);
       }
   }
-  
+
   startAnimation (animation) {
       this.currentAnimation = animation;
       this.currentAnimatable = this.game.scene.beginAnimation(this.mesh.skeleton, animation.from+1, animation.to, true, 1);
       this.currentAnimatable.enableBlending(.1);
   }
-    
+
   animations () {
       // walk animation
       var magnitude = this.body.velocity.length();
@@ -169,12 +171,12 @@ export default class Hero {
 
   update () {
     this.checkGroundCheck();
-      
+
 
     if (this.moveBool) {
         this.move();
     }
-      
+
     this.animations();
 
     this._manageMana();

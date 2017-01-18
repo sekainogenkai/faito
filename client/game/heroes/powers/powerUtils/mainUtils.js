@@ -17,11 +17,11 @@ const autoRemove = mesh => {
 
 const autoPhysicsRemove = mesh => {
     if (!mesh.userData[remainingDelaySymbol]--) {
-        mesh.physicsImpostor.physicsBody.collisionFilterGroup = 4;
+        mesh.physicsImpostor.physicsBody.collisionFilterGroup = 4; // Adds the object to collisionGroupFall TODO: learn how to reference
         mesh.physicsImpostor.physicsBody.linearDamping = 0.999;
         mesh.physicsImpostor.physicsBody.fixedRotation = true;
         mesh.physicsImpostor.physicsBody.mass = 100;
-        mesh.physicsImpostor.physicsBody.type = 1;
+        mesh.physicsImpostor.physicsBody.type = 1; // Changes the object so it becomes dynamic
         mesh.physicsImpostor.physicsBody.updateMassProperties();
     }
     if (mesh.position.y < -mesh.getBoundingInfo().boundingBox.extendSize.y){

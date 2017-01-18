@@ -131,7 +131,7 @@ export default class Hero {
               this.currentAnimatable.speedRatio = .25 * magnitude;
           } else if (magnitude > 5) { // Run animation
               this.startAnimationNew(this.runAnimation);
-              this.currentAnimatable.speedRatio = .9 + .01 * magnitude;
+              this.currentAnimatable.speedRatio = .9 + .02 * magnitude;
           }
       } else {
           this.startAnimationNew(this.jumpAnimation, false);

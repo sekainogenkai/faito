@@ -88,6 +88,7 @@ export default class Hero {
 
   initAnimations () {
       //console.log('animation range', this.mesh.skeleton.getAnimationRange('run'));
+      this.idleAnimation = this.mesh.skeleton.getAnimationRange('idle');
       this.walkAnimation = this.mesh.skeleton.getAnimationRange('walk');
       this.runAnimation = this.mesh.skeleton.getAnimationRange('run');
       this.jumpAnimation = this.mesh.skeleton.getAnimationRange('jump');
@@ -124,9 +125,13 @@ export default class Hero {
           var magnitude =
               Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.z * this.body.velocity.z);
           //console.log("mag: ", magnitude);
-          if (magnitude < 2 && this.animatePower) {// Power animation
-              this.startAnimationNew(this.powerAnimation, false);
-              this.currentAnimatable.speedRatio = 1.5;
+          if (magnitude < 2) {// Power animation
+              if (!this.animatePower) {
+                  this.startAnimationNew(this.idleAnimation, true);
+              } else {
+                  this.startAnimationNew(this.powerAnimation, false);
+                  this.currentAnimatable.speedRatio = 1.5;
+              }
           } else if (magnitude < 5) { // Walk animation
               this.startAnimationNew(this.walkAnimation);
               this.currentAnimatable.speedRatio = .25 * magnitude;
@@ -135,8 +140,8 @@ export default class Hero {
               this.currentAnimatable.speedRatio = .9 + .02 * magnitude;
           }
       } else {
-          this.startAnimationNew(this.jumpAnimation, false);
-          this.currentAnimatable.speedRatio = 4;
+          this.startAnimationNew(this.jumpAnimation);
+          this.currentAnimatable.speedRatio = .8;
       }
   }
 

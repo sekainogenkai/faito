@@ -15,8 +15,6 @@ const updateBall = mesh => {
     }
 };
 
-const wallLifeTime = secondsToTicks(4);
-const wallRemainingLifeSymbol = Symbol('wallRemainingLife');
 const wallRemainingAnimationSymbol = Symbol('wallRemainingAnimation');
 const wallAnimationTargetYSymbol = Symbol('wallTargetY');
 const wallGameReferenceSymbol = Symbol('wallGameReference');
@@ -31,20 +29,9 @@ const updateWall = mesh => {
             mesh.userData[wallRemainingAnimationSymbol]--;
         } else {
             mesh.userData[wallRemainingAnimationSymbol] = undefined;
-            mesh.userData[wallRemainingLifeSymbol] = wallLifeTime;
             mesh.physicsImpostor.physicsBody.collisionFilterMask = mesh.userData[wallGameReferenceSymbol].collisionGroupGround | mesh.userData[wallGameReferenceSymbol].collisionGroupNormal;
         }
     }
-    /*
-    const remainingLife = mesh.userData[wallRemainingLifeSymbol];
-    if (remainingLife !== undefined) {
-        if (remainingLife) {
-            mesh.userData[wallRemainingLifeSymbol]--;
-        } else {
-            mesh.dispose();
-        }
-    }
-    */
 };
 
 export default class testPower extends BasePower {

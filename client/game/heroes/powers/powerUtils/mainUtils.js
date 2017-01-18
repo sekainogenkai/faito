@@ -23,11 +23,12 @@ const autoPhysicsRemove = mesh => {
         mesh.physicsImpostor.physicsBody.type = 2; // Changes the object so it becomes static
         mesh.physicsImpostor.physicsBody.updateMassProperties();
     } else if (mesh.userData[remainingDelaySymbol] < 0){
+      if (mesh.position.y < -mesh.userData[meshHeightSymbol]){
+        mesh.dispose();
+        console.log('physics mesh disposed');
+      } else {
         mesh.position.y -= 0.02 * mesh.userData[meshHeightSymbol]; // Falls speed it based on height of mesh
-    }
-    if (mesh.position.y < -mesh.userData[meshHeightSymbol]){
-      mesh.dispose();
-      console.log('physics mesh disposed');
+      }
     }
 };
 /**

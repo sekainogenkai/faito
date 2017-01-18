@@ -4,6 +4,7 @@ import {Buttons} from '../input';
 import testPower from './powers/testPower';
 import testPower2 from './powers/testPower2';
 import testPower3 from './powers/testPower3';
+import testPower4 from './powers/testPower4';
 
 const zeroVector2 = new BABYLON.Vector2(0, 0);
 const maxMana = 5000000;
@@ -98,29 +99,29 @@ export default class Hero {
 
       this.currentAnimation = null;
       this.currentAnimatable = null;
-      
+
       this.animatePower = false;
       /**
       this.walk = new BABYLON.Animation(game.scene.meshes[2])
       this.run = **/
   }
-    
+
   startAnimationNew(animation, loop=true) {
       if (this.currentAnimation != animation) {
           this.startAnimation(animation, loop);
       }
   }
-  
+
   startAnimation (animation, loop=true) {
       this.currentAnimation = animation;
       this.currentAnimatable = this.game.scene.beginAnimation(this.mesh.skeleton, animation.from+1, animation.to, loop, 1);
       this.currentAnimatable.enableBlending(.1);
   }
-      
+
   animations () {
       if (this.onGround) {
           // walk animation
-          var magnitude = 
+          var magnitude =
               Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.z * this.body.velocity.z);
           //console.log("mag: ", magnitude);
           if (magnitude < 2 && this.animatePower) {// Power animation

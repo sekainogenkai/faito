@@ -9,16 +9,26 @@ const remainingDelaySymbol = Symbol('remainingDelay');
  * Removes mesh after some delay.
  */
 const autoRemove = mesh => {
-    mesh.userData[remainingDelaySymbol]--
-    if (mesh.userData[remainingDelaySymbol] < 0) {
-        mesh.physicsImpostor.physicsBody.collisionFilterGroup = 4;
-        if (mesh.position.y < -mesh.getBoundingInfo().boundingBox.extendSize.y){
-          mesh.dispose();
-          console.log('mesh disposed')
-        }
-    }
+  if (!mesh.userData[remainingDelaySymbol]--) {
+    mesh.dispose();
+    console.log('mesh disposed');
+  }
 };
 
+const autoPhysicsRemove = mesh => {
+    if (!mesh.userData[remainingDelaySymbol]--) {
+        mesh.physicsImpostor.physicsBody.collisionFilterGroup = 4;
+        mesh.physicsImpostor.physicsBody.linearDamping = 0.999;
+        mesh.physicsImpostor.physicsBody.fixedRotation = true;
+        mesh.physicsImpostor.physicsBody.mass = 100;
+        mesh.physicsImpostor.physicsBody.type = 1;
+        mesh.physicsImpostor.physicsBody.updateMassProperties();
+    }
+    if (mesh.position.y < -mesh.getBoundingInfo().boundingBox.extendSize.y){
+      mesh.dispose();
+      console.log('physics mesh disposed');
+    }
+};
 /**
  * Setup a mesh to be removed after some delay.
  */
@@ -27,5 +37,10 @@ export const configureAutoRemove = (mesh, delay) => {
         mesh.userData = {};
     }
     mesh.userData[remainingDelaySymbol] = secondsToTicks(delay);
-    mesh.registerAfterRender(autoRemove);
+    if (!mesh.physicsImpostor) {
+      mesh.registerAfterRender(autoRemove);
+    } else {
+      mesh.registerAfterRender(autoPhysicsRemove);
+    }
+
 };

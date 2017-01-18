@@ -35,7 +35,7 @@ const updateWall = mesh => {
             mesh.physicsImpostor.physicsBody.collisionFilterMask = mesh.userData[wallGameReferenceSymbol].collisionGroupGround | mesh.userData[wallGameReferenceSymbol].collisionGroupNormal;
         }
     }
-
+    /*
     const remainingLife = mesh.userData[wallRemainingLifeSymbol];
     if (remainingLife !== undefined) {
         if (remainingLife) {
@@ -44,6 +44,7 @@ const updateWall = mesh => {
             mesh.dispose();
         }
     }
+    */
 };
 
 export default class testPower extends BasePower {
@@ -106,6 +107,7 @@ export default class testPower extends BasePower {
             // Add the wall to the shadowGenerator
             this.game.shadowGenerator.getShadowMap().renderList.push(wall);
             wall.receiveShadows = true;
+            configureAutoRemove(wall, 5);
 
             this.ball.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:0.9});
             this.ball.userData[directionSymbol] = null;

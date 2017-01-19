@@ -11,7 +11,7 @@ const maxMana = 5000000;
 
 export default class Hero {
   constructor(
-    game, name, meshFileName='omi', speed=30, airSpeed=10, jumpStrength=250,
+    game, name, meshFileName='omi', speed=30, airSpeed=10, jumpStrength=250, rollGroundSpeed=60, rollAirSpeed=20,
     attack1=testPower, attack2=testPower2, attack3=testPower3, attack4=testPower,
     defense1=testPower, defense2=testPower, defense3=testPower, defense4=testPower){
     this.game = game;
@@ -31,6 +31,7 @@ export default class Hero {
         this.mesh.id = this.name;
         this.mesh.parent = this.mask;
         this.mesh.position.y = -3;
+        this.mesh.position.z = .6;
         // Add the player mesh to the shadowGenerator
         this.game.shadowGenerator.getShadowMap().renderList.push(this.mesh);
         this.mesh.receiveShadows = true;
@@ -56,17 +57,22 @@ export default class Hero {
     // Movement variables
     this.onGround = false;
     this.jumpStrength = jumpStrength;
-    this.jumpTimerStart = 20
+    this.jumpTimerStart = 20;
     this.jumpTimer = this.jumpTimerStart;
+    this.rollTimerStart = 30;
+    this.rollTimer = this.rollTimerStart;
     this.speed = speed;
     this.airSpeed = airSpeed;
     this.moveBool = true;
+    this.rollGroundSpeed = rollGroundSpeed;
+    this.rollAirSpeed = rollAirSpeed;
 
     // Input
     this.Input = {
       AXIS_X : 0,
       AXIS_Y : 0,
       JUMP : false,
+      ROLL : false,
     };
 
     // InitializePowers
@@ -93,6 +99,7 @@ export default class Hero {
       this.runAnimation = this.mesh.skeleton.getAnimationRange('run');
       this.jumpAnimation = this.mesh.skeleton.getAnimationRange('jump');
       this.powerAnimation = this.mesh.skeleton.getAnimationRange('ability');
+      this.rollAnimation = this.mesh.skeleton.getAnimationRange('roll');
       const animatable = this.game.scene.beginAnimation(this.mesh.skeleton, 0, 120, true, 2);
       setTimeout(() => {
           animatable.speedRatio /= 8;
@@ -120,25 +127,27 @@ export default class Hero {
   }
 
   animations () {
-      if (this.onGround) {
-          // walk animation
-          var magnitude =
-              Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.z * this.body.velocity.z);
-          //console.log("mag: ", magnitude);
-          if (magnitude < 2) {// Power animation
-              if (!this.animatePower) {
-                  this.startAnimationNew(this.idleAnimation, true);
-              } else {
-                  this.startAnimationNew(this.powerAnimation, false);
-                  this.currentAnimatable.speedRatio = 1.5;
-              }
-          } else if (magnitude < 5) { // Walk animation
-              this.startAnimationNew(this.walkAnimation);
-              this.currentAnimatable.speedRatio = .25 * magnitude;
-          } else if (magnitude > 5) { // Run animation
-              this.startAnimationNew(this.runAnimation);
-              this.currentAnimatable.speedRatio = .9 + .02 * magnitude;
-          }
+        if (this.rollTimer) {
+                this.startAnimationNew(this.rollAnimation, false);
+            } else if (this.onGround) {
+                // walk animation
+                var magnitude =
+                Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.z * this.body.velocity.z);
+                //console.log("mag: ", magnitude);
+            if (magnitude < 2) {// Power animation
+                if (!this.animatePower) {
+                    this.startAnimationNew(this.idleAnimation);
+                } else {
+                    this.startAnimationNew(this.powerAnimation, false);
+                    this.currentAnimatable.speedRatio = 1.5;
+                }
+            } else if (magnitude < 5) { // Walk animation
+                this.startAnimationNew(this.walkAnimation);
+                this.currentAnimatable.speedRatio = .25 * magnitude;
+            } else if (magnitude > 5) { // Run animation
+                this.startAnimationNew(this.runAnimation);
+                this.currentAnimatable.speedRatio = .9 + .02 * magnitude;
+            }
       } else {
           this.startAnimationNew(this.jumpAnimation);
           this.currentAnimatable.speedRatio = .8;
@@ -153,8 +162,8 @@ export default class Hero {
     m0.position.y -= height * 0.5;
     m2.position.y += height * 0.5;
     m0.computeWorldMatrix(true);
-	  m1.computeWorldMatrix(true);
-	  m2.computeWorldMatrix(true);
+    m1.computeWorldMatrix(true);
+    m2.computeWorldMatrix(true);
     return BABYLON.Mesh.MergeMeshes([m0,m1,m2], true);
   }
 
@@ -168,7 +177,7 @@ export default class Hero {
   initGroundCheck() {
     // Create mesh for onGround collision check
     this.groundCheck = BABYLON.Mesh.CreateBox("mask", 2.5, this.game.scene);
-    this.groundCheck.isVisible = false;
+    this.groundCheck.isVisible = true;
     this.groundCheck.parent = this.mask;
     this.groundCheck.position.y = -3;
     this.groundCheck.scaling.y = 0.2;
@@ -212,10 +221,22 @@ export default class Hero {
       //console.log('xbox move:', this.Input.AXIS_X, ', ', this.Input.AXIS_Y, ', scaleSpeed:', Math.min(1, movementVector.length()));
     var normalizedMovementVector = movementVector.clone().normalize();
     //console.log('scale speed:', this.getScaleSpeed(movementVector, this.speed));
+      
+   
+     // Rolling is very important
+    if (this.Input.ROLL && this.rollTimer == 0) {
+        this.rollTimer = this.rollTimerStart;
+    } else if (this.rollTimer > 0) {
+        this.rollTimer--;
+    }
+    this.Input.ROLL = false;
+    //console.log(this.rollTimer);
+      
+    // Movement on ground
     if (this.onGround) {
-        movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.speed));
-    } else {
-        movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.airSpeed));
+        movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollGroundSpeed:this.speed));
+    } else { // Movement in air
+        movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollAirSpeed:this.airSpeed));
     }
 
     // Jump
@@ -224,9 +245,11 @@ export default class Hero {
         movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
         this.mesh.material.diffuseColor = BABYLON.Color3.Blue();
         this.jumpTimer = this.jumpTimerStart;
-    }else if (this.jumpTimer > 0) {
-      this.jumpTimer -= 1;
+    } else if (this.jumpTimer > 0) {
+        this.jumpTimer--;
     }
+    this.Input.JUMP = false;
+      
     // apply movement at the very end.
     //console.log('ONGROUND:', this.onGround);
     this.mask.applyImpulse(movementVector, this.mask.position);
@@ -234,6 +257,14 @@ export default class Hero {
     if (this.body.velocity.length() > 1 && (this.Input.AXIS_X || this.Input.AXIS_Y) ) {
         this.setRotation();
     }
+  }
+    
+  normalMovement () {
+      
+  }
+    
+  jumpMovement () {
+      
   }
 
   setRotation () {
@@ -270,13 +301,14 @@ export default class Hero {
 
   _handleButton(button, pressed) {
     switch (button) {
-        case Buttons.RB: this.Input.JUMP = pressed; break;
     }
   }
 
   handleButtonDown(button) {
     this._handleButton(button, true);
     switch (button) {
+        case Buttons.RB: this.Input.JUMP = true; break;
+        case Buttons.LB: this.Input.ROLL = true; break;
         case Buttons.A: this.attack1.buttonDown(0); this.animatePower=true; break;
         case Buttons.B: this.attack2.buttonDown(0); this.animatePower=true; break;
         case Buttons.X: this.attack3.buttonDown(0); this.animatePower=true; break;

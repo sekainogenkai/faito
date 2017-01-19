@@ -8,6 +8,7 @@ export const Buttons = {
   X: 'x',
   Y: 'y',
   RB: 'rb',
+  LB: 'lb',
 };
 
 export class Manager extends EventEmitter {

@@ -15,7 +15,7 @@ const buttonMap = [
   Buttons.Y,
   Buttons.Menu, // Start on XBox controller
   undefined,
-  undefined,
+  Buttons.LB,
   Buttons.RB,
 ];
 

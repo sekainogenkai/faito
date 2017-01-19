@@ -12,7 +12,7 @@ const maxMana = 5000000;
 export default class Hero {
   constructor(
     game, name, meshFileName='omi', speed=30, airSpeed=10, jumpStrength=250, rollGroundSpeed=60, rollAirSpeed=20,
-    attack1=testPower, attack2=testPower2, attack3=testPower3, attack4=testPower,
+    attack1=testPower, attack2=testPower4, attack3=testPower3, attack4=testPower,
     defense1=testPower, defense2=testPower, defense3=testPower, defense4=testPower){
     this.game = game;
     this.name = name;
@@ -222,8 +222,8 @@ export default class Hero {
       //console.log('xbox move:', this.Input.AXIS_X, ', ', this.Input.AXIS_Y, ', scaleSpeed:', Math.min(1, movementVector.length()));
     var normalizedMovementVector = movementVector.clone().normalize();
     //console.log('scale speed:', this.getScaleSpeed(movementVector, this.speed));
-      
-   
+
+
      // Rolling is very important
     if (this.Input.ROLL && this.rollTimer == 0) {
         this.rollTimer = this.rollTimerStart;
@@ -232,7 +232,7 @@ export default class Hero {
     }
     this.Input.ROLL = false;
     //console.log(this.rollTimer);
-      
+
     // Movement on ground
     if (this.onGround) {
         movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollGroundSpeed:this.speed));
@@ -250,7 +250,7 @@ export default class Hero {
         this.jumpTimer--;
     }
     this.Input.JUMP = false;
-      
+
     // apply movement at the very end.
     //console.log('ONGROUND:', this.onGround);
     this.mask.applyImpulse(movementVector, this.mask.position);
@@ -259,13 +259,13 @@ export default class Hero {
         this.setRotation();
     }
   }
-    
+
   normalMovement () {
-      
+
   }
-    
+
   jumpMovement () {
-      
+
   }
 
   setRotation () {

@@ -4,6 +4,9 @@ export const freezeHero = function (hero) {
 
 export const secondsToTicks = seconds => 60*seconds;
 
+const meshRemainingAnimationSymbol = Symbol('meshRemainingAnimation');
+const meshAnimationLengthSymbol = Symbol('meshAnimationLength');
+const meshAnimationTargetYSymbol = Symbol('meshTargetY');
 const meshHeightSymbol = Symbol('meshHeight');
 const remainingDelaySymbol = Symbol('remainingDelay');
 /**
@@ -23,18 +26,22 @@ const autoPhysicsRemove = mesh => {
         mesh.physicsImpostor.physicsBody.type = 2; // Changes the object so it becomes static
         mesh.physicsImpostor.physicsBody.updateMassProperties();
     } else if (mesh.userData[remainingDelaySymbol] < 0){
-      if (mesh.position.y < -mesh.userData[meshHeightSymbol]){
-        mesh.dispose();
-        console.log('physics mesh disposed');
-      } else {
-        mesh.position.y -= 0.02 * mesh.userData[meshHeightSymbol]; // Falls speed it based on height of mesh
+      const remainingAnimation = mesh.userData[meshRemainingAnimationSymbol];
+      if (remainingAnimation !== undefined) {
+          if (remainingAnimation) {
+            mesh.position.y = mesh.userData[meshAnimationTargetYSymbol] + mesh.userData[meshHeightSymbol] * remainingAnimation/mesh.userData[meshAnimationLengthSymbol];
+            mesh.userData[meshRemainingAnimationSymbol]--;
+          } else {
+            mesh.dispose();
+            console.log('physics mesh disposed');
+          }
       }
     }
 };
 /**
  * Setup a mesh to be removed after some delay.
  */
-export const configureAutoRemove = (mesh, delay) => {
+export const configureAutoRemove = (mesh, delay, length=0.25) => {
     if (!mesh.userData) {
         mesh.userData = {};
     }
@@ -42,7 +49,12 @@ export const configureAutoRemove = (mesh, delay) => {
     if (!mesh.physicsImpostor) {
       mesh.registerAfterRender(autoRemove);
     } else {
-      mesh.userData[meshHeightSymbol] = mesh.getBoundingInfo().boundingBox.extendSize.y
+      var meshHeight = mesh.getBoundingInfo().boundingBox.extendSize.y*2;
+      var animationLength = secondsToTicks(length);
+      mesh.userData[meshHeightSymbol] = meshHeight;
+      mesh.userData[meshAnimationTargetYSymbol] = -meshHeight/2;
+      mesh.userData[meshRemainingAnimationSymbol] = animationLength;
+      mesh.userData[meshAnimationLengthSymbol] = animationLength;
       mesh.registerAfterRender(autoPhysicsRemove);
     }
 

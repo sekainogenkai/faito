@@ -1,4 +1,4 @@
-import BasePower from './BasePower';
+import basePower from './powerTemplates/basePower';
 import BABYLON from 'babylonjs';
 import {configureAutoRemove} from './powerUtils/mainUtils';
 
@@ -16,7 +16,7 @@ const update = mesh => {
     mesh.position.addInPlace(updatePositionVec);
 };
 
-export default class testPower extends BasePower {
+export default class testPower extends basePower {
     constructor(game, hero) {
         super(game, hero);
 

@@ -129,6 +129,7 @@ export default class Hero {
   animations () {
         if (this.rollTimer) {
                 this.startAnimationNew(this.rollAnimation, false);
+                this.currentAnimatable.speedRatio = 4;
             } else if (this.onGround) {
                 // walk animation
                 var magnitude =

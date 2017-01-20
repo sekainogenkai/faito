@@ -132,7 +132,7 @@ export default class Hero {
             } else if (this.onGround) {
                 // walk animation
                 var magnitude =
-                Math.sqrt(this.mask.physicsImpostor.physicsBody.velocity.x * this.mask.physicsImpostor.physicsBody.velocity.x + this.mask.physicsImpostor.physicsBody.velocity.z * this.mask.physicsImpostor.physicsBody.velocity.z);
+                Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.z * this.body.velocity.z);
                 //console.log("mag: ", magnitude);
             if (magnitude < 2) {// Power animation
                 if (!this.animatePower) {
@@ -156,9 +156,10 @@ export default class Hero {
 
   initCollider (width=2) {
     // Merges three spheres to create a capsule
-    var m0 = BABYLON.Mesh.CreateSphere("m0", 2, 2.2, this.game.scene);
-    var m1 = BABYLON.Mesh.CreateSphere("m1", 2, 2.2, this.game.scene);
-    var m2 = BABYLON.Mesh.CreateSphere("m2", 2, 1.3, this.game.scene);
+    let detail = 10;
+    var m0 = BABYLON.Mesh.CreateSphere("m0", detail, 2.3, this.game.scene);
+    var m1 = BABYLON.Mesh.CreateSphere("m1", detail, 2.3, this.game.scene);
+    var m2 = BABYLON.Mesh.CreateSphere("m2", detail, 1.3, this.game.scene);
     m0.position.y -= 1.9;
     m2.position.y += 1.7;
     m0.computeWorldMatrix(true);
@@ -171,23 +172,27 @@ export default class Hero {
     
     // make it spawn higher for testing purposes
     this.mask.position.y = 20;
+      
     this.mask.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask, BABYLON.PhysicsImpostor.BoxImpostor, {mass:10, friction:0.05, restitution:0.5}, this.game.scene);
       
     console.log('mask', this.mask);
     this.mask.isVisible = true;
+      
+      
+    this.body = this.mask.physicsImpostor.physicsBody;
     // Create the physics body using mask TODO: Make the Impostor a capsule
     console.log('body', this.mask.physicsImpostor.physicsBody);
     
-    this.mask.physicsImpostor.physicsBody.collisionFilterGroup = this.game.collisionGroupNormal;
-    this.mask.physicsImpostor.physicsBody.collisionFilterMask = this.game.collisionGroupGround | this.game.collisionGroupNormal | this.game.collisionGroupFall;
+    this.body.collisionFilterGroup = this.game.collisionGroupNormal;
+    this.body.collisionFilterMask = this.game.collisionGroupGround | this.game.collisionGroupNormal | this.game.collisionGroupFall;
       
   }
 
   updateMassProperties() {
-    this.mask.physicsImpostor.physicsBody.linearDamping = .8;
-    this.mask.physicsImpostor.physicsBody.fixedRotation = true;
-    this.mask.physicsImpostor.physicsBody.sleepSpeedLimit = 20;
-    this.mask.physicsImpostor.physicsBody.updateMassProperties();
+    this.body.linearDamping = .8;
+    this.body.fixedRotation = true;
+    this.body.sleepSpeedLimit = 20;
+    this.body.updateMassProperties();
   }
 
   initGroundCheck() {
@@ -270,7 +275,7 @@ export default class Hero {
     //console.log('ONGROUND:', this.onGround);
     this.mask.applyImpulse(movementVector, this.mask.position);
 
-    if (this.mask.physicsImpostor.physicsBody.velocity.length() > 1 && (this.Input.AXIS_X || this.Input.AXIS_Y) ) {
+    if (this.body.velocity.length() > 1 && (this.Input.AXIS_X || this.Input.AXIS_Y) ) {
         this.setRotation();
     }
   }
@@ -285,7 +290,7 @@ export default class Hero {
 
   setRotation () {
     // Player rotation
-    this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.mask.physicsImpostor.physicsBody.velocity.x, this.mask.physicsImpostor.physicsBody.velocity.z), 0, 0);
+    this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.body.velocity.x, this.body.velocity.z), 0, 0);
   }
 
   setPlayer(player) {

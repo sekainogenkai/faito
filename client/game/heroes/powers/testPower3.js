@@ -1,4 +1,4 @@
-import BasePower from './BasePower';
+import basePower from './powerTemplates/basePower';
 import BABYLON from 'babylonjs';
 import {secondsToTicks, configureAutoRemove} from './powerUtils/mainUtils';
 
@@ -34,7 +34,7 @@ const updateWall = mesh => {
     }
 };
 
-export default class testPower extends BasePower {
+export default class testPower extends basePower {
     constructor(game, hero) {
         super(game, hero);
 
@@ -91,10 +91,13 @@ export default class testPower extends BasePower {
             wall.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:0, friction:0.1, restitution:0.9});
             wall.physicsImpostor.physicsBody.collisionFilterGroup = this.game.collisionGroupGround;
             wall.physicsImpostor.physicsBody.collisionFilterMask = this.game.collisionGroupNormal;
+
+            console.log(wall.getBoundingInfo().boundingBox.extendSize.y)
+            console.log(wallHeight)
             // Add the wall to the shadowGenerator
             this.game.shadowGenerator.getShadowMap().renderList.push(wall);
             wall.receiveShadows = true;
-            configureAutoRemove(wall, 5);
+            configureAutoRemove(wall, 5, 2);
 
             this.ball.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:0.9});
             this.ball.userData[directionSymbol] = null;

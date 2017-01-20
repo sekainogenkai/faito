@@ -164,6 +164,7 @@ export default class Hero {
     m0.computeWorldMatrix(true);
     m1.computeWorldMatrix(true);
     m2.computeWorldMatrix(true);
+      // hello
     
     // Create collision mask
     this.mask = BABYLON.Mesh.MergeMeshes([m0,m1,m2], true);

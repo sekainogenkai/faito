@@ -171,7 +171,9 @@ export default class Hero {
     
     // make it spawn higher for testing purposes
     this.mask.position.y = 20;
-    this.body = this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.05, restitution:0.5});
+    this.mask.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask, BABYLON.PhysicsImpostor.BoxImpostor, {mass:10, friction:0.05, restitution:0.5}, this.game.scene);
+    this.body = this.mask.physicsImpostor;
+    //this.mask.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.05, restitution:0.5});
       
     console.log('mask', this.mask);
     this.mask.isVisible = true;

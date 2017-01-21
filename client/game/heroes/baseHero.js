@@ -100,9 +100,6 @@ export default class Hero {
       this.currentAnimatable = null;
 
       this.animatePower = false;
-      /**
-      this.walk = new BABYLON.Animation(game.scene.meshes[2])
-      this.run = **/
   }
 
   startAnimationNew(animation, loop=true, blending=.1) {

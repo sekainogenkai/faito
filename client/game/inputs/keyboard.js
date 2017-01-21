@@ -3,20 +3,20 @@ import EventEmitter from 'events';
 import {Buttons} from '../input.js';
 
 const keyButtonMap = {
-  'Escape': Buttons.Menu,
-  'u': Buttons.A,
-  'i': Buttons.B,
-  'o': Buttons.X,
-  'p': Buttons.Y,
-  'f': Buttons.RB,
-  'e': Buttons.LB,
+  Escape: Buttons.Menu,
+  KeyU: Buttons.A,
+  KeyI: Buttons.B,
+  KeyO: Buttons.X,
+  KeyP: Buttons.Y,
+  ShiftLeft: Buttons.LB,
+  Space: Buttons.RB,
 };
 
 const keyJoyMap = {
-  'a': new BABYLON.Vector2(-1, 0), // left
-  'd': new BABYLON.Vector2(1, 0), // right
-  'w': new BABYLON.Vector2(0, 1), // up
-  's': new BABYLON.Vector2(0, -1), // down
+  KeyA: new BABYLON.Vector2(-1, 0), // left
+  KeyD: new BABYLON.Vector2(1, 0), // right
+  KeyW: new BABYLON.Vector2(0, 1), // up
+  KeyS: new BABYLON.Vector2(0, -1), // down
 };
 const joyKeys = Object.keys(keyJoyMap);
 
@@ -50,8 +50,12 @@ export default class KeyboardInput extends EventEmitter {
     };
 
     window.addEventListener('keydown', e => {
-      const key = e.key;
-      const alreadyPressed = keyState[key];
+      // Code represents the actual key itself rather than the
+      // character that would be printed as a result of pressing the
+      // key. For example, if you’re holding shift, key would give
+      // uppercase characters for alphabetic keys.
+      const code = e.code;
+      const alreadyPressed = keyState[code];
       // Either we have already handled it or it is a key we don’t
       // care about.
       if (alreadyPressed || alreadyPressed === undefined) {
@@ -59,16 +63,16 @@ export default class KeyboardInput extends EventEmitter {
       }
 
       // Mark as pressed.
-      keyState[key] = true;
+      keyState[code] = true;
 
       // Is it a joy key?
-      if (keyJoyMap[key]) {
+      if (keyJoyMap[code]) {
         updateJoy();
         return;
       }
 
       // Is it a button?
-      var button = keyButtonMap[key];
+      var button = keyButtonMap[code];
       if (button) {
         this.emit('buttondown', button);
         return;
@@ -76,23 +80,23 @@ export default class KeyboardInput extends EventEmitter {
     });
 
     window.addEventListener('keyup', e => {
-      const key = e.key;
+      const code = e.code;
 
       // Do we care about this key?
-      if (keyState[key] === undefined) {
+      if (keyState[code] === undefined) {
         return;
       }
 
-      keyState[key] = false;
+      keyState[code] = false;
 
       // Is it a joy key?
-      if (keyJoyMap[key]) {
+      if (keyJoyMap[code]) {
         updateJoy();
         return;
       }
 
       // Is it a button?
-      var button = keyButtonMap[key];
+      var button = keyButtonMap[code];
       if (button) {
         this.emit('buttonup', button);
         return;

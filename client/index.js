@@ -106,8 +106,8 @@ class Game extends EventEmitter {
       new BABYLON.Vector3(0, -10, 0),
       new BABYLON.CannonJSPlugin());
     // Add collision groups, groups must be powers of 2: http://schteppe.github.io/cannon.js/demos/collisionFilter.html
-    this.collisionGroupNormal = 1;
-    this.collisionGroupGround = 2;
+    this.collisionGroupNormal = 2;
+    this.collisionGroupGround = 1;
     this.collisionGroupFall = 4;
 
     // Add ground

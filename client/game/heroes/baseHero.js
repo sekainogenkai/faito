@@ -11,21 +11,18 @@ const maxMana = 5000000;
 
 export default class Hero {
   constructor(
-    game, name, meshFileName='omi', speed=30, airSpeed=10, jumpStrength=250, rollGroundSpeed=60, rollAirSpeed=20,
+    game, name, meshFileName='omi', speed=5, airSpeed=5, jumpStrength=250, rollGroundSpeed=60, rollAirSpeed=20,
     attack1=testPower, attack2=testPower4, attack3=testPower3, attack4=testPower,
     defense1=testPower, defense2=testPower, defense3=testPower, defense4=testPower){
     this.game = game;
     this.name = name;
-      this._mana = maxMana;
-      this._joyTarget = this;
+    this._mana = maxMana;
+    this._joyTarget = this;
 
     
     // Get physics impostor ready
     this.initCollider();
       
-    this.updateMassProperties();
-
-    this.initGroundCheck();
 
     require(`../../../models/heroes/${meshFileName}.blend`).ImportMesh(BABYLON.SceneLoader, null, this.game.scene, loadedMeshes => {
         // Add the mesh
@@ -34,7 +31,7 @@ export default class Hero {
         this.mesh.isVisible = true;
         this.mesh.id = this.name;
         this.mesh.parent = this.mask;
-        this.mesh.position.y = -3;
+        this.mesh.position.y = -3  + 1.9;
         this.mesh.position.z = .6;
         // Add the player mesh to the shadowGenerator
         this.game.shadowGenerator.getShadowMap().renderList.push(this.mesh);
@@ -46,12 +43,6 @@ export default class Hero {
 
         this.initAnimations();
     });
-
-
-    
-
-    
-
 
     // Movement variables
     this.onGround = false;
@@ -159,40 +150,81 @@ export default class Hero {
     let detail = 10;
     var m0 = BABYLON.Mesh.CreateSphere("m0", detail, 2.3, this.game.scene);
     var m1 = BABYLON.Mesh.CreateSphere("m1", detail, 2.3, this.game.scene);
-    var m2 = BABYLON.Mesh.CreateSphere("m2", detail, 1.3, this.game.scene);
-    m0.position.y -= 1.9;
-    m2.position.y += 1.7;
+    var m2 = BABYLON.Mesh.CreateSphere("m2", detail, 4, this.game.scene);
+    m1.position.y += 1.9;
+    m2.position.y += 1.9 + 1.7 + 4;
     m0.computeWorldMatrix(true);
     m1.computeWorldMatrix(true);
     m2.computeWorldMatrix(true);
       // hello
     
-    // Create collision mask
-    this.mask = BABYLON.Mesh.MergeMeshes([m0,m1,m2], true);
     
-    // make it spawn higher for testing purposes
-    this.mask.position.y = 20;
+    // Create collision mask m0
+    this.mask = m0;
+    this.mask.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask, BABYLON.PhysicsImpostor.SphereImpostor, {mass:4, friction:0.05, restitution:0.5}, this.game.scene);
       
-    this.mask.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask, BABYLON.PhysicsImpostor.BoxImpostor, {mass:10, friction:0.05, restitution:0.5}, this.game.scene);
-      
-    console.log('mask', this.mask);
-    this.mask.isVisible = true;
-      
-      
-    this.body = this.mask.physicsImpostor.physicsBody;
-    // Create the physics body using mask TODO: Make the Impostor a capsule
-    console.log('body', this.mask.physicsImpostor.physicsBody);
-    
-    this.body.collisionFilterGroup = this.game.collisionGroupNormal;
-    this.body.collisionFilterMask = this.game.collisionGroupGround | this.game.collisionGroupNormal | this.game.collisionGroupFall;
-      
-  }
+    // create collision mask m1
+    this.mask1 = m1;
+    this.mask1.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask1, BABYLON.PhysicsImpostor.SphereImpostor, {mass:1, friction:0.05, restitution:0.5}, this.game.scene);
+    this.body1 = this.mask1.physicsImpostor.physicsBody;
+    this.body1.fixedRotation = true;
+    this.mask1.parent = this.mask;
+    this.addCollisionToGroup(this.body1);
 
-  updateMassProperties() {
+    //this.body1.type = 2;
+     
+    // Create collision mask m2
+    this.mask2 = m2;
+    this.mask2.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask2, BABYLON.PhysicsImpostor.SphereImpostor, {mass:1, friction:0.05, restitution:0.5}, this.game.scene);
+    this.body2 = this.mask2.physicsImpostor.physicsBody;
+    this.body2.fixedRotation = true;
+    this.addCollisionToGroup(this.body2);
+    this.mask2.parent = this.mask;
+    //this.body2.type = 2;
+    this.mask.physicsImpostor.forceUpdate();
+    this.body = this.mask.physicsImpostor.physicsBody;
+    this.addCollisionToGroup(this.body);
+    this.body.fixedRotation = true;
+      
+      
+    
     this.body.linearDamping = .8;
     this.body.fixedRotation = true;
-    this.body.sleepSpeedLimit = 20;
+    this.body.sleepSpeedLimit = .1;
     this.body.updateMassProperties();
+
+    this.initGroundCheck();
+    
+      /*
+    this.game.scene.createCompoundImpostor([
+        { mesh: this.mask, impostor: BABYLON.PhysicsEngine.SphereImpostor },
+        { mesh: this.mask1, impostor: BABYLON.PhysicsEngine.SphereImpostor },
+        { mesh: this.mask2, impostor: BABYLON.PhysicsEngine.SphereImpostor }
+    ], { mass: 10, friction: 0.05, restitution: 0.5 }); */
+    /*
+    // Create the joint
+    
+    var pointJoint = new BABYLON.PhysicsJoint(BABYLON.PhysicsJoint.PointToPointJoint, {
+		length: 2,
+		stiffness: 10,
+		damping: 0.001
+	});
+    // attach the masks
+    this.mask.physicsImpostor.addJoint(this.mask2.physicsImpostor, pointJoint);
+    */
+    console.log('mask', this.mask);
+    this.mask.isVisible = true;
+    this.mask1.isVisible = true;
+    this.mask2.isVisible = true;
+      
+    this.mask.position.y = 20;
+     
+    console.log('body', this.mask.physicsImpostor.physicsBody);
+  }
+    
+  addCollisionToGroup (impostorBody) {
+    impostorBody.collisionFilterGroup = this.game.collisionGroupNormal;
+    impostorBody.collisionFilterMask = this.game.collisionGroupGround | this.game.collisionGroupNormal | this.game.collisionGroupFall;
   }
 
   initGroundCheck() {
@@ -200,7 +232,7 @@ export default class Hero {
     this.groundCheck = BABYLON.Mesh.CreateBox("mask", 2.5, this.game.scene);
     this.groundCheck.isVisible = true;
     this.groundCheck.parent = this.mask;
-    this.groundCheck.position.y = -3;
+    this.groundCheck.position.y = -3 + 1.9;
     this.groundCheck.scaling.y = 0.2;
   }
 

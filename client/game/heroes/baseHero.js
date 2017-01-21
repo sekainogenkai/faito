@@ -11,7 +11,7 @@ const maxMana = 5000000;
 
 export default class Hero {
   constructor(
-    game, name, meshFileName='omi', speed=5, airSpeed=5, jumpStrength=250, rollGroundSpeed=60, rollAirSpeed=20,
+    game, name, meshFileName='omi', speed=20, airSpeed=5, jumpStrength=250, rollGroundSpeed=60, rollAirSpeed=20,
     attack1=testPower, attack2=testPower4, attack3=testPower3, attack4=testPower,
     defense1=testPower, defense2=testPower, defense3=testPower, defense4=testPower){
     this.game = game;
@@ -148,7 +148,7 @@ export default class Hero {
   initCollider (width=2) {
     // Merges three spheres to create a capsule
     let detail = 10;
-    var m0 = BABYLON.Mesh.CreateSphere("m0", detail, 2.3, this.game.scene);
+    var m0 = BABYLON.Mesh.CreateSphere("m0", detail, 2.5, this.game.scene);
     var m1 = BABYLON.Mesh.CreateSphere("m1", detail, 2.3, this.game.scene);
     var m2 = BABYLON.Mesh.CreateSphere("m2", detail, 4, this.game.scene);
     m1.position.y += 1.9;

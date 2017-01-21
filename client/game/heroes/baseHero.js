@@ -151,36 +151,21 @@ export default class Hero {
   initCollider (width=2) {
     // Merges three spheres to create a capsule
     let detail = 10;
-    var m0 = BABYLON.Mesh.CreateSphere("m0", detail, 2.5, this.game.scene);
-    var m1 = BABYLON.Mesh.CreateSphere("m1", detail, 2.3, this.game.scene);
-    var m2 = BABYLON.Mesh.CreateSphere("m2", detail, 2, this.game.scene);
-    m1.position.y += 1.9;
-    m2.position.y += 1.9 + 1.7;
-    m0.computeWorldMatrix(true);
-    m1.computeWorldMatrix(true);
-    m2.computeWorldMatrix(true);
-      // hello
-    
-    
+      
     // Create collision mask m0
-    this.mask = m0;
-    this.mask.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask, BABYLON.PhysicsImpostor.SphereImpostor, {mass:4, friction:0.2, restitution:0.2}, this.game.scene);
+    this.mask = this.createSphere('m0', detail, 2.5, 0, 4, .2, .2);
       
     // create collision mask m1
-    this.mask1 = m1;
-    this.mask1.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask1, BABYLON.PhysicsImpostor.SphereImpostor, {mass:1, friction:0.05, restitution:0.2}, this.game.scene);
+    this.mask1 = this.createSphere('m1', detail, 2.3, 1.9, 1, .05, .2);
     this.body1 = this.mask1.physicsImpostor.physicsBody;
-    this.body1.fixedRotation = true;
+    //this.body1.fixedRotation = true;
     this.mask1.parent = this.mask;
     this.addCollisionToGroup(this.body1);
 
-    //this.body1.type = 2;
-     
     // Create collision mask m2
-    this.mask2 = m2;
-    this.mask2.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask2, BABYLON.PhysicsImpostor.SphereImpostor, {mass:1, friction:0.05, restitution:0.2}, this.game.scene);
+    this.mask2 = this.createSphere('m2', detail, 2, 1.9+1.7, 1, .05, .2);
     this.body2 = this.mask2.physicsImpostor.physicsBody;
-    this.body2.fixedRotation = true;
+    //this.body2.fixedRotation = true;
     this.addCollisionToGroup(this.body2);
     this.mask2.parent = this.mask;
     //this.body2.type = 2;
@@ -193,28 +178,18 @@ export default class Hero {
     this.body.fixedRotation = true;
     this.body.sleepSpeedLimit = .1;
     this.body.updateMassProperties();
+    
+    // Testing
+      /*
+    this.mask2.position.y -= 5;
+    this.mask.physicsImpostor.forceUpdate();
+    this.body = this.mask.physicsImpostor.physicsBody;
+      this.body.updateMassProperties();*/
 
     this.initGroundCheck();
     
-      /*
-    this.game.scene.createCompoundImpostor([
-        { mesh: this.mask, impostor: BABYLON.PhysicsEngine.SphereImpostor },
-        { mesh: this.mask1, impostor: BABYLON.PhysicsEngine.SphereImpostor },
-        { mesh: this.mask2, impostor: BABYLON.PhysicsEngine.SphereImpostor }
-    ], { mass: 10, friction: 0.05, restitution: 0.5 }); */
-    /*
-    // Create the joint
-    
-    var pointJoint = new BABYLON.PhysicsJoint(BABYLON.PhysicsJoint.PointToPointJoint, {
-		length: 2,
-		stiffness: 10,
-		damping: 0.001
-	});
-    // attach the masks
-    this.mask.physicsImpostor.addJoint(this.mask2.physicsImpostor, pointJoint);
-    */
     console.log('mask', this.mask);
-    let visible = true;
+    let visible = false;
     this.mask.isVisible = visible;
     this.mask1.isVisible = visible;
     this.mask2.isVisible = visible;
@@ -224,7 +199,17 @@ export default class Hero {
     console.log('body', this.mask.physicsImpostor.physicsBody);
   }
     
-  
+    
+  createSphere (name, detail, size, posY, mass, friction, restitution) {
+      // Make sphere mesh
+      let sphere = BABYLON.Mesh.CreateSphere(name, detail, size, this.game.scene);
+      // Set sphere position
+      sphere.position.y += posY;
+      sphere.computeWorldMatrix(true);
+      // Create collision mask
+      sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, {mass:mass, friction:friction, restitution:restitution}, this.game.scene);
+      return sphere;
+  }
     
   addCollisionToGroup (impostorBody) {
     impostorBody.collisionFilterGroup = this.game.collisionGroupNormal;
@@ -255,7 +240,6 @@ export default class Hero {
 
   update () {
     this.checkGroundCheck();
-
 
     if (this.moveBool) {
         this.move();

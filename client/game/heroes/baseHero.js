@@ -11,7 +11,7 @@ const maxMana = 5000000;
 
 export default class Hero {
   constructor(
-    game, name, meshFileName='omi', speed=20, airSpeed=5, jumpStrength=150, rollGroundSpeed=60, rollAirSpeed=20,
+    game, name, meshFileName='omi', speed=20, airSpeed=5, jumpStrength=150, rollGroundSpeed=40, rollAirSpeed=20,
     attack1=testPower, attack2=testPower4, attack3=testPower3, attack4=testPower,
     defense1=testPower, defense2=testPower, defense3=testPower, defense4=testPower){
     this.game = game;
@@ -49,7 +49,7 @@ export default class Hero {
     this.jumpStrength = jumpStrength;
     this.jumpTimerStart = 20;
     this.jumpTimer = this.jumpTimerStart;
-    this.rollTimerStart = 30;
+    this.rollTimerStart = 15;
     this.rollTimer = this.rollTimerStart;
     this.speed = speed;
     this.airSpeed = airSpeed;
@@ -90,6 +90,7 @@ export default class Hero {
       this.jumpAnimation = this.mesh.skeleton.getAnimationRange('jump');
       this.powerAnimation = this.mesh.skeleton.getAnimationRange('ability');
       this.rollAnimation = this.mesh.skeleton.getAnimationRange('roll');
+      this.rollingAnimation = this.mesh.skeleton.getAnimationRange('rolling');
       const animatable = this.game.scene.beginAnimation(this.mesh.skeleton, 0, 120, true, 2);
       setTimeout(() => {
           animatable.speedRatio /= 8;
@@ -104,27 +105,31 @@ export default class Hero {
       this.run = **/
   }
 
-  startAnimationNew(animation, loop=true) {
+  startAnimationNew(animation, loop=true, blending=.1) {
       if (this.currentAnimation != animation) {
-          this.startAnimation(animation, loop);
+          this.startAnimation(animation, loop, blending);
       }
   }
 
-  startAnimation (animation, loop=true) {
+  startAnimation (animation, loop=true, blending=.1) {
       this.currentAnimation = animation;
       this.currentAnimatable = this.game.scene.beginAnimation(this.mesh.skeleton, animation.from+1, animation.to, loop, 1);
-      this.currentAnimatable.enableBlending(.1);
+      this.currentAnimatable.enableBlending(blending);
   }
 
   animations () {
+        // walk animation
+        var magnitude =
+        Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.z * this.body.velocity.z);
         if (this.rollTimer) {
-                this.startAnimationNew(this.rollAnimation, false);
-                this.currentAnimatable.speedRatio = 4;
-            } else if (this.onGround) {
-                // walk animation
-                var magnitude =
-                Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.z * this.body.velocity.z);
-                //console.log("mag: ", magnitude);
+                if (magnitude > 1) { 
+                    this.startAnimationNew(this.rollingAnimation, true, 10);
+                    this.currentAnimatable.speedRatio = 2.5;
+                } else {
+                    this.startAnimationNew(this.rollAnimation, false);
+                }
+        } else if (this.onGround) {
+            //console.log("mag: ", magnitude);
             if (magnitude < 2) {// Power animation
                 if (!this.animatePower) {
                     this.startAnimationNew(this.idleAnimation);
@@ -135,7 +140,7 @@ export default class Hero {
             } else if (magnitude < 5) { // Walk animation
                 this.startAnimationNew(this.walkAnimation);
                 this.currentAnimatable.speedRatio = .25 * magnitude;
-            } else if (magnitude > 5) { // Run animation
+            } else if (magnitude >= 5) { // Run animation
                 this.startAnimationNew(this.runAnimation);
                 this.currentAnimatable.speedRatio = .9 + .02 * magnitude;
             }
@@ -161,7 +166,7 @@ export default class Hero {
     
     // Create collision mask m0
     this.mask = m0;
-    this.mask.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask, BABYLON.PhysicsImpostor.SphereImpostor, {mass:4, friction:0.05, restitution:0.2}, this.game.scene);
+    this.mask.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask, BABYLON.PhysicsImpostor.SphereImpostor, {mass:4, friction:0.1, restitution:0.2}, this.game.scene);
       
     // create collision mask m1
     this.mask1 = m1;
@@ -185,8 +190,6 @@ export default class Hero {
     this.body = this.mask.physicsImpostor.physicsBody;
     this.addCollisionToGroup(this.body);
     this.body.fixedRotation = true;
-      
-      
     
     this.body.linearDamping = .8;
     this.body.fixedRotation = true;
@@ -213,9 +216,9 @@ export default class Hero {
     this.mask.physicsImpostor.addJoint(this.mask2.physicsImpostor, pointJoint);
     */
     console.log('mask', this.mask);
-    this.mask.isVisible = true;
-    this.mask1.isVisible = true;
-    this.mask2.isVisible = true;
+    this.mask.isVisible = false;
+    this.mask1.isVisible = false;
+    this.mask2.isVisible = false;
       
     this.mask.position.y = 20;
      
@@ -230,7 +233,7 @@ export default class Hero {
   initGroundCheck() {
     // Create mesh for onGround collision check
     this.groundCheck = BABYLON.Mesh.CreateBox("mask", 2.5, this.game.scene);
-    this.groundCheck.isVisible = true;
+    this.groundCheck.isVisible = false;
     this.groundCheck.parent = this.mask;
     this.groundCheck.position.y = -3 + 1.9;
     this.groundCheck.scaling.y = 0.2;
@@ -275,12 +278,17 @@ export default class Hero {
     var normalizedMovementVector = movementVector.clone().normalize();
     //console.log('scale speed:', this.getScaleSpeed(movementVector, this.speed));
 
-
-     // Rolling is very important
+    // Rolling is very important
     if (this.Input.ROLL && this.rollTimer == 0) {
         this.rollTimer = this.rollTimerStart;
+        
     } else if (this.rollTimer > 0) {
         this.rollTimer--;
+        // Slow the movement after rolling is done
+        if (this.rollTimer == 0) {
+            let slowDown = -6;
+            this.mask.applyImpulse(new BABYLON.Vector3(slowDown * this.body.velocity.x, slowDown * this.body.velocity.y, slowDown * this.body.velocity.z), this.mask.position);
+        }
     }
     this.Input.ROLL = false;
     //console.log(this.rollTimer);

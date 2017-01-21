@@ -11,7 +11,7 @@ const maxMana = 5000000;
 
 export default class Hero {
   constructor(
-    game, name, meshFileName='omi', speed=20, airSpeed=5, jumpStrength=150, rollGroundSpeed=40, rollAirSpeed=20,
+    game, name, meshFileName='omi', speed=20, airSpeed=5, jumpStrength=150, rollGroundSpeed=30, rollAirSpeed=20,
     attack1=testPower, attack2=testPower4, attack3=testPower3, attack4=testPower,
     defense1=testPower, defense2=testPower, defense3=testPower, defense4=testPower){
     this.game = game;
@@ -121,13 +121,14 @@ export default class Hero {
         if (this.rollTimer) {
                 if (magnitude > 1) { 
                     this.startAnimationNew(this.rollingAnimation, true, 10);
-                    this.currentAnimatable.speedRatio = 2.5;
+                    this.currentAnimatable.speedRatio = 2.6;
                 } else {
                     this.startAnimationNew(this.rollAnimation, false);
+                    this.currentAnimatable.speedRatio = 2;
                 }
         } else if (this.onGround) {
             //console.log("mag: ", magnitude);
-            if (magnitude < 2) {// Power animation
+            if (magnitude < 1) {// Idle and power
                 if (!this.animatePower) {
                     this.startAnimationNew(this.idleAnimation);
                 } else {
@@ -136,8 +137,8 @@ export default class Hero {
                 }
             } else if (magnitude < 5) { // Walk animation
                 this.startAnimationNew(this.walkAnimation);
-                this.currentAnimatable.speedRatio = .25 * magnitude;
-            } else if (magnitude >= 5) { // Run animation
+                this.currentAnimatable.speedRatio = .31 * magnitude;
+            } else { // Run animation
                 this.startAnimationNew(this.runAnimation);
                 this.currentAnimatable.speedRatio = .9 + .02 * magnitude;
             }
@@ -163,7 +164,7 @@ export default class Hero {
     
     // Create collision mask m0
     this.mask = m0;
-    this.mask.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask, BABYLON.PhysicsImpostor.SphereImpostor, {mass:4, friction:0.1, restitution:0.2}, this.game.scene);
+    this.mask.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask, BABYLON.PhysicsImpostor.SphereImpostor, {mass:4, friction:0.2, restitution:0.2}, this.game.scene);
       
     // create collision mask m1
     this.mask1 = m1;
@@ -213,14 +214,17 @@ export default class Hero {
     this.mask.physicsImpostor.addJoint(this.mask2.physicsImpostor, pointJoint);
     */
     console.log('mask', this.mask);
-    this.mask.isVisible = false;
-    this.mask1.isVisible = false;
-    this.mask2.isVisible = false;
+    let visible = true;
+    this.mask.isVisible = visible;
+    this.mask1.isVisible = visible;
+    this.mask2.isVisible = visible;
       
     this.mask.position.y = 20;
      
     console.log('body', this.mask.physicsImpostor.physicsBody);
   }
+    
+  
     
   addCollisionToGroup (impostorBody) {
     impostorBody.collisionFilterGroup = this.game.collisionGroupNormal;
@@ -295,8 +299,11 @@ export default class Hero {
         movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollGroundSpeed:this.speed));
     } else { // Movement in air
         movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollAirSpeed:this.airSpeed));
-        if (this.body.velocity.y < 0) {
+        if (this.body.velocity.y < 1) {
             movementVector = movementVector.add(new BABYLON.Vector3(0,-5,0));
+        }
+        if (this.rollTimer) {
+            movementVector = movementVector.add(new BABYLON.Vector3(0, -5,0 ));
         }
     }
 
@@ -318,14 +325,6 @@ export default class Hero {
     if (this.body.velocity.length() > 1 && (this.Input.AXIS_X || this.Input.AXIS_Y) ) {
         this.setRotation();
     }
-  }
-
-  normalMovement () {
-
-  }
-
-  jumpMovement () {
-
   }
 
   setRotation () {

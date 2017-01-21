@@ -11,7 +11,7 @@ const maxMana = 5000000;
 
 export default class Hero {
   constructor(
-    game, name, meshFileName='omi', speed=20, airSpeed=5, jumpStrength=250, rollGroundSpeed=60, rollAirSpeed=20,
+    game, name, meshFileName='omi', speed=20, airSpeed=5, jumpStrength=150, rollGroundSpeed=60, rollAirSpeed=20,
     attack1=testPower, attack2=testPower4, attack3=testPower3, attack4=testPower,
     defense1=testPower, defense2=testPower, defense3=testPower, defense4=testPower){
     this.game = game;
@@ -150,9 +150,9 @@ export default class Hero {
     let detail = 10;
     var m0 = BABYLON.Mesh.CreateSphere("m0", detail, 2.5, this.game.scene);
     var m1 = BABYLON.Mesh.CreateSphere("m1", detail, 2.3, this.game.scene);
-    var m2 = BABYLON.Mesh.CreateSphere("m2", detail, 4, this.game.scene);
+    var m2 = BABYLON.Mesh.CreateSphere("m2", detail, 2, this.game.scene);
     m1.position.y += 1.9;
-    m2.position.y += 1.9 + 1.7 + 4;
+    m2.position.y += 1.9 + 1.7;
     m0.computeWorldMatrix(true);
     m1.computeWorldMatrix(true);
     m2.computeWorldMatrix(true);
@@ -161,11 +161,11 @@ export default class Hero {
     
     // Create collision mask m0
     this.mask = m0;
-    this.mask.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask, BABYLON.PhysicsImpostor.SphereImpostor, {mass:4, friction:0.05, restitution:0.5}, this.game.scene);
+    this.mask.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask, BABYLON.PhysicsImpostor.SphereImpostor, {mass:4, friction:0.05, restitution:0.2}, this.game.scene);
       
     // create collision mask m1
     this.mask1 = m1;
-    this.mask1.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask1, BABYLON.PhysicsImpostor.SphereImpostor, {mass:1, friction:0.05, restitution:0.5}, this.game.scene);
+    this.mask1.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask1, BABYLON.PhysicsImpostor.SphereImpostor, {mass:1, friction:0.05, restitution:0.2}, this.game.scene);
     this.body1 = this.mask1.physicsImpostor.physicsBody;
     this.body1.fixedRotation = true;
     this.mask1.parent = this.mask;
@@ -175,7 +175,7 @@ export default class Hero {
      
     // Create collision mask m2
     this.mask2 = m2;
-    this.mask2.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask2, BABYLON.PhysicsImpostor.SphereImpostor, {mass:1, friction:0.05, restitution:0.5}, this.game.scene);
+    this.mask2.physicsImpostor = new BABYLON.PhysicsImpostor(this.mask2, BABYLON.PhysicsImpostor.SphereImpostor, {mass:1, friction:0.05, restitution:0.2}, this.game.scene);
     this.body2 = this.mask2.physicsImpostor.physicsBody;
     this.body2.fixedRotation = true;
     this.addCollisionToGroup(this.body2);
@@ -290,6 +290,9 @@ export default class Hero {
         movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollGroundSpeed:this.speed));
     } else { // Movement in air
         movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollAirSpeed:this.airSpeed));
+        if (this.body.velocity.y < 0) {
+            movementVector = movementVector.add(new BABYLON.Vector3(0,-5,0));
+        }
     }
 
     // Jump

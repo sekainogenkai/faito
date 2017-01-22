@@ -1,5 +1,6 @@
 import basePower from './basePower';
 import BABYLON from 'babylonjs';
+import {registerAfterSceneRender, registerBeforeSceneRender} from '../../../mesh-util.js';
 import {secondsToTicks, configureAutoRemove} from '../powerUtils/mainUtils';
 
 const initialDirectionVec = new BABYLON.Vector3(0, 0, 1);
@@ -73,7 +74,7 @@ export default class baseDirectionCursor extends basePower {
       this._directionVec.scaleInPlace(0.5);
       cursor.userData[directionSymbol] = this._directionVec;
 
-      cursor.registerBeforeRender(updateCursor);
+        registerBeforeSceneRender(cursor, updateCursor);
     }
 
     createPowerMesh (){
@@ -95,7 +96,7 @@ export default class baseDirectionCursor extends basePower {
           mesh.userData[meshAnimationLengthSymbol] = animationLength;
           mesh.userData[meshGameReferenceSymbol] = this.game;
           mesh.userData[meshHeightSymbol] = meshHeight;
-          mesh.registerAfterRender(updateMesh);
+          registerAfterSceneRender(mesh, updateMesh);
           configureAutoRemove(mesh, removeDelay, removeLength);
 
           // Remove the cursor

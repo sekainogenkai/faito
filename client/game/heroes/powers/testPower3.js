@@ -1,5 +1,6 @@
 import basePower from './powerTemplates/basePower';
 import BABYLON from 'babylonjs';
+import {registerAfterSceneRender, registerBeforeSceneRender} from '../../mesh-util';
 import {secondsToTicks, configureAutoRemove} from './powerUtils/mainUtils';
 
 const initialDirectionVec = new BABYLON.Vector3(0, 0, 1);
@@ -72,7 +73,7 @@ export default class testPower extends basePower {
         this._directionVec.scaleInPlace(0.5);
         ball.userData[directionSymbol] = this._directionVec;
 
-        ball.registerBeforeRender(updateBall);
+        registerBeforeSceneRender(ball, updateBall);
     }
 
     buttonUp(i) {
@@ -87,7 +88,7 @@ export default class testPower extends basePower {
             wall.position.y = - wallHeight/2;
             wall.userData[wallRemainingAnimationSymbol] = wallAnimationLength;
             wall.userData[wallGameReferenceSymbol] = this.game;
-            wall.registerAfterRender(updateWall);
+            registerAfterSceneRender(wall, updateWall);
             wall.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:0, friction:0.1, restitution:0.9});
             wall.physicsImpostor.physicsBody.collisionFilterGroup = this.game.collisionGroupGround;
             wall.physicsImpostor.physicsBody.collisionFilterMask = this.game.collisionGroupNormal;

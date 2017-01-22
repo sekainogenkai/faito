@@ -1,3 +1,5 @@
+import {registerAfterSceneRender} from '../../../mesh-util.js';
+
 export const freezeHero = function (hero) {
     hero.moveBool = false;
 };
@@ -47,7 +49,7 @@ export const configureAutoRemove = (mesh, delay, length=0.25) => {
     }
     mesh.userData[remainingDelaySymbol] = secondsToTicks(delay);
     if (!mesh.physicsImpostor) {
-      mesh.registerAfterRender(autoRemove);
+        registerAfterSceneRender(mesh, autoRemove);
     } else {
       var meshHeight = mesh.getBoundingInfo().boundingBox.extendSize.y*2;
       var animationLength = secondsToTicks(length);
@@ -55,7 +57,6 @@ export const configureAutoRemove = (mesh, delay, length=0.25) => {
       mesh.userData[meshAnimationTargetYSymbol] = -meshHeight/2;
       mesh.userData[meshRemainingAnimationSymbol] = animationLength;
       mesh.userData[meshAnimationLengthSymbol] = animationLength;
-      mesh.registerAfterRender(autoPhysicsRemove);
+        registerAfterSceneRender(mesh, autoPhysicsRemove);
     }
-
 };

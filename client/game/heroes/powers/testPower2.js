@@ -1,6 +1,7 @@
 import basePower from './powerTemplates/basePower';
 import BABYLON from 'babylonjs';
 import {configureAutoRemove} from './powerUtils/mainUtils';
+import {registerAfterSceneRender, registerBeforeSceneRender} from '../../mesh-util';
 
 const joySymbol = Symbol('joy');
 
@@ -48,7 +49,7 @@ export default class testPower extends basePower {
         configureAutoRemove(ball, 6);
         ball.userData = ball.userData || {};
         ball.userData[joySymbol] = new BABYLON.Vector2(0, 0);
-        ball.registerBeforeRender(update);
+        registerBeforeSceneRender(ball, update);
         this.hero.setJoyTarget(this);
     }
 

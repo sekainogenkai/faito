@@ -1,6 +1,7 @@
 import BABYLON from 'babylonjs';
 import {EventSubscriptionContext} from '../../event-util';
 import {Buttons} from '../input';
+import {registerBeforeSceneRender} from '../mesh-util';
 import testPower from './powers/testPower';
 import testPower2 from './powers/testPower2';
 import testPower3 from './powers/testPower3';
@@ -76,10 +77,10 @@ export default class Hero {
     this.defense3 = new defense3(game, this);
     this.defense4 = new defense4(game, this);
 
-    // Add update loop to Babylon
-    this.mesh.registerBeforeRender(() => {
-        this.update();
-    });
+      // Add update loop to Babylon
+      registerBeforeSceneRender(this.mesh, () => {
+          this.update();
+      });
   }
 
   initAnimations () {

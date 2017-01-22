@@ -150,7 +150,7 @@ export default class Hero {
 
   initCollider (width=2) {
     // Merges three spheres to create a capsule
-    let detail = 10;
+    const detail = 10;
       
     // Create collision mask m0
     this.mask = this.createSphere('m0', detail, 2.5, 0, 4, .2, .2);
@@ -160,36 +160,39 @@ export default class Hero {
     this.body1 = this.mask1.physicsImpostor.physicsBody;
     //this.body1.fixedRotation = true;
     this.mask1.parent = this.mask;
-    this.addCollisionToGroup(this.body1);
 
     // Create collision mask m2
     this.mask2 = this.createSphere('m2', detail, 2, 1.9+1.7, 1, .05, .2);
     this.body2 = this.mask2.physicsImpostor.physicsBody;
     //this.body2.fixedRotation = true;
-    this.addCollisionToGroup(this.body2);
     this.mask2.parent = this.mask;
     //this.body2.type = 2;
-    this.mask.physicsImpostor.forceUpdate();
-    this.body = this.mask.physicsImpostor.physicsBody;
-    this.addCollisionToGroup(this.body);
-    this.body.fixedRotation = true;
     
-    this.body.linearDamping = .8;
-    this.body.fixedRotation = true;
-    this.body.sleepSpeedLimit = .1;
-    this.body.updateMassProperties();
+    
+    
+    //this.updateMassProperties();
     
     // Testing
-      /*
-    this.mask2.position.y -= 5;
-    this.mask.physicsImpostor.forceUpdate();
-    this.body = this.mask.physicsImpostor.physicsBody;
-      this.body.updateMassProperties();*/
+    //this.mask2.position.y = -1;
+      
+    
+    //this.mask.physicsImpostor.forceUpdate();
+    //this.body = this.mask.physicsImpostor.physicsBody;
+    
+      
+    this.updatePhysicsImpostor();
+    this.updateMassProperties();
 
     this.initGroundCheck();
     
+    //this.mask2.position.y = -5;
+    //this.updatePhysicsImpostor();
+    //this.updateMassProperties();
+      
+    //this.body2.position.y -= 5;
+     
     console.log('mask', this.mask);
-    let visible = false;
+    const visible = true;
     this.mask.isVisible = visible;
     this.mask1.isVisible = visible;
     this.mask2.isVisible = visible;
@@ -197,6 +200,19 @@ export default class Hero {
     this.mask.position.y = 20;
      
     console.log('body', this.mask.physicsImpostor.physicsBody);
+  }
+    
+  updatePhysicsImpostor () {
+    this.addCollisionToGroup(this.mask.physicsImpostor.physicsBody);
+    this.mask.physicsImpostor.forceUpdate();
+    this.body = this.mask.physicsImpostor.physicsBody;
+  }
+    
+  updateMassProperties () {
+    this.body.linearDamping = .8;
+    this.body.fixedRotation = true;
+    this.body.sleepSpeedLimit = .1;
+    this.body.updateMassProperties();
   }
     
     
@@ -271,7 +287,7 @@ export default class Hero {
         this.rollTimer--;
         // Slow the movement after rolling is done
         if (this.rollTimer == 0) {
-            let slowDown = -6;
+            let slowDown = -5;
             this.mask.applyImpulse(new BABYLON.Vector3(slowDown * this.body.velocity.x, slowDown * this.body.velocity.y, slowDown * this.body.velocity.z), this.mask.position);
         }
     }

@@ -204,9 +204,9 @@ export default class Hero {
   }
     
   updatePhysicsImpostor () {
-    this.addCollisionToGroup(this.mask.physicsImpostor.physicsBody);
     this.mask.physicsImpostor.forceUpdate();
     this.body = this.mask.physicsImpostor.physicsBody;
+    this.addCollisionToGroup(this.body);
   }
     
   updateMassProperties () {

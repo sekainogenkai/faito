@@ -20,10 +20,10 @@ export default class Hero {
     this._mana = maxMana;
     this._joyTarget = this;
 
-    
+
     // Get physics impostor ready
     this.initCollider();
-      
+
 
     require(`../../../models/heroes/${meshFileName}.blend`).ImportMesh(BABYLON.SceneLoader, null, this.game.scene, loadedMeshes => {
         // Add the mesh
@@ -120,7 +120,7 @@ export default class Hero {
         var magnitude =
         Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.z * this.body.velocity.z);
         if (this.rollTimer) {
-                if (magnitude > 1) { 
+                if (magnitude > 1) {
                     this.startAnimationNew(this.rollingAnimation, true, 10);
                     this.currentAnimatable.speedRatio = 2.6;
                 } else {
@@ -152,10 +152,10 @@ export default class Hero {
   initCollider (width=2) {
     // Merges three spheres to create a capsule
     const detail = 10;
-      
+
     // Create collision mask m0
     this.mask = this.createSphere('m0', detail, 2.5, 0, 4, .2, .2);
-      
+
     // create collision mask m1
     this.mask1 = this.createSphere('m1', detail, 2.3, 1.9, 1, .05, .2);
     this.body1 = this.mask1.physicsImpostor.physicsBody;
@@ -168,55 +168,55 @@ export default class Hero {
     //this.body2.fixedRotation = true;
     this.mask2.parent = this.mask;
     //this.body2.type = 2;
-    
-    
-    
+
+
+
     //this.updateMassProperties();
-    
+
     // Testing
     //this.mask2.position.y = -1;
-      
-    
+
+
     //this.mask.physicsImpostor.forceUpdate();
     //this.body = this.mask.physicsImpostor.physicsBody;
-    
-      
+
+
     this.updatePhysicsImpostor();
     this.updateMassProperties();
 
     this.initGroundCheck();
-    
+
     //this.mask2.position.y = -5;
     //this.updatePhysicsImpostor();
     //this.updateMassProperties();
-      
+
     //this.body2.position.y -= 5;
-     
+
     console.log('mask', this.mask);
-    const visible = true;
+    const visible = false;
     this.mask.isVisible = visible;
     this.mask1.isVisible = visible;
     this.mask2.isVisible = visible;
-      
+
     this.mask.position.y = 20;
-     
+
     console.log('body', this.mask.physicsImpostor.physicsBody);
   }
-    
+
   updatePhysicsImpostor () {
     this.mask.physicsImpostor.forceUpdate();
     this.body = this.mask.physicsImpostor.physicsBody;
     this.addCollisionToGroup(this.body);
   }
-    
+
   updateMassProperties () {
     this.body.linearDamping = .8;
     this.body.fixedRotation = true;
     this.body.sleepSpeedLimit = .1;
     this.body.updateMassProperties();
   }
-    
-    
+
+
   createSphere (name, detail, size, posY, mass, friction, restitution) {
       // Make sphere mesh
       let sphere = BABYLON.Mesh.CreateSphere(name, detail, size, this.game.scene);
@@ -227,7 +227,7 @@ export default class Hero {
       sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, {mass:mass, friction:friction, restitution:restitution}, this.game.scene);
       return sphere;
   }
-    
+
   addCollisionToGroup (impostorBody) {
     impostorBody.collisionFilterGroup = this.game.collisionGroupNormal;
     impostorBody.collisionFilterMask = this.game.collisionGroupGround | this.game.collisionGroupNormal | this.game.collisionGroupFall;
@@ -283,12 +283,12 @@ export default class Hero {
     // Rolling is very important
     if (this.Input.ROLL && this.rollTimer == 0) {
         this.rollTimer = this.rollTimerStart;
-        
+
     } else if (this.rollTimer > 0) {
         this.rollTimer--;
         // Slow the movement after rolling is done
         if (this.rollTimer == 0) {
-            let slowDown = -5;
+            let slowDown = -3;
             this.mask.applyImpulse(new BABYLON.Vector3(slowDown * this.body.velocity.x, slowDown * this.body.velocity.y, slowDown * this.body.velocity.z), this.mask.position);
         }
     }

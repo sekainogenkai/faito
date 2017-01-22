@@ -11,7 +11,7 @@ export default class testPower extends baseDirectionCursor {
       const mesh = BABYLON.Mesh.CreateSphere('mesh', 10, 10, this.game.scene);
       BABYLON.Tags.EnableFor(mesh);
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
-      mesh.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:0, friction:0.1, restitution:0.9});
+      mesh.setPhysicsState(BABYLON.PhysicsEngine.SphereImpostor, {mass:0, friction:0.1, restitution:0.9});
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.collisionGroupNormal;
       return mesh;

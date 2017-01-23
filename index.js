@@ -55,7 +55,13 @@ if (env === 'dev') {
   webpackConfig.output.path = __dirname;
   webpackConfig.output.filename = 'main.js';
   webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
-  webpackConfig.plugins.push(new webpack.NoErrorsPlugin());
+    webpackConfig.plugins.push(new webpack.NoErrorsPlugin());
+    const babelQuery = webpackConfig.module.loaders.find(plugin => plugin.loader === 'babel-loader').query;
+    // Remove es2015 during development because it has
+    // es2015-block-scoping which modern browsers already implement
+    // but which fails at actually enforcing const. See
+    // https://github.com/babel/babel/issues/563
+    babelQuery.presets = babelQuery.presets.filter(preset => preset != 'es2015');
   const webpackCompiler = webpack(webpackConfig);
 
   app.use(webpackDevMiddleware(webpackCompiler));

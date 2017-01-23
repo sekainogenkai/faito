@@ -1,5 +1,6 @@
 'use strict';
 
+const fs = require('fs');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const path = require('path');
 
@@ -19,7 +20,19 @@ module.exports = {
       // instead of “typeof CANNON !== 'undefined'” when checking for
       // cannon that we have to expose cannon.
       { test: require.resolve('cannon'), loader: require('expose-loader') && 'expose-loader?CANNON' },
-      { test: /\.jsx?$/, exclude: /node_modules/, loader: require('babel-core') && require('babel-loader') && "babel-loader", },
+        {
+            test: /\.jsx?$/,
+            exclude: /node_modules/,
+            loader: require('babel-core') && require('babel-loader') && "babel-loader",
+            // Load presets into config so that webdev version can
+            // override them.
+            query: Object.assign(JSON.parse(fs.readFileSync(path.join(__dirname, '.babelrc'))), {
+                // Request that the babel-loader not go behind our
+                // backs and load .babelrc when we went to all this
+                // trouble to manually load it ourselves.
+                babelrc: false,
+            }),
+        },
     ],
   },
   output: {

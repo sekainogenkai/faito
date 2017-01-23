@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --bail",
+    "build": "webpack",
     "test": "npm run build && mocha --recursive && dependency-lint",
     "start": "node index.cgi"
   },
@@ -36,7 +36,7 @@
     "promisify-node": "^0.4.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
-    "webpack": "^1.14.0",
+    "webpack": "^2.2.0",
     "webpack-dev-middleware": "^1.9.0",
     "webpack-hot-middleware": "^2.14.0",
     "webpack-manifest-plugin": "^1.1.0"

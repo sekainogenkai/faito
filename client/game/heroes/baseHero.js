@@ -421,9 +421,6 @@ export default class Hero {
 
     _manageMana() {
         if (this._mana < maxMana) {
-            if (this.mask.physicsImpostor.getLinearVelocity().length() < 2) {
-                console.log(this.mask.physicsImpostor.getLinearVelocity().length());
-            }
             this._mana = Math.min(maxMana, this._mana + ((this.mask.physicsImpostor.getLinearVelocity().length() < 1)?this.manaGainIdle:this.manaGainMoving));
         }
         this._udpateManaBar();

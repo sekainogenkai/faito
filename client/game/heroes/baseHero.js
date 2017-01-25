@@ -26,8 +26,8 @@ export default class Hero {
     this.initCollider();
 
     // Create the mana bar
-    this.manaBar = this._initDisplayBar("mana", 0.5, 2, 20, BABYLON.Color3.Blue());
-    this.healthBar = this._initDisplayBar("health", 0.5, 2.5, 20, BABYLON.Color3.Red());
+    this.manaBar = this._initDisplayBar("mana", 0.3, 2, 20, BABYLON.Color3.Blue());
+    this.healthBar = this._initDisplayBar("health", 0.3, 2.5, 20, BABYLON.Color3.Red());
 
     require(`../../../models/heroes/${meshFileName}.blend`).ImportMesh(BABYLON.SceneLoader, null, this.game.scene, loadedMeshes => {
         // Add the mesh
@@ -399,7 +399,7 @@ export default class Hero {
     var path = [];
     var step = Math.PI * 2 / (tessellation-1.2); // -1.2 so that the circle closes
     for(var i = 0; i < tessellation; i++) {
-      var point = new BABYLON.Vector3(radius * Math.cos(step * i), 0, radius * Math.sin(step * i));
+      var point = new BABYLON.Vector3(-radius * Math.cos(step * i), 0, -radius * Math.sin(step * i));
       path.push(point);
     }
     var bar = BABYLON.Mesh.ExtrudeShapeCustom(id+"Display", shape, path, null, null, false, false, 0, this.game.scene, true);
@@ -417,8 +417,8 @@ export default class Hero {
     // Displays the mana bar
     var step = ((Math.PI * 2) / (bar.tessellation-1.2)) * (displayValue);
     for(var i = 0; i < bar.path.length; i++) {
-      var x = bar.radius * Math.cos(step * i);
-      var z = bar.radius * Math.sin(step * i);
+      var x = -bar.radius * Math.cos(step * i);
+      var z = -bar.radius * Math.sin(step * i);
       bar.path[i].x = x;
       bar.path[i].z = z;
     }

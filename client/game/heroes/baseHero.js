@@ -242,14 +242,13 @@ export default class Hero {
   checkGroundCheck() {
     //TODO: http://schteppe.github.io/cannon.js/examples/threejs_voxel_fps.html use this jump check logic
     // Check for ground
-    var jumpableMeshes = this.game.scene.getMeshesByTags("checkJump")
     this.onGround = false;
-    for (var i in jumpableMeshes) {
-      if (this.groundCheck.intersectsMesh(jumpableMeshes[i], true)){
+    this.game.scene.getMeshesByTags("checkJump").forEach(function (mesh) {
+      if (this.groundCheck.intersectsMesh(mesh, true)){
         this.mesh.material.diffuseColor = new BABYLON.Color3.Red();
         this.onGround = true;
       }
-    }
+    }, this);
   }
 
   update () {

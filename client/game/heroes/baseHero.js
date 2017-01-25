@@ -23,7 +23,7 @@ export default class Hero {
     // Get physics impostor ready
     this.initCollider();
 
-    // Create the mana
+    // Create the mana bar
     this._initManaBar(20);
     require(`../../../models/heroes/${meshFileName}.blend`).ImportMesh(BABYLON.SceneLoader, null, this.game.scene, loadedMeshes => {
         // Add the mesh
@@ -380,8 +380,9 @@ export default class Hero {
     }
   }
   _initManaBar (resolution=20) {
+    // Mark's mana bar
     //http://www.babylonjs-playground.com/#RF9W9#453
-    this.manaBarResolution = resolution + 10;
+    this.manaBarResolution = resolution;
     // Shape
     this.manaBarShape = [
       new BABYLON.Vector3(0.5, 0, 0),
@@ -427,7 +428,7 @@ export default class Hero {
         }
         this._udpateManaBar();
     }
-       
+
 
     /**
      * Returns false if there is insufficient mana.

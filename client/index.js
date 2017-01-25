@@ -7,6 +7,7 @@ import BABYLON from 'babylonjs';
 import {BabylonJS} from './react-babylonjs.js';
 import Hero from './game/heroes/baseHero';
 import Menu from './menu/Menu';
+import mapLoader from './mapLoader.js';
 
 class Game extends EventEmitter {
   constructor() {
@@ -111,6 +112,7 @@ class Game extends EventEmitter {
     this.collisionGroupFall = 4;
 
     // Add ground
+      /*
     this.ground = BABYLON.Mesh.CreateGround("ground", 2500, 2500, 20, this.scene);
     var material = new BABYLON.StandardMaterial("green", this.scene);
     material.diffuseColor = BABYLON.Color3.FromInts(31, 158, 69);
@@ -123,6 +125,11 @@ class Game extends EventEmitter {
     this.ground.physicsImpostor.physicsBody.collisionFilterMask = this.collisionGroupNormal | this.collisionGroupGround;
     this.shadowGenerator.getShadowMap().renderList.push(this.scene.meshes[2]);
     this.ground.receiveShadows = true;
+    */
+    
+    this.mapLoader = new mapLoader('test1', this);
+      
+      
 
     for (var x in [0,1]) {
       require('../models/heroes/omi.blend').Append(BABYLON.SceneLoader, this.scene, loadedScene => {

@@ -9,6 +9,7 @@ import testPower4 from './powers/testPower4';
 
 const zeroVector2 = new BABYLON.Vector2(0, 0);
 const maxMana = 5000;
+const maxHealth = 5000;
 
 export default class Hero {
   constructor(
@@ -18,13 +19,16 @@ export default class Hero {
     this.game = game;
     this.name = name;
     this._mana = maxMana;
+    this._health = maxHealth;
     this._joyTarget = this;
 
     // Get physics impostor ready
     this.initCollider();
 
     // Create the mana bar
-    this._initManaBar(20);
+    this.manaBar = this._initDisplayBar("mana", 0.5, 2, 20, BABYLON.Color3.Blue());
+    this.healthBar = this._initDisplayBar("health", 0.5, 2.5, 20, BABYLON.Color3.Red());
+
     require(`../../../models/heroes/${meshFileName}.blend`).ImportMesh(BABYLON.SceneLoader, null, this.game.scene, loadedMeshes => {
         // Add the mesh
         this.mesh = loadedMeshes[0];//.clone(this.name); // 2 is the index of the player mesh
@@ -258,6 +262,7 @@ export default class Hero {
     this.animations();
 
     this._manageMana();
+    this._udpateDisplayBar(this.healthBar, (this._health/maxHealth)); //TODO: put into manageHealth function
   }
 
   // use this to make xbox controller movement is smoove and doesn't go over the speed limit
@@ -379,53 +384,55 @@ export default class Hero {
         case Buttons.Y: this.attack4.buttonUp(0); this.animatePower=false; break;
     }
   }
-  _initManaBar (resolution=20) {
-    // Mark's mana bar
+  _initDisplayBar (id, width, radius, tessellation, color) {
     //http://www.babylonjs-playground.com/#RF9W9#453
-    this.manaBarResolution = resolution;
-    // Shape
-    this.manaBarShape = [
-      new BABYLON.Vector3(0.5, 0, 0),
+    var shape = [
+      new BABYLON.Vector3(width, 0, 0),
       new BABYLON.Vector3(0, 0, 0),
     ];
     // material
-    var material = new BABYLON.StandardMaterial("manaMaterial", this.game.scene);
+    var material = new BABYLON.StandardMaterial(id+"Material", this.game.scene);
     material.alpha = 0.5;
-    material.diffuseColor = new BABYLON.Color3(0, 0, 1);
+    material.diffuseColor = color;
     material.backFaceCulling = false;
 
-    this.pathArray = [];
-    var step = Math.PI * 2 / (this.manaBarResolution-1.2); // -2 so that the circle closes
-    for(var i = 0; i < this.manaBarResolution; i++) {
-      var point = new BABYLON.Vector3(2 * Math.cos(step * i), 0, 2 * Math.sin(step * i));
-      this.pathArray.push(point);
+    var path = [];
+    var step = Math.PI * 2 / (tessellation-1.2); // -1.2 so that the circle closes
+    for(var i = 0; i < tessellation; i++) {
+      var point = new BABYLON.Vector3(radius * Math.cos(step * i), 0, radius * Math.sin(step * i));
+      path.push(point);
     }
-    this.manaBar = BABYLON.Mesh.ExtrudeShapeCustom("manaMesh", this.manaBarShape, this.pathArray, null, null, false, false, 0, this.game.scene, true);
-    this.manaBar.material = material;
-    //this.manaBar.position.y -= 1;
-    //this.manaBar.parent = this.mask;
+    var bar = BABYLON.Mesh.ExtrudeShapeCustom(id+"Display", shape, path, null, null, false, false, 0, this.game.scene, true);
+    bar.material = material;
+    bar.tessellation = tessellation;
+    bar.path = path;
+    bar.shape = shape;
+    bar.radius = radius;
+
+    return bar;
   }
 
-  _udpateManaBar () {
+  _udpateDisplayBar (bar, displayValue) {
     //http://www.babylonjs-playground.com/#1MSEBT#3
     // Displays the mana bar
-    var step = ((Math.PI * 2) / (this.manaBarResolution-1.2)) * (this._mana/maxMana);
-    for(var i = 0; i < this.pathArray.length; i++) {
-      var x = 2 * Math.cos(step * i);
-      var z = 2 * Math.sin(step * i);
-      this.pathArray[i].x = x;
-      this.pathArray[i].z = z;
+    var step = ((Math.PI * 2) / (bar.tessellation-1.2)) * (displayValue);
+    for(var i = 0; i < bar.path.length; i++) {
+      var x = bar.radius * Math.cos(step * i);
+      var z = bar.radius * Math.sin(step * i);
+      bar.path[i].x = x;
+      bar.path[i].z = z;
     }
-    this.manaBar = BABYLON.Mesh.ExtrudeShapeCustom(null, this.manaBarShape, this.pathArray, null, null, null, null, null, null, null, null, this.manaBar);
-    this.manaBar.position.copyFrom(this.mask.position); // We don't parent so it has a fixed rotation
-    this.manaBar.position.y -= 1;
+    bar = BABYLON.Mesh.ExtrudeShapeCustom(null, bar.shape, bar.path, null, null, null, null, null, null, null, null, bar);
+    bar.position.copyFrom(this.mask.position); // We don't parent the bar to the mask so it has a fixed rotation
+    bar.position.y -= 1;
   }
 
     _manageMana() {
         if (this._mana < maxMana) {
             this._mana = Math.min(maxMana, this._mana + ((this.mask.physicsImpostor.getLinearVelocity().length() < 1)?this.manaGainIdle:this.manaGainMoving));
         }
-        this._udpateManaBar();
+        this._udpateDisplayBar(this.manaBar, (this._mana/maxMana));
+
     }
 
 

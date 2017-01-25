@@ -49,12 +49,6 @@ export default class Hero {
         var material = new BABYLON.StandardMaterial("blue_material", game.scene);
         material.diffuseColor = BABYLON.Color3.Blue();
         this.mesh.material = material;
-
-        // Highlight
-        this.highlightLayer = new BABYLON.HighlightLayer(name, this.game.scene);
-        this.highlightLayer.addMesh(loadedMeshes[0], BABYLON.Color3.Blue());
-        this.highlightLayer.innerGlow = false;
-
         this.initAnimations();
     });
 
@@ -72,6 +66,9 @@ export default class Hero {
     this.rollAirSpeed = rollAirSpeed;
     this.useAbilityTimer = 0;
     this.useAbilityTimerStart = 20;
+    // Mana variables
+    this.manaGainIdle = 10;
+    this.manaGainMoving = 1;
 
     // Input
     this.Input = {
@@ -384,7 +381,7 @@ export default class Hero {
   }
   _initManaBar (resolution=20) {
     //http://www.babylonjs-playground.com/#RF9W9#453
-    this.manaBarResolution = resolution;
+    this.manaBarResolution = resolution + 10;
     // Shape
     this.manaBarShape = [
       new BABYLON.Vector3(0.5, 0, 0),
@@ -397,7 +394,7 @@ export default class Hero {
     material.backFaceCulling = false;
 
     this.pathArray = [];
-    var step = Math.PI * 2 / (this.manaBarResolution-2); // -2 so that the circle closes
+    var step = Math.PI * 2 / (this.manaBarResolution-1.2); // -2 so that the circle closes
     for(var i = 0; i < this.manaBarResolution; i++) {
       var point = new BABYLON.Vector3(2 * Math.cos(step * i), 0, 2 * Math.sin(step * i));
       this.pathArray.push(point);
@@ -410,8 +407,8 @@ export default class Hero {
 
   _udpateManaBar () {
     //http://www.babylonjs-playground.com/#1MSEBT#3
-    // TODO: fix this maths
-    var step = Math.PI * 2 / ((this.manaBarResolution-2) + (maxMana/this._mana));
+    // Displays the mana bar
+    var step = ((Math.PI * 2) / (this.manaBarResolution-1.2)) * (this._mana/maxMana);
     for(var i = 0; i < this.pathArray.length; i++) {
       var x = 2 * Math.cos(step * i);
       var z = 2 * Math.sin(step * i);
@@ -423,30 +420,14 @@ export default class Hero {
 
     _manageMana() {
         if (this._mana < maxMana) {
+            if (this.mask.physicsImpostor.getLinearVelocity().length() < 2) {
+                console.log('asdf');
+            }
             this._mana = Math.min(maxMana, this._mana + 5);
-        }
-
-        /*
-        var manaColor = this._mana / maxMana;
-        this.mesh.outlineColor = new BABYLON.Color3(0,0,manaColor);
-        this.mesh.outlineWidth = .2 * manaColor;*/
-
-        // Handle blur
-        var manaSize = this._mana / maxMana;
-        this.setBlurSize(manaSize * 2);
-        if (this.useAbilityTimer) {
-            this.useAbilityTimer--;
-            this.highlightLayer.innerGlow = true;
-        } else {
-            this.highlightLayer.innerGlow = false;
         }
         this._udpateManaBar();
     }
-
-    setBlurSize (size) {
-        this.highlightLayer.blurHorizontalSize = size;
-        this.highlightLayer.blurVerticalSize = size;
-    }
+       
 
     /**
      * Returns false if there is insufficient mana.

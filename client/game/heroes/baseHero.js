@@ -8,7 +8,7 @@ import testPower3 from './powers/testPower3';
 import testPower4 from './powers/testPower4';
 
 const zeroVector2 = new BABYLON.Vector2(0, 0);
-const maxMana = 5000000;
+const maxMana = 5000;
 
 export default class Hero {
   constructor(
@@ -24,6 +24,8 @@ export default class Hero {
     // Get physics impostor ready
     this.initCollider();
 
+    // Create the mana
+    this._initManaBar(20);
 
     require(`../../../models/heroes/${meshFileName}.blend`).ImportMesh(BABYLON.SceneLoader, null, this.game.scene, loadedMeshes => {
         // Add the mesh
@@ -386,11 +388,50 @@ export default class Hero {
         case Buttons.Y: this.attack4.buttonUp(0); this.animatePower=false; break;
     }
   }
+  _initManaBar (resolution=20) {
+    //http://www.babylonjs-playground.com/#RF9W9#453
+    this.manaBarResolution = resolution;
+    // Shape
+    this.manaBarShape = [
+      new BABYLON.Vector3(0.5, 0, 0),
+      new BABYLON.Vector3(0, 0, 0),
+    ];
+    // material
+    var material = new BABYLON.StandardMaterial("manaMaterial", this.game.scene);
+    material.alpha = 0.5;
+    material.diffuseColor = new BABYLON.Color3(0, 0, 1);
+    material.backFaceCulling = false;
+
+    this.pathArray = [];
+    var step = Math.PI * 2 / (this.manaBarResolution-2); // -2 so that the circle closes
+    for(var i = 0; i < this.manaBarResolution; i++) {
+      var point = new BABYLON.Vector3(2 * Math.cos(step * i), 0, 2 * Math.sin(step * i));
+      this.pathArray.push(point);
+    }
+    this.manaBar = BABYLON.Mesh.ExtrudeShapeCustom("manaMesh", this.manaBarShape, this.pathArray, null, null, false, false, 0, this.game.scene, true);
+    this.manaBar.material = material;
+    this.manaBar.position.y -= 1;
+    this.manaBar.parent = this.mask;
+  }
+
+  _udpateManaBar () {
+    //http://www.babylonjs-playground.com/#1MSEBT#3
+    // TODO: fix this maths
+    var step = Math.PI * 2 / ((this.manaBarResolution-2) + (maxMana/this._mana));
+    for(var i = 0; i < this.pathArray.length; i++) {
+      var x = 2 * Math.cos(step * i);
+      var z = 2 * Math.sin(step * i);
+      this.pathArray[i].x = x;
+      this.pathArray[i].z = z;
+    }
+    this.manaBar = BABYLON.Mesh.ExtrudeShapeCustom(null, this.manaBarShape, this.pathArray, null, null, null, null, null, null, null, null, this.manaBar);
+  }
 
     _manageMana() {
         if (this._mana < maxMana) {
             this._mana = Math.min(maxMana, this._mana + 1);
         }
+        this._udpateManaBar();
     }
 
     /**

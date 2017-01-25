@@ -402,8 +402,8 @@ export default class Hero {
     }
     this.manaBar = BABYLON.Mesh.ExtrudeShapeCustom("manaMesh", this.manaBarShape, this.pathArray, null, null, false, false, 0, this.game.scene, true);
     this.manaBar.material = material;
-    this.manaBar.position.y -= 1;
-    this.manaBar.parent = this.mask;
+    //this.manaBar.position.y -= 1;
+    //this.manaBar.parent = this.mask;
   }
 
   _udpateManaBar () {
@@ -417,6 +417,8 @@ export default class Hero {
       this.pathArray[i].z = z;
     }
     this.manaBar = BABYLON.Mesh.ExtrudeShapeCustom(null, this.manaBarShape, this.pathArray, null, null, null, null, null, null, null, null, this.manaBar);
+    this.manaBar.position.copyFrom(this.mask.position); // We don't parent so it has a fixed rotation
+    this.manaBar.position.y -= 1;
   }
 
     _manageMana() {

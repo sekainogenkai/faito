@@ -20,29 +20,40 @@ export default class Hero {
     this._mana = maxMana;
     this._joyTarget = this;
 
-
     // Get physics impostor ready
     this.initCollider();
 
     // Create the mana
     this._initManaBar(20);
-
     require(`../../../models/heroes/${meshFileName}.blend`).ImportMesh(BABYLON.SceneLoader, null, this.game.scene, loadedMeshes => {
         // Add the mesh
         this.mesh = loadedMeshes[0];//.clone(this.name); // 2 is the index of the player mesh
         // console.log("the player mesh", this.mesh);
         this.mesh.isVisible = true;
+
+        // outline
+        this.mesh.outlineWidth = .1;
+        this.mesh.renderOutline = true;
+        this.mesh.outlineColor = new BABYLON.Color4(0,0,0, .01);
+        this.mesh.outlineAlpha = .1;
+
         this.mesh.id = this.name;
         this.mesh.parent = this.mask;
-        this.mesh.position.y = -3  + 1.9;
+        this.mesh.position.y = -3  + 1.9 - .1;
         this.mesh.position.z = .6;
         // Add the player mesh to the shadowGenerator
         this.game.shadowGenerator.getShadowMap().renderList.push(this.mesh);
         this.mesh.receiveShadows = true;
+
         // Add material for debug
         var material = new BABYLON.StandardMaterial("blue_material", game.scene);
         material.diffuseColor = BABYLON.Color3.Blue();
         this.mesh.material = material;
+
+        // Highlight
+        this.highlightLayer = new BABYLON.HighlightLayer(name, this.game.scene);
+        this.highlightLayer.addMesh(loadedMeshes[0], BABYLON.Color3.Blue());
+        this.highlightLayer.innerGlow = false;
 
         this.initAnimations();
     });
@@ -59,6 +70,8 @@ export default class Hero {
     this.moveBool = true;
     this.rollGroundSpeed = rollGroundSpeed;
     this.rollAirSpeed = rollAirSpeed;
+    this.useAbilityTimer = 0;
+    this.useAbilityTimerStart = 20;
 
     // Input
     this.Input = {
@@ -122,19 +135,19 @@ export default class Hero {
         var magnitude =
         Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.z * this.body.velocity.z);
         if (this.rollTimer) {
-                if (magnitude > 1) {
+                if (magnitude > 1) { // roll animation
                     this.startAnimationNew(this.rollingAnimation, true, 10);
                     this.currentAnimatable.speedRatio = 2.6;
-                } else {
+                } else { // duck animation
                     this.startAnimationNew(this.rollAnimation, false);
                     this.currentAnimatable.speedRatio = 2;
                 }
         } else if (this.onGround) {
             //console.log("mag: ", magnitude);
-            if (magnitude < 1) {// Idle and power
+            if (magnitude < 1) {// Idle Animation
                 if (!this.animatePower) {
                     this.startAnimationNew(this.idleAnimation);
-                } else {
+                } else { // Power animation
                     this.startAnimationNew(this.powerAnimation, false);
                     this.currentAnimatable.speedRatio = 1.5;
                 }
@@ -156,7 +169,7 @@ export default class Hero {
     const detail = 10;
 
     // Create collision mask m0
-    this.mask = this.createSphere('m0', detail, 2.5, 0, 4, .2, .2);
+    this.mask = this.createSphere('m0', detail, 2.5, 0, 4, .2, .01);
 
     // create collision mask m1
     this.mask1 = this.createSphere('m1', detail, 2.3, 1.9, 1, .05, .2);
@@ -171,35 +184,16 @@ export default class Hero {
     this.mask2.parent = this.mask;
     //this.body2.type = 2;
 
-
-
-    //this.updateMassProperties();
-
-    // Testing
-    //this.mask2.position.y = -1;
-
-
-    //this.mask.physicsImpostor.forceUpdate();
-    //this.body = this.mask.physicsImpostor.physicsBody;
-
-
     this.updatePhysicsImpostor();
     this.updateMassProperties();
 
     this.initGroundCheck();
-
-    //this.mask2.position.y = -5;
-    //this.updatePhysicsImpostor();
-    //this.updateMassProperties();
-
-    //this.body2.position.y -= 5;
 
     console.log('mask', this.mask);
     const visible = false;
     this.mask.isVisible = visible;
     this.mask1.isVisible = visible;
     this.mask2.isVisible = visible;
-
     this.mask.position.y = 20;
 
     console.log('body', this.mask.physicsImpostor.physicsBody);
@@ -240,8 +234,8 @@ export default class Hero {
     this.groundCheck = BABYLON.Mesh.CreateBox("mask", 2.5, this.game.scene);
     this.groundCheck.isVisible = false;
     this.groundCheck.parent = this.mask;
-    this.groundCheck.position.y = -3 + 1.9;
-    this.groundCheck.scaling.y = 0.2;
+    this.groundCheck.position.y = -3 + 1.9 -.2;
+    this.groundCheck.scaling.y = 0.3;
   }
 
   checkGroundCheck() {
@@ -302,7 +296,7 @@ export default class Hero {
         movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollGroundSpeed:this.speed));
     } else { // Movement in air
         movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollAirSpeed:this.airSpeed));
-        if (this.body.velocity.y < 1) {
+        if (this.body.velocity.y < 0) {
             movementVector = movementVector.add(new BABYLON.Vector3(0,-5,0));
         }
         if (this.rollTimer) {
@@ -429,9 +423,29 @@ export default class Hero {
 
     _manageMana() {
         if (this._mana < maxMana) {
-            this._mana = Math.min(maxMana, this._mana + 1);
+            this._mana = Math.min(maxMana, this._mana + 5);
+        }
+
+        /*
+        var manaColor = this._mana / maxMana;
+        this.mesh.outlineColor = new BABYLON.Color3(0,0,manaColor);
+        this.mesh.outlineWidth = .2 * manaColor;*/
+
+        // Handle blur
+        var manaSize = this._mana / maxMana;
+        this.setBlurSize(manaSize * 2);
+        if (this.useAbilityTimer) {
+            this.useAbilityTimer--;
+            this.highlightLayer.innerGlow = true;
+        } else {
+            this.highlightLayer.innerGlow = false;
         }
         this._udpateManaBar();
+    }
+
+    setBlurSize (size) {
+        this.highlightLayer.blurHorizontalSize = size;
+        this.highlightLayer.blurVerticalSize = size;
     }
 
     /**
@@ -441,6 +455,9 @@ export default class Hero {
         if (this._mana < amount) {
             return false;
         }
+
+        this.useAbilityTimer = this.useAbilityTimerStart;
+
         this._mana -= amount;
         return true;
     }

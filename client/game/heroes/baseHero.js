@@ -13,7 +13,7 @@ const maxHealth = 5000;
 
 export default class Hero {
   constructor(
-    game, name, meshFileName='omi', speed=20, airSpeed=5, jumpStrength=150, rollGroundSpeed=30, rollAirSpeed=20,
+    game, name, meshFileName='omi', speed=15, airSpeed=4, jumpStrength=150, rollGroundSpeed=25, rollAirSpeed=15,
     attack1=testPower, attack2=testPower4, attack3=testPower3, attack4=testPower,
     defense1=testPower, defense2=testPower, defense3=testPower, defense4=testPower){
     this.game = game;

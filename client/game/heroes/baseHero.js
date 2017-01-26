@@ -431,7 +431,6 @@ export default class Hero {
             this._mana = Math.min(maxMana, this._mana + ((this.mask.physicsImpostor.getLinearVelocity().length() < 1)?this.manaGainIdle:this.manaGainMoving));
         }
         this._udpateDisplayBar(this.manaBar, (this._mana/maxMana));
-
     }
 
 

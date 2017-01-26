@@ -170,16 +170,16 @@ export default class Hero {
     const detail = 10;
 
     // Create collision mask m0
-    this.mask = this.createSphere('m0', detail, 2.5, 0, 4, .2, .01);
+    this.mask = this.createSphere('m0', detail, 2.3, 0, 4, 0, .01);
 
     // create collision mask m1
-    this.mask1 = this.createSphere('m1', detail, 2.3, 1.9, 1, .05, .2);
+    this.mask1 = this.createSphere('m1', detail, 2.5, 1.9, 1, 0, .2);
     this.body1 = this.mask1.physicsImpostor.physicsBody;
     //this.body1.fixedRotation = true;
     this.mask1.parent = this.mask;
 
     // Create collision mask m2
-    this.mask2 = this.createSphere('m2', detail, 2, 1.9+1.7, 1, .05, .2);
+    this.mask2 = this.createSphere('m2', detail, 2, 1.9+1.7, 1, 0, .2);
     this.body2 = this.mask2.physicsImpostor.physicsBody;
     //this.body2.fixedRotation = true;
     this.mask2.parent = this.mask;
@@ -188,10 +188,9 @@ export default class Hero {
     this.updatePhysicsImpostor();
     this.updateMassProperties();
 
-    this.initGroundCheck();
+    const visible = true;
+    this.initGroundCheck(visible);
 
-    console.log('mask', this.mask);
-    const visible = false;
     this.mask.isVisible = visible;
     this.mask1.isVisible = visible;
     this.mask2.isVisible = visible;
@@ -230,10 +229,10 @@ export default class Hero {
     impostorBody.collisionFilterMask = this.game.collisionGroupGround | this.game.collisionGroupNormal | this.game.collisionGroupFall;
   }
 
-  initGroundCheck() {
+  initGroundCheck(visible=false) {
     // Create mesh for onGround collision check
-    this.groundCheck = BABYLON.Mesh.CreateBox("mask", 2.5, this.game.scene);
-    this.groundCheck.isVisible = false;
+    this.groundCheck = BABYLON.Mesh.CreateCylinder("groundCheck", 2, 1.5, 1.5, 10, 1, this.game.scene);
+    this.groundCheck.isVisible = visible;
     this.groundCheck.parent = this.mask;
     this.groundCheck.position.y = -3 + 1.9 -.2;
     this.groundCheck.scaling.y = 0.3;

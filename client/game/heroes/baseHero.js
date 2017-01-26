@@ -7,6 +7,8 @@ import testPower2 from './powers/testPower2';
 import testPower3 from './powers/testPower3';
 import testPower4 from './powers/testPower4';
 
+const contactNormal = new CANNON.Vec3();
+const upAxis = new BABYLON.Vector3.Up()
 const zeroVector2 = new BABYLON.Vector2(0, 0);
 const maxMana = 5000;
 const maxHealth = 5000;
@@ -57,7 +59,7 @@ export default class Hero {
     });
 
     // Movement variables
-    this.onGround = false;
+    //this.mask.physicsImpostor.canJump = false;
     this.jumpStrength = jumpStrength;
     this.jumpTimerStart = 20;
     this.jumpTimer = this.jumpTimerStart;
@@ -143,7 +145,7 @@ export default class Hero {
                     this.startAnimationNew(this.rollAnimation, false);
                     this.currentAnimatable.speedRatio = 2;
                 }
-        } else if (this.onGround) {
+        } else if (this.mask.physicsImpostor.physicsBody.canJump) {
             //console.log("mag: ", magnitude);
             if (magnitude < 1) {// Idle Animation
                 if (!this.animatePower) {
@@ -171,7 +173,19 @@ export default class Hero {
 
     // Create collision mask m0
     this.mask = this.createSphere('m0', detail, 2.3, 0, 4, 0.05, .01);
-
+    this.mask.physicsImpostor.physicsBody.canJump = false;
+    this.mask.physicsImpostor.onCollide = function(e) {
+      //http://schteppe.github.io/cannon.js/examples/threejs_voxel_fps.html
+      var contact = e.contact;
+      if (contact.bi.id == this.id) {
+        contact.ni.negate(contactNormal);
+      } else {
+        contactNormal.copy(contact.ni);
+      }
+      if(contactNormal.dot(upAxis) > 0.5){ // 0.5 is the threshold
+        this.canJump = true;
+      }
+    }
     // create collision mask m1
     this.mask1 = this.createSphere('m1', detail, 2.3, 1.9, 1, 0, .2);
     this.body1 = this.mask1.physicsImpostor.physicsBody;
@@ -241,17 +255,27 @@ export default class Hero {
   checkGroundCheck() {
     //TODO: http://schteppe.github.io/cannon.js/examples/threejs_voxel_fps.html use this jump check logic
     // Check for ground
-    this.onGround = false;
+    //this.mask.physicsImpostor.canJump = false;
     this.game.scene.getMeshesByTags("checkJump").forEach(function (mesh) {
       if (this.groundCheck.intersectsMesh(mesh, true)){
         this.mesh.material.diffuseColor = new BABYLON.Color3.Red();
         this.onGround = true;
       }
     }, this);
+    /*
+    this.game.scene.getMeshesByTags("checkHeightMapJump").forEach(function (mesh) {
+      console.log(mesh);
+      console.log(mesh.getHeightAtCoordinates(this.mask.position.x, this.mask.position.z + ' : ' + this.mask.position.y));
+      if (mesh.getHeightAtCoordinates(this.mask.position.x, this.mask.position.z) == this.mask.position.y){
+        this.mesh.material.diffuseColor = new BABYLON.Color3.Red();
+        this.mask.physicsImpostor.canJump = true;
+      }
+    }, this);
+    */
   }
 
   update () {
-    this.checkGroundCheck();
+    //this.checkGroundCheck();
 
     if (this.moveBool) {
         this.move();
@@ -292,7 +316,7 @@ export default class Hero {
     //console.log(this.rollTimer);
 
     // Movement on ground
-    if (this.onGround) {
+    if (this.mask.physicsImpostor.physicsBody.canJump) {
         movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollGroundSpeed:this.speed));
     } else { // Movement in air
         movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollAirSpeed:this.airSpeed));
@@ -305,10 +329,11 @@ export default class Hero {
     }
 
     // Jump
-    if (this.onGround && this.Input.JUMP && this.jumpTimer == 0) {
+    if (this.mask.physicsImpostor.physicsBody.canJump && this.Input.JUMP && this.jumpTimer == 0) {
         //console.log("jump!");
+        this.mask.physicsImpostor.physicsBody.canJump = false;
         movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
-        this.mesh.material.diffuseColor = BABYLON.Color3.Blue();
+        this.mesh.material.diffuseColor = new BABYLON.Color3.Blue();
         this.jumpTimer = this.jumpTimerStart;
     } else if (this.jumpTimer > 0) {
         this.jumpTimer--;
@@ -316,7 +341,7 @@ export default class Hero {
     this.Input.JUMP = false;
 
     // apply movement at the very end.
-    //console.log('ONGROUND:', this.onGround);
+    //console.log('ONGROUND:', this.mask.physicsImpostor.canJump);
     this.mask.applyImpulse(movementVector, this.mask.position);
 
     if (this.body.velocity.length() > 1 && (this.Input.AXIS_X || this.Input.AXIS_Y) ) {

@@ -70,8 +70,8 @@ class GamepadInput extends EventEmitter {
         && values.y > -zeroSensitivity && values.y < zeroSensitivity;
       if (!willBeZeroed || willBeZeroed != xIsZeroed) {
         xIsZeroed = willBeZeroed;
-        joyVector.x = values.x;
-        joyVector.y = -values.y;
+        joyVector.x = willBeZeroed ? 0 : values.x;
+        joyVector.y = willBeZeroed ? 0 :-values.y;
         this.emit('joychanged', joyVector);
       }
     }

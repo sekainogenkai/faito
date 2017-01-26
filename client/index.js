@@ -94,10 +94,13 @@ class Game extends EventEmitter {
     shader.backFaceCulling = false;
     skybox.material = shader;
 
-    // Fog
-    this.scene.fogMode = BABYLON.Scene.FOGMODE_EXP2;
-    this.scene.fogDensity = 0.0018;
+    /*
+    this.scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
+    this.scene.fogDensity = 0.01;
     this.scene.fogColor = new BABYLON.Color3(240/255, 240/255, 1);
+    this.scene.fogStart = 300.0;
+    this.scene.fogEnd = 400.0;
+    */
 
     // Add shadow generator
     this.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,10), this.light);
@@ -126,10 +129,10 @@ class Game extends EventEmitter {
     this.shadowGenerator.getShadowMap().renderList.push(this.scene.meshes[2]);
     this.ground.receiveShadows = true;
     */
-    
+
     this.mapLoader = new mapLoader('test1', this);
-      
-      
+
+
 
     for (var x in [0,1]) {
       require('../models/heroes/omi.blend').Append(BABYLON.SceneLoader, this.scene, loadedScene => {

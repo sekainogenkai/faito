@@ -104,7 +104,8 @@ class Game extends EventEmitter {
 
     // Add shadow generator
     this.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,10), this.light);
-    this.shadowGenerator.setDarkness(0.5) ;
+    this.shadowGenerator.setDarkness(0.5);
+    //this.shadowGenerator.bias = 0.01;
 
     this.scene.enablePhysics(
       new BABYLON.Vector3(0, -10, 0),

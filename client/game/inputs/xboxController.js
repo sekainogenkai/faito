@@ -54,7 +54,7 @@ class GamepadInput extends EventEmitter {
       // Treat stuff close to 0 as 0 so that when the player intends
       // their character to be at rest the character is actually at
       // rest.
-    const zeroSensitivity = 0.15;
+    const zeroSensitivity = 0.2;
     if (/* per-axis, kpgbrink dislikes */false) {
       const willXBeZeroed = values.x > -zeroSensitivity && values.x < zeroSensitivity;
       const willYBeZeroed = values.y > -zeroSensitivity && values.y < zeroSensitivity;
@@ -70,8 +70,8 @@ class GamepadInput extends EventEmitter {
         && values.y > -zeroSensitivity && values.y < zeroSensitivity;
       if (!willBeZeroed || willBeZeroed != xIsZeroed) {
         xIsZeroed = willBeZeroed;
-        joyVector.x = values.x;
-        joyVector.y = -values.y;
+        joyVector.x = willBeZeroed ? 0 : values.x;
+        joyVector.y = willBeZeroed ? 0 :-values.y;
         this.emit('joychanged', joyVector);
       }
     }

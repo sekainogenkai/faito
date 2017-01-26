@@ -13,7 +13,7 @@ const maxHealth = 5000;
 
 export default class Hero {
   constructor(
-    game, name, meshFileName='omi', speed=15, airSpeed=4, jumpStrength=150, rollGroundSpeed=25, rollAirSpeed=15,
+    game, name, meshFileName='omi', speed=12, airSpeed=4, jumpStrength=150, rollGroundSpeed=20, rollAirSpeed=10,
     attack1=testPower, attack2=testPower4, attack3=testPower3, attack4=testPower,
     defense1=testPower, defense2=testPower, defense3=testPower, defense4=testPower){
     this.game = game;
@@ -152,7 +152,7 @@ export default class Hero {
                     this.startAnimationNew(this.powerAnimation, false);
                     this.currentAnimatable.speedRatio = 1.5;
                 }
-            } else if (magnitude < 5) { // Walk animation
+            } else if (magnitude < 9) { // Walk animation
                 this.startAnimationNew(this.walkAnimation);
                 this.currentAnimatable.speedRatio = .31 * magnitude;
             } else { // Run animation
@@ -170,10 +170,10 @@ export default class Hero {
     const detail = 10;
 
     // Create collision mask m0
-    this.mask = this.createSphere('m0', detail, 2.3, 0, 4, 0, .01);
+    this.mask = this.createSphere('m0', detail, 2.3, 0, 4, 0.05, .01);
 
     // create collision mask m1
-    this.mask1 = this.createSphere('m1', detail, 2.5, 1.9, 1, 0, .2);
+    this.mask1 = this.createSphere('m1', detail, 2.3, 1.9, 1, 0, .2);
     this.body1 = this.mask1.physicsImpostor.physicsBody;
     //this.body1.fixedRotation = true;
     this.mask1.parent = this.mask;
@@ -188,7 +188,7 @@ export default class Hero {
     this.updatePhysicsImpostor();
     this.updateMassProperties();
 
-    const visible = true;
+    const visible = false;
     this.initGroundCheck(visible);
 
     this.mask.isVisible = visible;
@@ -319,7 +319,6 @@ export default class Hero {
     //console.log('ONGROUND:', this.onGround);
     this.mask.applyImpulse(movementVector, this.mask.position);
 
-    console.log('x',this.Input.AXIS_X)
     if (this.body.velocity.length() > 1 && (this.Input.AXIS_X || this.Input.AXIS_Y) ) {
         this.setRotation();
     }

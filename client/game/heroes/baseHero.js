@@ -417,6 +417,8 @@ export default class Hero {
     var material = new BABYLON.StandardMaterial(id+"Material", this.game.scene);
     material.alpha = 0.5;
     material.diffuseColor = color;
+    material.ambientColor = color;
+    material.specularColor = color;
     material.backFaceCulling = false;
 
     var path = [];

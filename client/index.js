@@ -81,6 +81,7 @@ class Game extends EventEmitter {
     camera.attachControl(engine.getRenderingCanvas(), false);
 
     this.light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(0, -2, 0), this.scene);
+    this.light2 = new BABYLON.HemisphericLight("dir02", new BABYLON.Vector3(0,1,0), this.scene);
     // Skybox
     BABYLON.Engine.ShadersRepository = "./shaders/";
 
@@ -104,7 +105,7 @@ class Game extends EventEmitter {
 
     // Add shadow generator
     this.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,10), this.light);
-    this.shadowGenerator.setDarkness(0.5);
+    this.shadowGenerator.setDarkness(0.6);
     //this.shadowGenerator.bias = 0.01;
 
     this.scene.enablePhysics(

@@ -251,7 +251,7 @@ export default class Hero {
     this.groundCheck.position.y = -3 + 1.9 -.2;
     this.groundCheck.scaling.y = 0.3;
   }
-
+  /*
   checkGroundCheck() {
     //TODO: http://schteppe.github.io/cannon.js/examples/threejs_voxel_fps.html use this jump check logic
     // Check for ground
@@ -262,7 +262,6 @@ export default class Hero {
         this.onGround = true;
       }
     }, this);
-    /*
     this.game.scene.getMeshesByTags("checkHeightMapJump").forEach(function (mesh) {
       console.log(mesh);
       console.log(mesh.getHeightAtCoordinates(this.mask.position.x, this.mask.position.z + ' : ' + this.mask.position.y));
@@ -271,8 +270,8 @@ export default class Hero {
         this.mask.physicsImpostor.canJump = true;
       }
     }, this);
-    */
   }
+  */
 
   update () {
     //this.checkGroundCheck();
@@ -333,7 +332,6 @@ export default class Hero {
         //console.log("jump!");
         this.mask.physicsImpostor.physicsBody.canJump = false;
         movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
-        this.mesh.material.diffuseColor = new BABYLON.Color3.Blue();
         this.jumpTimer = this.jumpTimerStart;
     } else if (this.jumpTimer > 0) {
         this.jumpTimer--;

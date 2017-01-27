@@ -80,8 +80,14 @@ class Game extends EventEmitter {
     camera.setPosition(new BABYLON.Vector3(0, 40, -40));
     camera.attachControl(engine.getRenderingCanvas(), false);
 
-    this.light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(0, -2, 0), this.scene);
+    this.light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(0, -1, 0), this.scene);
+    let lightStrength = 1;
+    this.light.diffuse = new BABYLON.Color3(lightStrength,lightStrength,lightStrength);
+    this.light.specular = new BABYLON.Color3(lightStrength,lightStrength,lightStrength);
     this.light2 = new BABYLON.HemisphericLight("dir02", new BABYLON.Vector3(0,1,0), this.scene);
+    let lightStrength2 = .7;
+    this.light2.diffuse = new BABYLON.Color3(lightStrength2,lightStrength2,lightStrength2);
+    this.light2.specular = new BABYLON.Color3(lightStrength2,lightStrength2,lightStrength2);
     // Skybox
     BABYLON.Engine.ShadersRepository = "./shaders/";
 
@@ -105,7 +111,7 @@ class Game extends EventEmitter {
 
     // Add shadow generator
     this.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,10), this.light);
-    this.shadowGenerator.setDarkness(0.6);
+    this.shadowGenerator.setDarkness(0);
     //this.shadowGenerator.bias = 0.01;
 
     this.scene.enablePhysics(

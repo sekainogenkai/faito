@@ -95,10 +95,10 @@ export default class Hero {
     this.defense3 = new defense3(game, this);
     this.defense4 = new defense4(game, this);
 
-      // Add update loop to Babylon
-      registerBeforeSceneRender(this.mesh, () => {
-          this.update();
-      });
+    // Add update loop to Babylon
+    registerBeforeSceneRender(this.mesh, () => {
+        this.update();
+    });
   }
 
   initAnimations () {

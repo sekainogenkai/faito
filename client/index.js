@@ -7,7 +7,8 @@ import BABYLON from 'babylonjs';
 import {BabylonJS} from './react-babylonjs.js';
 import Hero from './game/heroes/baseHero';
 import Menu from './menu/Menu';
-import mapLoader from './mapLoader.js';
+import MapLoader from './mapLoader.js';
+import Camera from './game/camera';
 
 class Game extends EventEmitter {
   constructor() {
@@ -75,10 +76,13 @@ class Game extends EventEmitter {
     engine.runRenderLoop(this.handleRenderLoop = () => this.doRenderLoop());
     this.scene = new BABYLON.Scene(engine);
 
+    // Initialize camera
+    this.camera = new Camera(this);
+    this.scene.activeCamer = this.camera;
     // Controllable camera
-    var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 10, new BABYLON.Vector3.Zero(), this.scene);
-    camera.setPosition(new BABYLON.Vector3(0, 40, -40));
-    camera.attachControl(engine.getRenderingCanvas(), false);
+    //var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 10, new BABYLON.Vector3.Zero(), this.scene);
+    //camera.setPosition(new BABYLON.Vector3(0, 40, -40));
+    //camera.attachControl(engine.getRenderingCanvas(), false);
 
     this.light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(0, -1, 0), this.scene);
     let lightStrength = 1;
@@ -138,7 +142,7 @@ class Game extends EventEmitter {
     this.ground.receiveShadows = true;
     */
 
-    this.mapLoader = new mapLoader('test1', this);
+    this.mapLoader = new MapLoader('test1', this);
 
 
 

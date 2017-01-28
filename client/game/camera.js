@@ -12,6 +12,7 @@ export default class Camera {
     // Set camera properties
     this.camera.lowerRadiusLimit = minRad;
     this.camera.upperRadiusLimit = maxRad;
+    this.game.scene.registerBeforeRender(this.update());
   }
 
   update () {
@@ -19,21 +20,25 @@ export default class Camera {
   }
 
   setTarget () {
-    var cx = cz = mx = mz = 0;
+    var cx, cz, mx, mz;
+    cx = cz = mx = mz = 0;
     var numPlayers = this.game.players.length || 1;
     this.game.players.forEach(function (player) {
       cx += player.mask.position.x;
       cz += player.mask.position.z;
       // Set max x and z distances
-      mx = ((player.mask.position.x > mx) ? player.mask.position.x : mx);
-      mz = ((player.mask.position.z > mz) ? player.mask.position.z : mz);
+      var dx = player.mask.position.x - this.cameraTarget.x
+      var dz = player.mask.position.z - this.cameraTarget.z
+      mx = ((dx > mx) ? dx : mx);
+      mz = ((dz > mz) ? dz : mz);
     }, this);
 
     // Update center point
     this.cameraTarget.x = cx/numPlayers;
     this.cameraTarget.z = cz/numPlayers;
+    console.log(this.cameraTarget)
     // Set zoom
-    setZoom(mx, mz);
+    this.setZoom(mx, mz);
   }
 
   setZoom (mx, mz) {

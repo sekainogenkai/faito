@@ -12,7 +12,7 @@ export default class Camera {
     // Set camera properties
     this.camera.lowerRadiusLimit = minRad;
     this.camera.upperRadiusLimit = maxRad;
-    this.game.scene.registerBeforeRender(this.update());
+    //this.game.scene.registerBeforeRender(this.update());
   }
 
   update () {

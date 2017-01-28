@@ -8,6 +8,7 @@ export default class MapLoader {
              this.setImpostors('boxImpostor', BABYLON.PhysicsImpostor.BoxImpostor);
              this.setImpostors('heightFieldImpostor', BABYLON.PhysicsImpostor.HeightmapImpostor);
              this.setImpostors('sphereImpostor', BABYLON.PhysicsImpostor.SphereImpostor);
+             this.setImpostors('cylinderImpostor', BABYLON.PhysicsImpostor.CylinderImpostor);
         });
     }
     
@@ -23,3 +24,4 @@ export default class MapLoader {
         }, this);
     }
 }
+

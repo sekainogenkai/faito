@@ -1,3 +1,4 @@
+import MiniSignal from 'mini-signals';
 import EventEmitter from 'events';
 import {Buttons, Manager as InputManager} from './game/input';
 import {LocalPlayer} from './game/player';
@@ -15,7 +16,8 @@ class Game extends EventEmitter {
     super();
     this.players = [];
     this.heroes = [];
-    this.on('playerschanged', () => this.handlePlayersChanged());
+      this.on('playerschanged', () => this.handlePlayersChanged());
+      this.menuSignal = new MiniSignal();
   }
 
   addInput(input) {
@@ -37,8 +39,8 @@ class Game extends EventEmitter {
     // levels of indirection!
     player.input.on('buttondown', button => {
       console.log(`input emitted ${button}`);
-      if (button === Buttons.Menu) {
-        this.setState({menu: true,});
+        if (button === Buttons.Menu) {
+            this.menuSignal.dispatch();
       }
     });
     this.emit('playerschanged');
@@ -173,7 +175,10 @@ class Ui extends React.Component {
   }
 
   handleEngineCreated(engine) {
-    this.props.game.setEngine(engine);
+      this.props.game.setEngine(engine);
+      this.props.game.menuSignal.add(() => this.setState({
+          menu: !this.state.menu,
+      }));
   }
 
   handleEngineAbandoned(engine) {

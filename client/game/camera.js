@@ -13,7 +13,7 @@ export default class Camera {
     this.radius = {
         current: 100,
         target: 100,
-        min: 59,
+        min: 70,
     };
 
     // Add the update function to the scene

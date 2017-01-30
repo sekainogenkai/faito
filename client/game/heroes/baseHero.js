@@ -2,12 +2,13 @@ import BABYLON from 'babylonjs';
 import {EventSubscriptionContext} from '../../event-util';
 import {Buttons} from '../input';
 import {registerBeforeSceneRender} from '../mesh-util';
+import Particle from '../effects/particle'
 import testPower from './powers/testPower';
 import testPower2 from './powers/testPower2';
 import testPower3 from './powers/testPower3';
 import testPower4 from './powers/testPower4';
 
-const upAxis = new CANNON.Vec3(0, 1, 0)
+const upAxis = new CANNON.Vec3(0, 1, 0);
 const zeroVector2 = new BABYLON.Vector2(0, 0);
 const maxMana = 5000;
 const maxHealth = 5000;
@@ -333,6 +334,9 @@ export default class Hero {
         this.mask.physicsImpostor.physicsBody.canJump = false;
         movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
         this.jumpTimer = this.jumpTimerStart;
+
+        // Create particle
+        new Particle(this.game, '../effects/circle.png', this.mask.position);
     } else if (this.jumpTimer > 0) {
         this.jumpTimer--;
     }

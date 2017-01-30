@@ -52,7 +52,7 @@ export default class Camera {
         }, this);
         //console.log('maxDistance', maxDistance);
     }
-      
+
     //console.log('maxDistance', maxDistance);
     this.camera.radius = Math.max(this.radius.min, 50 + maxDistance * 1.5);
   }

@@ -106,14 +106,6 @@ class Game extends EventEmitter {
     shader.backFaceCulling = false;
     skybox.material = shader;
 
-    /*
-    this.scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
-    this.scene.fogDensity = 0.01;
-    this.scene.fogColor = new BABYLON.Color3(240/255, 240/255, 1);
-    this.scene.fogStart = 300.0;
-    this.scene.fogEnd = 400.0;
-    */
-
     // Add shadow generator
     this.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,10), this.light);
     this.shadowGenerator.setDarkness(0);
@@ -127,33 +119,7 @@ class Game extends EventEmitter {
     this.collisionGroupGround = 1;
     this.collisionGroupFall = 4;
 
-    // Add ground
-      /*
-    this.ground = BABYLON.Mesh.CreateGround("ground", 2500, 2500, 20, this.scene);
-    var material = new BABYLON.StandardMaterial("green", this.scene);
-    material.diffuseColor = BABYLON.Color3.FromInts(31, 158, 69);
-    this.ground.material = material;
-    this.ground.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, move:false});
-    this.ground.physicsImpostor.physicsBody
-    BABYLON.Tags.EnableFor(this.ground);
-    BABYLON.Tags.AddTagsTo(this.ground, "checkJump");
-    this.ground.physicsImpostor.physicsBody.collisionFilterGroup = this.collisionGroupGround;
-    this.ground.physicsImpostor.physicsBody.collisionFilterMask = this.collisionGroupNormal | this.collisionGroupGround;
-    this.shadowGenerator.getShadowMap().renderList.push(this.scene.meshes[2]);
-    this.ground.receiveShadows = true;
-    */
-
     this.mapLoader = new MapLoader('test1', this);
-
-
-
-    for (var x in [0,1]) {
-      require('../models/heroes/omi.blend').Append(BABYLON.SceneLoader, this.scene, loadedScene => {
-        /*onsuccess*/
-      //  new BABYLON.PhysicsImpostor(loadedScene.meshes[x], BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, }, scene);
-        loadedScene.beginAnimation(this.scene.skeletons[x], 0, 120, true, 2);
-      }, x => {/*onprogress*/}, ex => {/*onerror*/});
-    }
 
     new InputManager(this);
   }

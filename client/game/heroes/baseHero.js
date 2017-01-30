@@ -7,7 +7,6 @@ import testPower2 from './powers/testPower2';
 import testPower3 from './powers/testPower3';
 import testPower4 from './powers/testPower4';
 
-const contactNormal = new CANNON.Vec3();
 const upAxis = new CANNON.Vec3(0, 1, 0)
 const zeroVector2 = new BABYLON.Vector2(0, 0);
 const maxMana = 5000;
@@ -174,6 +173,7 @@ export default class Hero {
     // Create collision mask m0
     this.mask = this.createSphere('m0', detail, 2.3, 0, 4, 0.05, .01);
     this.mask.physicsImpostor.physicsBody.canJump = false;
+    var contactNormal = new CANNON.Vec3();
     this.mask.physicsImpostor.onCollide = function(e) {
       //http://schteppe.github.io/cannon.js/examples/threejs_voxel_fps.html
       var contact = e.contact;

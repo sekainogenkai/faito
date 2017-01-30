@@ -156,7 +156,7 @@ export default class Hero {
                 }
             } else if (magnitude < 9) { // Walk animation
                 this.startAnimationNew(this.walkAnimation);
-                this.currentAnimatable.speedRatio = .31 * magnitude;
+                this.currentAnimatable.speedRatio = .34 * magnitude;
             } else { // Run animation
                 this.startAnimationNew(this.runAnimation);
                 this.currentAnimatable.speedRatio = .9 + .02 * magnitude;

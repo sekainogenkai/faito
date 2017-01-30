@@ -9,6 +9,12 @@ export default class Camera {
     this.cameraTarget = new BABYLON.Vector3.Zero()
     this.camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, this.initRadius, this.cameraTarget, this.game.scene);
     this.camera.setPosition(new BABYLON.Vector3(0, 40, -40));
+    // Set radius values
+    this.radius = {
+        current: 100,
+        target: 100,
+        min: 59,
+    };
 
     // Add the update function to the scene
     this.game.scene.registerBeforeRender(() => this.update());
@@ -16,6 +22,7 @@ export default class Camera {
 
   update () {
     this.setTarget();
+    this.setZoom();
   }
 
   setTarget () {
@@ -35,11 +42,18 @@ export default class Camera {
     // Update center point
     this.cameraTarget.x = cx/numHeroes;
     this.cameraTarget.z = cz/numHeroes;
-    // Set zoom
-    this.setZoom(mx, mz);
   }
 
-  setZoom (mx, mz) {
-    this.camera.radius = 100; //TODO: vary zoom based on hero positions
+  setZoom () {
+    var maxDistance = 0;
+    if (this.game.heroes) {
+        this.game.heroes.forEach(function (hero) {
+            maxDistance = Math.max(maxDistance, BABYLON.Vector3.Distance(new BABYLON.Vector3(hero.mask.position.x, 0, hero.mask.position.z), new BABYLON.Vector3(this.cameraTarget.x, 0, this.cameraTarget.z)));
+        }, this);
+        //console.log('maxDistance', maxDistance);
+    }
+      
+    //console.log('maxDistance', maxDistance);
+    this.camera.radius = Math.max(this.radius.min, 50 + maxDistance * 1.5); //TODO: vary zoom based on hero positions
   }
 }

@@ -14,13 +14,25 @@ export default class Particle {
     // Changeable properties
     this.particleSystem.minLifeTime = 0.5;
     this.particleSystem.maxLifeTime = 2.5;
+      
+    this.particleSystem.minSize = 0.1;
+    this.particleSystem.maxSize = 0.5;
+      
     this.particleSystem.manualEmitCount = 100;
-    this.particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE
+    this.particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+      
+    this.particleSystem.direction1 = new BABYLON.Vector3(-7, 8, 3);
+    this.particleSystem.direction2 = new BABYLON.Vector3(7, 8, -3);
+     
+      
+    this.particleSystem.gravity = new BABYLON.Vector3(0,-10,0);
 
     // Set life of the system
     this.particleSystem.disposeOnStop = true;
     this.particleSystem.targetStopDuration = 5;
-
-
+      
+    this.particleSystem.disposeOnStop = true;
+      
+    this.particleSystem.start();
   }
 }

@@ -2,7 +2,7 @@ import BABYLON from 'babylonjs';
 import {EventSubscriptionContext} from '../../event-util';
 import {Buttons} from '../input';
 import {registerBeforeSceneRender} from '../mesh-util';
-import Particle from '../effects/particle'
+import Particle from '../particle';
 import testPower from './powers/testPower';
 import testPower2 from './powers/testPower2';
 import testPower3 from './powers/testPower3';
@@ -336,7 +336,7 @@ export default class Hero {
         this.jumpTimer = this.jumpTimerStart;
 
         // Create particle
-        new Particle(this.game, '../effects/circle.png', this.mask.position);
+        new Particle(this.game, './textures/effects/circle.png', this.mask.position);
     } else if (this.jumpTimer > 0) {
         this.jumpTimer--;
     }

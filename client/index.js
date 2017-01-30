@@ -79,7 +79,7 @@ class Game extends EventEmitter {
     this.scene = new BABYLON.Scene(engine);
 
     // Initialize camera
-    this.camera = new Camera(this, 40, 20, 60);
+    this.camera = new Camera(this);
     // Controllable camera
     //var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 10, new BABYLON.Vector3.Zero(), this.scene);
     //camera.setPosition(new BABYLON.Vector3(0, 40, -40));

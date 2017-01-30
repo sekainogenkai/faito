@@ -1,11 +1,11 @@
 import BABYLON from 'babylonjs';
 
 export default class Camera {
-  constructor (game, radius) {
+  constructor (game) {
     this.game = game;
     // Set the target vector which will get updated
-    this.initRadius = radius; // Used in setZoom
-    console.log(this.initRadius);
+    this.initRadius = 100; // Used in setZoom
+    this.radiusSpeed = 5;
     this.cameraTarget = new BABYLON.Vector3.Zero()
     this.camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, this.initRadius, this.cameraTarget, this.game.scene);
     this.camera.setPosition(new BABYLON.Vector3(0, 40, -40));
@@ -54,6 +54,6 @@ export default class Camera {
     }
       
     //console.log('maxDistance', maxDistance);
-    this.camera.radius = Math.max(this.radius.min, 50 + maxDistance * 1.5); //TODO: vary zoom based on hero positions
+    this.camera.radius = Math.max(this.radius.min, 50 + maxDistance * 1.5);
   }
 }

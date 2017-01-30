@@ -8,7 +8,7 @@ import testPower3 from './powers/testPower3';
 import testPower4 from './powers/testPower4';
 
 const contactNormal = new CANNON.Vec3();
-const upAxis = new BABYLON.Vector3.Up()
+const upAxis = new CANNON.Vec3(0, 1, 0)
 const zeroVector2 = new BABYLON.Vector2(0, 0);
 const maxMana = 5000;
 const maxHealth = 5000;

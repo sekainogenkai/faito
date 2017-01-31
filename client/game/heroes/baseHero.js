@@ -334,7 +334,7 @@ export default class Hero {
         this.mask.physicsImpostor.physicsBody.canJump = false;
         movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
         this.jumpTimer = this.jumpTimerStart;
-
+        this.game.SoundEffects.jump.play();
         // Create particle
         new Particle(this.game, './textures/effects/circle.png', this.mask.position);
     } else if (this.jumpTimer > 0) {

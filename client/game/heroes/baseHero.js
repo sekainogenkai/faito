@@ -336,7 +336,8 @@ export default class Hero {
         this.jumpTimer = this.jumpTimerStart;
         this.game.SoundEffects.jump.play();
         // Create particle
-        new Particle(this.game, './textures/effects/circle.png', this.mask.position);
+        var particlePosition = new BABYLON.Vector3(this.mask.position.x, this.mask.position.y - 0.5, this.mask.position.z);
+        new Particle(this.game, './textures/effects/circle.png', particlePosition);
     } else if (this.jumpTimer > 0) {
         this.jumpTimer--;
     }

@@ -213,7 +213,7 @@ export default class Hero {
     this.mask2.isVisible = visible;
     this.mask.position.y = 20;
 
-    console.log('body', this.mask.physicsImpostor.physicsBody);
+    //console.log('body', this.mask.physicsImpostor.physicsBody);
   }
 
   updatePhysicsImpostor () {
@@ -254,16 +254,21 @@ export default class Hero {
     this.groundCheck.position.y = -3 + 1.9 -.2;
     this.groundCheck.scaling.y = 0.3;
   }
-  checkGroundCheck() {
-    if (this.mask.physicsImpostor.physicsBody.world.contacts.length == 0 &&
-        this.mask.physicsImpostor.physicsBody.onGround > 0) {
+  checkGround() {
+    if (this.mask.physicsImpostor.physicsBody.onGround > 0) {
       this.mask.physicsImpostor.physicsBody.onGround -= 1;
     }
+    //console.log(this.mask.physicsImpostor.physicsBody.onGround);
+    this.mask.physicsImpostor.physicsBody.world.contacts.forEach(function(contact) {
+      if (contact.bi.id == this.mask.physicsImpostor.physicsBody.id || contact.bj.id == this.mask.physicsImpostor.physicsBody.id) {
+        this.mask.physicsImpostor.physicsBody.onGround = 10;
+      }
+    }, this);
   }
 
   update () {
     //console.log(this.mask.physicsImpostor.physicsBody.world.contacts);
-    this.checkGroundCheck();
+    this.checkGround();
 
     if (this.moveBool) {
         this.move();

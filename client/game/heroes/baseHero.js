@@ -175,7 +175,6 @@ export default class Hero {
     // Create collision mask m0
     this.mask = this.createSphere('m0', detail, 2.3, 0, 4, 0.05, .01);
     this.mask.physicsImpostor.physicsBody.onGround = onGroundPadding;
-    this.mask.physicsImpostor.physicsBody.currentContact = undefined;
 
     var contactNormal = new CANNON.Vec3();
     this.mask.physicsImpostor.onCollide = function(e) {
@@ -188,7 +187,6 @@ export default class Hero {
       }
       if(contactNormal.dot(upAxis) > 0.5){ // 0.5 is the threshold
         this.onGround = onGroundPadding;
-        this.currentContact = e;
       }
     }
     // create collision mask m1

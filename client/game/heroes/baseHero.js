@@ -12,6 +12,7 @@ const upAxis = new CANNON.Vec3(0, 1, 0);
 const zeroVector2 = new BABYLON.Vector2(0, 0);
 const maxMana = 5000;
 const maxHealth = 5000;
+const onGroundPadding = 10;
 
 export default class Hero {
   constructor(
@@ -59,7 +60,7 @@ export default class Hero {
     });
 
     // Movement variables
-    //this.mask.physicsImpostor.canJump = false;
+    //this.mask.physicsImpostor.onGround = false;
     this.jumpStrength = jumpStrength;
     this.jumpTimerStart = 20;
     this.jumpTimer = this.jumpTimerStart;
@@ -145,7 +146,7 @@ export default class Hero {
                     this.startAnimationNew(this.rollAnimation, false);
                     this.currentAnimatable.speedRatio = 2;
                 }
-        } else if (this.mask.physicsImpostor.physicsBody.canJump) {
+        } else if (this.mask.physicsImpostor.physicsBody.onGround) {
             //console.log("mag: ", magnitude);
             if (magnitude < 1) {// Idle Animation
                 if (!this.animatePower) {
@@ -173,7 +174,9 @@ export default class Hero {
 
     // Create collision mask m0
     this.mask = this.createSphere('m0', detail, 2.3, 0, 4, 0.05, .01);
-    this.mask.physicsImpostor.physicsBody.canJump = false;
+    this.mask.physicsImpostor.physicsBody.onGround = onGroundPadding;
+    this.mask.physicsImpostor.physicsBody.currentContact = undefined;
+
     var contactNormal = new CANNON.Vec3();
     this.mask.physicsImpostor.onCollide = function(e) {
       //http://schteppe.github.io/cannon.js/examples/threejs_voxel_fps.html
@@ -184,7 +187,8 @@ export default class Hero {
         contactNormal.copy(contact.ni);
       }
       if(contactNormal.dot(upAxis) > 0.5){ // 0.5 is the threshold
-        this.canJump = true;
+        this.onGround = onGroundPadding;
+        this.currentContact = e;
       }
     }
     // create collision mask m1
@@ -252,30 +256,16 @@ export default class Hero {
     this.groundCheck.position.y = -3 + 1.9 -.2;
     this.groundCheck.scaling.y = 0.3;
   }
-  /*
   checkGroundCheck() {
-    //TODO: http://schteppe.github.io/cannon.js/examples/threejs_voxel_fps.html use this jump check logic
-    // Check for ground
-    //this.mask.physicsImpostor.canJump = false;
-    this.game.scene.getMeshesByTags("checkJump").forEach(function (mesh) {
-      if (this.groundCheck.intersectsMesh(mesh, true)){
-        this.mesh.material.diffuseColor = new BABYLON.Color3.Red();
-        this.onGround = true;
-      }
-    }, this);
-    this.game.scene.getMeshesByTags("checkHeightMapJump").forEach(function (mesh) {
-      console.log(mesh);
-      console.log(mesh.getHeightAtCoordinates(this.mask.position.x, this.mask.position.z + ' : ' + this.mask.position.y));
-      if (mesh.getHeightAtCoordinates(this.mask.position.x, this.mask.position.z) == this.mask.position.y){
-        this.mesh.material.diffuseColor = new BABYLON.Color3.Red();
-        this.mask.physicsImpostor.canJump = true;
-      }
-    }, this);
+    if (this.mask.physicsImpostor.physicsBody.world.contacts.length == 0 &&
+        this.mask.physicsImpostor.physicsBody.onGround > 0) {
+      this.mask.physicsImpostor.physicsBody.onGround -= 1;
+    }
   }
-  */
 
   update () {
-    //this.checkGroundCheck();
+    //console.log(this.mask.physicsImpostor.physicsBody.world.contacts);
+    this.checkGroundCheck();
 
     if (this.moveBool) {
         this.move();
@@ -316,7 +306,7 @@ export default class Hero {
     //console.log(this.rollTimer);
 
     // Movement on ground
-    if (this.mask.physicsImpostor.physicsBody.canJump) {
+    if (this.mask.physicsImpostor.physicsBody.onGround) {
         movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollGroundSpeed:this.speed));
     } else { // Movement in air
         movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollAirSpeed:this.airSpeed));
@@ -329,9 +319,9 @@ export default class Hero {
     }
 
     // Jump
-    if (this.mask.physicsImpostor.physicsBody.canJump && this.Input.JUMP && this.jumpTimer == 0) {
+    if (this.mask.physicsImpostor.physicsBody.onGround && this.Input.JUMP && this.jumpTimer == 0) {
         //console.log("jump!");
-        this.mask.physicsImpostor.physicsBody.canJump = false;
+        this.mask.physicsImpostor.physicsBody.onGround = false;
         movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
         this.jumpTimer = this.jumpTimerStart;
         this.game.SoundEffects.jump.play();
@@ -344,7 +334,7 @@ export default class Hero {
     this.Input.JUMP = false;
 
     // apply movement at the very end.
-    //console.log('ONGROUND:', this.mask.physicsImpostor.canJump);
+    //console.log('ONGROUND:', this.mask.physicsImpostor.onGround);
     this.mask.applyImpulse(movementVector, this.mask.position);
 
     if (this.body.velocity.length() > 1 && (this.Input.AXIS_X || this.Input.AXIS_Y) ) {

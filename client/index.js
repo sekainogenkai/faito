@@ -118,12 +118,12 @@ class Game extends EventEmitter {
     this.collisionGroupNormal = 2;
     this.collisionGroupGround = 1;
     this.collisionGroupFall = 4;
-    
+
     this.mapLoader = new MapLoader('test1', this);
 
     // Load sounds TODO: make sure this is the correct place to load sounds
     this.SoundEffects = {
-      jump : new BABYLON.Sound('jump', './audio/testSound2.wav', this.scene, null, {loop: false, autoplay: false}),
+      jump : new BABYLON.Sound('jump', './audio/testSound.wav', this.scene, null, {loop: false, autoplay: false}),
     };
 
     new InputManager(this);

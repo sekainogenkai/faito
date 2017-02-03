@@ -61,6 +61,8 @@ export default class Hero {
 
     // Movement variables
     //this.mask.physicsImpostor.onGround = false;
+    this.contactNormal = new CANNON.Vec3(); // Used in the onGround calculation
+    this.onGround = onGroundPadding;
     this.jumpStrength = jumpStrength;
     this.jumpTimerStart = 20;
     this.jumpTimer = this.jumpTimerStart;
@@ -146,7 +148,7 @@ export default class Hero {
                     this.startAnimationNew(this.rollAnimation, false);
                     this.currentAnimatable.speedRatio = 2;
                 }
-        } else if (this.mask.physicsImpostor.physicsBody.onGround) {
+        } else if (this.onGround) {
             //console.log("mag: ", magnitude);
             if (magnitude < 1) {// Idle Animation
                 if (!this.animatePower) {
@@ -174,21 +176,9 @@ export default class Hero {
 
     // Create collision mask m0
     this.mask = this.createSphere('m0', detail, 2.3, 0, 4, 0.05, .01);
-    this.mask.physicsImpostor.physicsBody.onGround = onGroundPadding;
 
-    var contactNormal = new CANNON.Vec3();
-    this.mask.physicsImpostor.onCollide = function(e) {
-      //http://schteppe.github.io/cannon.js/examples/threejs_voxel_fps.html
-      var contact = e.contact;
-      if (contact.bi.id == this.id) {
-        contact.ni.negate(contactNormal);
-      } else {
-        contactNormal.copy(contact.ni);
-      }
-      if(contactNormal.dot(upAxis) > 0.5){ // 0.5 is the threshold
-        this.onGround = onGroundPadding;
-      }
-    }
+    this.mask.physicsImpostor.onCollide = function() {}
+
     // create collision mask m1
     this.mask1 = this.createSphere('m1', detail, 2.3, 1.9, 1, 0, .2);
     this.body1 = this.mask1.physicsImpostor.physicsBody;
@@ -255,13 +245,19 @@ export default class Hero {
     this.groundCheck.scaling.y = 0.3;
   }
   checkGround() {
-    if (this.mask.physicsImpostor.physicsBody.onGround > 0) {
-      this.mask.physicsImpostor.physicsBody.onGround -= 1;
+    if (this.onGround > 0) {
+      this.onGround -= 1;
     }
-    //console.log(this.mask.physicsImpostor.physicsBody.onGround);
+    //console.log(this.onGround);
     this.mask.physicsImpostor.physicsBody.world.contacts.forEach(function(contact) {
-      if (contact.bi.id == this.mask.physicsImpostor.physicsBody.id || contact.bj.id == this.mask.physicsImpostor.physicsBody.id) {
-        this.mask.physicsImpostor.physicsBody.onGround = 10;
+      //http://schteppe.github.io/cannon.js/examples/threejs_voxel_fps.html
+      if (contact.bi.id == this.mask.physicsImpostor.physicsBody.id) {
+        contact.ni.negate(this.contactNormal);
+      } else if (contact.bj.id == this.mask.physicsImpostor.physicsBody.id){
+        this.contactNormal.copy(contact.ni);
+      }
+      if(this.contactNormal.dot(upAxis) > 0.5){ // 0.5 is the threshold
+        this.onGround = onGroundPadding;
       }
     }, this);
   }
@@ -309,7 +305,7 @@ export default class Hero {
     //console.log(this.rollTimer);
 
     // Movement on ground
-    if (this.mask.physicsImpostor.physicsBody.onGround) {
+    if (this.onGround) {
         movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollGroundSpeed:this.speed));
     } else { // Movement in air
         movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollAirSpeed:this.airSpeed));
@@ -322,9 +318,9 @@ export default class Hero {
     }
 
     // Jump
-    if (this.mask.physicsImpostor.physicsBody.onGround && this.Input.JUMP && this.jumpTimer == 0) {
+    if (this.onGround && this.Input.JUMP && this.jumpTimer == 0) {
         //console.log("jump!");
-        this.mask.physicsImpostor.physicsBody.onGround = false;
+        this.onGround = false;
         movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
         this.jumpTimer = this.jumpTimerStart;
         this.game.SoundEffects.jump.play();

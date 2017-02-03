@@ -248,15 +248,17 @@ export default class Hero {
     if (this.onGround > 0) {
       this.onGround -= 1;
     }
-    //console.log(this.onGround);
     this.mask.physicsImpostor.physicsBody.world.contacts.forEach(function(contact) {
       //http://schteppe.github.io/cannon.js/examples/threejs_voxel_fps.html
+      var collision = false;
       if (contact.bi.id == this.mask.physicsImpostor.physicsBody.id) {
         contact.ni.negate(this.contactNormal);
+        collision = true;
       } else if (contact.bj.id == this.mask.physicsImpostor.physicsBody.id){
         this.contactNormal.copy(contact.ni);
+        collision = true;
       }
-      if(this.contactNormal.dot(upAxis) > 0.5){ // 0.5 is the threshold
+      if(collision && this.contactNormal.dot(upAxis) > 0.5){ // 0.5 is the threshold
         this.onGround = onGroundPadding;
       }
     }, this);

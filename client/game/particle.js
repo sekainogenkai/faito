@@ -1,7 +1,13 @@
 import BABYLON from 'babylonjs';
 
 export default class ParticleEmitter {
-  constructor (game, name, particle, position = new BABYLON.Vector3(0, 0, 0), direction1 = new BABYLON.Vector3(-10, 0, 10), direction2 = new BABYLON.Vector3(10, 0, -10), gravity = new BABYLON.Vector3(0,15,0)) {
+  constructor (game, name, particle,
+              position = new BABYLON.Vector3(0, 0, 0),
+              direction1 = new BABYLON.Vector3(-10, 0, 10),
+              direction2 = new BABYLON.Vector3(10, 0, -10),
+              gravity = new BABYLON.Vector3(0,15,0),
+              color1 = new BABYLON.Color3(1, 1, 1),
+              color2 = new BABYLON.Color3(1, 1, 1)) {
     // Set up particle system
     this.game = game;
     this.particleSystem = new BABYLON.ParticleSystem(name, 10, this.game.scene);
@@ -9,6 +15,9 @@ export default class ParticleEmitter {
     this.particleSystem.particleTexture = new BABYLON.Texture(particle, this.game.scene);
     // Set position
     this.particleSystem.emitter = position;
+    // Set color
+    this.particleSystem.color1 = color1;
+    this.particleSystem.color2 = color2;
 
     // Changeable properties
     this.particleSystem.minLifeTime = 0.2;

@@ -28,6 +28,8 @@ export default class Hero {
     // Get physics impostor ready
     this.initCollider();
 
+    this.nameTag = this._initNameTag(name)
+
     // Create the mana bar
     this.manaBar = this._initDisplayBar("mana", 0.3, 2, 20, BABYLON.Color3.Blue());
     this.healthBar = this._initDisplayBar("health", 0.3, 2.5, 20, BABYLON.Color3.Red());
@@ -453,6 +455,23 @@ export default class Hero {
         this._udpateDisplayBar(this.manaBar, (this._mana/maxMana));
     }
 
+    _initNameTag(name) {
+      /* TODO: fix this
+      var wsc = new BABYLON.WorldSpaceCanvas2D(this.game.scene, new BABYLON.Size(8, 3), {
+            id: name,
+            unitScaleFactor: 10,
+            trackNodeOffset: new BABYLON.Vector3(8, 8, 0),
+            trackNodeBillboard: true,
+            trackNode: this.mask,
+            worldPosition: new BABYLON.Vector3(0, 0, 0),
+            backgroundFill: "#8080F040",
+            backgroundRoundRadius: 10,
+            children: [
+                new BABYLON.Text2D(name, { fontName: "10pt Arial", marginAlignment: "h: center, v: center", fontSignedDistanceField: true })
+            ]
+        });
+        */
+    }
 
     /**
      * Returns false if there is insufficient mana.

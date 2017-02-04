@@ -170,13 +170,13 @@ export default class Hero {
       } else {
           // jump up
           if (this.body.velocity.y >=0) {
-            this.startAnimationNew(this.jumpUpAnimation);
+            this.startAnimationNew(this.jumpUpAnimation, false);
           } else {
               // jump down
-              this.startAnimationNew(this.jumpDownAnimation);
+              this.startAnimationNew(this.jumpDownAnimation, false);
           }
           this.currentAnimatable.speedRatio = .8;
-              
+
       }
   }
 

@@ -310,7 +310,7 @@ export default class Hero {
         // Slow the movement after rolling is done
         if (this.rollTimer == 0) {
             let slowDown = -3;
-            this.mask.applyImpulse(new BABYLON.Vector3(slowDown * this.body.velocity.x, slowDown * this.body.velocity.y, slowDown * this.body.velocity.z), this.mask.position);
+            this.mask.applyImpulse(new BABYLON.Vector3(slowDown * this.body.velocity.x, this.body.velocity.y, slowDown * this.body.velocity.z), this.mask.position);
         }
     }
     this.Input.ROLL = false;

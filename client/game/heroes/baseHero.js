@@ -2,7 +2,7 @@ import BABYLON from 'babylonjs';
 import {EventSubscriptionContext} from '../../event-util';
 import {Buttons} from '../input';
 import {registerBeforeSceneRender} from '../mesh-util';
-import Particle from '../particle';
+import ParticleEmitter from '../particle';
 import testPower from './powers/testPower';
 import testPower2 from './powers/testPower2';
 import testPower3 from './powers/testPower3';
@@ -98,6 +98,8 @@ export default class Hero {
     this.defense3 = new defense3(game, this);
     this.defense4 = new defense4(game, this);
 
+    // Add particle emitters for stuff
+    this.dustParticleEmitter = new ParticleEmitter(this.game, 'dustParticle', './textures/effects/circle.png');
     // Add update loop to Babylon
     registerBeforeSceneRender(this.mesh, () => {
         this.update();
@@ -326,9 +328,8 @@ export default class Hero {
         movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
         this.jumpTimer = this.jumpTimerStart;
         this.game.SoundEffects.jump.play();
-        // Create particle
-        var particlePosition = new BABYLON.Vector3(this.mask.position.x, this.mask.position.y - 0.5, this.mask.position.z);
-        new Particle(this.game, './textures/effects/circle.png', particlePosition);
+        // Emit
+        this.dustParticleEmitter.emitManual(6, new BABYLON.Vector3(this.mask.position.x, this.mask.position.y - 0.5, this.mask.position.z));
     } else if (this.jumpTimer > 0) {
         this.jumpTimer--;
     }

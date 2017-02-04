@@ -6,7 +6,7 @@ export default class ParticleEmitter {
               direction1 = new BABYLON.Vector3(-10, 0, 10),
               direction2 = new BABYLON.Vector3(10, 0, -10),
               gravity = new BABYLON.Vector3(0,15,0),
-              color1 = new BABYLON.Color3(1, 1, 1),
+              color1 = new BABYLON.Color3(0, 1, 0),
               color2 = new BABYLON.Color3(1, 1, 1)) {
     // Set up particle system
     this.game = game;

@@ -111,7 +111,8 @@ export default class Hero {
       this.idleAnimation = this.mesh.skeleton.getAnimationRange('idle');
       this.walkAnimation = this.mesh.skeleton.getAnimationRange('walk');
       this.runAnimation = this.mesh.skeleton.getAnimationRange('run');
-      this.jumpAnimation = this.mesh.skeleton.getAnimationRange('jump');
+      this.jumpUpAnimation = this.mesh.skeleton.getAnimationRange('jumpUp');
+      this.jumpDownAnimation = this.mesh.skeleton.getAnimationRange('jumpDown');
       this.powerAnimation = this.mesh.skeleton.getAnimationRange('ability');
       this.rollAnimation = this.mesh.skeleton.getAnimationRange('roll');
       this.rollingAnimation = this.mesh.skeleton.getAnimationRange('rolling');
@@ -167,8 +168,15 @@ export default class Hero {
                 this.currentAnimatable.speedRatio = .9 + .02 * magnitude;
             }
       } else {
-          this.startAnimationNew(this.jumpAnimation);
+          // jump up
+          if (this.body.velocity.y >=0) {
+            this.startAnimationNew(this.jumpUpAnimation);
+          } else {
+              // jump down
+              this.startAnimationNew(this.jumpDownAnimation);
+          }
           this.currentAnimatable.speedRatio = .8;
+              
       }
   }
 

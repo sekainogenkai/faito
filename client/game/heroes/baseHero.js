@@ -206,7 +206,6 @@ export default class Hero {
     this.updateMassProperties();
 
     const visible = false;
-    this.initGroundCheck(visible);
 
     this.mask.isVisible = visible;
     this.mask1.isVisible = visible;
@@ -246,14 +245,6 @@ export default class Hero {
     impostorBody.collisionFilterMask = this.game.collisionGroupGround | this.game.collisionGroupNormal | this.game.collisionGroupFall;
   }
 
-  initGroundCheck(visible=false) {
-    // Create mesh for onGround collision check
-    this.groundCheck = BABYLON.Mesh.CreateCylinder("groundCheck", 2, 1.5, 1.5, 10, 1, this.game.scene);
-    this.groundCheck.isVisible = visible;
-    this.groundCheck.parent = this.mask;
-    this.groundCheck.position.y = -3 + 1.9 -.2;
-    this.groundCheck.scaling.y = 0.3;
-  }
   checkGround() {
     if (this.onGround > 0) {
       this.onGround -= 1;

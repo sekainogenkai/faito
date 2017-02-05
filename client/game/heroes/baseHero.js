@@ -172,7 +172,7 @@ export default class Hero {
       } else {
           // jump up
           if (this.body.velocity.y >=0) {
-            this.startAnimationNew(this.jumpUpAnimation, false);
+            this.startAnimationNew(this.jumpUpAnimation, false, 0.5);
           } else {
               // jump down
               this.startAnimationNew(this.jumpDownAnimation, false);

@@ -1,77 +1,58 @@
-import MiniSignal from 'mini-signals';
 import EventEmitter from 'events';
 import {Buttons, Manager as InputManager} from './game/input';
-import {LocalPlayer} from './game/player';
+import MiniSignal from 'mini-signals';
+import {PlayerManager} from './player';
 import React from 'react';
 import {render} from 'react-dom';
 import BABYLON from 'babylonjs';
 import {BabylonJS} from './react-babylonjs.js';
 import Hero from './game/heroes/baseHero';
-import Menu from './menu/menu';
+import {default as Menu, MenuPage, ButtonMenuItem} from './menu/menu';
 import MapLoader from './mapLoader.js';
 import Camera from './game/camera';
 
 class Game extends EventEmitter {
   constructor() {
-    super();
-    this.players = [];
-    this.heroes = [];
-      this.on('playerschanged', () => this.handlePlayersChanged());
+      super();
+      this.inputAddedSignal = new MiniSignal();
+      this.players = new PlayerManager(this);
+      this.players.changedSignal.add(() => this.handlePlayersChanged());
+      this.heroes = [];
       this.menuSignal = new MiniSignal();
+      this.players.menuSignal.add(() => this.menuSignal.dispatch());
+      // Initial state is for menu to be hidden. This preinitializes
+      // the input targets.
+      this.handleMenuHidden();
   }
 
-  addInput(input) {
-    const i = this.players.concat(undefined).indexOf(undefined);
-    const player = this.players[i] = new LocalPlayer(`Player ${i}`, input);
-    console.log(`Added player ${player.name} (${input.name})`);
-    player.on('end', () => {
-      this.players[i] = undefined;
-      player.destroy();
-      this.emit('playerschanged');
-    });
-    // TODO: Need to decide how to do routing of input when menu is
-    // shown. E.g., joystick should control menu and not heroes when
-    // menu is shown and switch back. Maybe instead of having heroes
-    // bind to the inputs directly we could just have an input router
-    // which just forwards the events to whatever is active at the
-    // moment. Could even just pass the player a faked out
-    // router-controlled input which the router forwards to. But the
-    // levels of indirection!
-    player.input.on('buttondown', button => {
-      console.log(`input emitted ${button}`);
-        if (button === Buttons.Menu) {
-            this.menuSignal.dispatch();
-      }
-    });
-    this.emit('playerschanged');
-  }
+    addInput(input) {
+        this.inputAddedSignal.dispatch(input);
+    }
 
   doRenderLoop() {
     this.scene.render();
   }
 
-  handlePlayersChanged() {
-    // For now, create a hero now. In the future, hero creation will
-    // be up to the current game mode (no such thing exists yet
-    // though).
-    for (const i in this.players) {
-      const player = this.players[i];
-      if (player) {
-        // Assert hero.
-        if (!this.heroes[i]) {
-          const hero = this.heroes[i] = new Hero(this, `${player.name}のヒーロー`);
-          hero.setPlayer(player);
-        }
-      } else { // if (player)
-        // Assert no hero.
-        const hero = this.heroes[i];
-        if (hero) {
-          hero.destory();
-          this.heroes[i] = undefined;
-        }
-      }
+    handleMenuHidden() {
+        this.players.setInputTargetFinder((i, player) => this.heroes[i] || (this.heroes[i] = new Hero(this, `${player.name}のヒーロー`)));
     }
-  }
+
+    handlePlayersChanged() {
+        // For now, create a hero now. In the future, hero creation will
+        // be up to the current game mode (no such thing exists yet
+        // though).
+        for (const i in this.players) {
+            const player = this.players[i];
+            if (!player) {
+                // Clean up hero.
+                const hero = this.heroes[i];
+                if (hero) {
+                    hero.destory();
+                    this.heroes[i] = undefined;
+                }
+            }
+        }
+    }
 
   setEngine(engine) {
     this.engine = engine;
@@ -137,28 +118,46 @@ class Game extends EventEmitter {
 }
 
 class Ui extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       menu: false,
     };
   }
 
-  handleEngineCreated(engine) {
-      this.props.game.setEngine(engine);
-      this.props.game.menuSignal.add(() => this.setState({
-          menu: !this.state.menu,
-      }));
-  }
+    handleEngineCreated(engine) {
+        this.props.game.setEngine(engine);
+        this.props.game.menuSignal.add(() => {
+            this.setState({
+                menu: !this.state.menu,
+            });
+            if (!this.state.menu) {
+                this.handleMenuHidden();
+            }
+        });
+    }
 
   handleEngineAbandoned(engine) {
     this.props.game.abandonEngine(engine);
   }
 
+    handleMenuHidden() {
+        this.setState({menu: false,});
+        this.props.game.handleMenuHidden();
+    }
+
   render() {
     return <div style={{width: '100%', height: '100%',}}>
         <BabylonJS onEngineCreated={engine => this.handleEngineCreated(engine)} onEngineAbandoned={engine => this.handleEngineAbandoned(engine)}/>
-        {this.state.menu ? <Menu onHide={() => this.setState({menu: false,})}/> : []}
+          {this.state.menu ? <Menu players={this.props.game.players} onHide={() => this.handleMenuHidden()}>
+           <MenuPage>
+           <ButtonMenuItem action={menu => menu.popMenuPage()}>Continue</ButtonMenuItem>
+           <ButtonMenuItem action={menu => menu.pushMenuPage(
+               <MenuPage>
+                   <ButtonMenuItem action={menu => menu.popMenuPage()}>Return</ButtonMenuItem>
+                   </MenuPage>)}>Quit to DOS</ButtonMenuItem>
+           </MenuPage>
+           </Menu>: []}
       </div>;
   }
 }

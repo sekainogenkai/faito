@@ -8,7 +8,13 @@ export const Buttons = {
   X: 'x',
   Y: 'y',
   RB: 'rb',
-  LB: 'lb',
+    LB: 'lb',
+    // These are virtual buttons that the joystick will automatically
+    // press and release as if simulating a D-pad.
+    JoyDown: 'joyDown',
+    JoyUp: 'joyUp',
+    JoyLeft: 'joyLeft',
+    JoyRight: 'joyRight',
 };
 
 export class Manager extends EventEmitter {

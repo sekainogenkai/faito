@@ -23,7 +23,17 @@ export default class Hero {
     this.name = name;
     this._mana = maxMana;
     this._health = maxHealth;
-    this._joyTarget = this;
+      /**
+       * For sort of treating the hero to act as a joy target. When
+       * this gets called, that means that the hero itself should
+       * respond to joy and, e.g., move.
+       */
+      this._joyTarget = this.heroJoyTarget = {
+          joyChanged: joy => {
+              this.Input.AXIS_X = joy.x;
+              this.Input.AXIS_Y = joy.y;
+          }
+      };
 
     // Get physics impostor ready
     this.initCollider();
@@ -350,39 +360,16 @@ export default class Hero {
     this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.body.velocity.x, this.body.velocity.z), 0, 0);
   }
 
-  setPlayer(player) {
-    (this._inputSubscriptions || {destroy: () => {}}).destroy();
-    if (!player) {
-      return;
-    }
-    this._inputSubscriptions = new EventSubscriptionContext(player.input)
-      .on('end', () => this.setPlayer())
-      .on('joychanged', joyVector => this.handleJoyChanged(joyVector))
-      .on('buttondown', button => this.handleButtonDown(button))
-      .on('buttonup', button => this.handleButtonUp(button))
-    ;
-  }
-
-  handleJoyChanged(joyVector) {
+    joyChanged(joyVector) {
       this._joyTarget.joyChanged(joyVector);
   }
-
-    /**
-     * Allow the hero to act as a joy target. When this gets
-     * called, that means that the hero itself should respond
-     * to joy and, e.g., move.
-     */
-    joyChanged(joyVector) {
-        this.Input.AXIS_Y = joyVector.y;
-        this.Input.AXIS_X = joyVector.x;
-    }
 
   _handleButton(button, pressed) {
     switch (button) {
     }
   }
 
-  handleButtonDown(button) {
+  buttonDown(button) {
     this._handleButton(button, true);
     switch (button) {
         case Buttons.RB: this.Input.JUMP = true; break;
@@ -394,7 +381,7 @@ export default class Hero {
     }
   }
 
-  handleButtonUp(button) {
+  buttonUp(button) {
     this._handleButton(button, false);
     switch (button) {
         case Buttons.A: this.attack1.buttonUp(0); this.animatePower=false; break;
@@ -493,13 +480,13 @@ export default class Hero {
      * responding to joy again.
      */
     setJoyTarget(target) {
-        target = target || this;
+        target = target || this.heroJoyTarget;
         // Send 0 to original target to set it to rest or whatever
         // instead of leaving it stuck at other value. For existing,
         // will stop movement in the hero.
-        this.handleJoyChanged(zeroVector2);
+        this.joyChanged(zeroVector2);
         this._joyTarget = target;
         // Emit 0 to help target with preinitializing itself.
-        this.handleJoyChanged(zeroVector2);
+        this.joyChanged(zeroVector2);
     }
 }

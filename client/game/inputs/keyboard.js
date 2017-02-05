@@ -13,10 +13,22 @@ const keyButtonMap = {
 };
 
 const keyJoyMap = {
-  KeyA: new BABYLON.Vector2(-1, 0), // left
-  KeyD: new BABYLON.Vector2(1, 0), // right
-  KeyW: new BABYLON.Vector2(0, 1), // up
-  KeyS: new BABYLON.Vector2(0, -1), // down
+    KeyA: {
+        direction: new BABYLON.Vector2(-1, 0), // left
+        button: Buttons.JoyLeft,
+    },
+    KeyD: {
+        direction: new BABYLON.Vector2(1, 0), // right
+        button: Buttons.JoyRight,
+    },
+    KeyW: {
+        direction: new BABYLON.Vector2(0, 1), // up
+        button: Buttons.JoyUp,
+    },
+    KeyS: {
+        direction: new BABYLON.Vector2(0, -1), // down
+        button: Buttons.JoyDown,
+    },
 };
 const joyKeys = Object.keys(keyJoyMap);
 
@@ -38,7 +50,7 @@ export default class KeyboardInput extends EventEmitter {
       joyVector.y = 0;
       for (const joyKey of joyKeys) {
         if (keyState[joyKey]) {
-          joyVector.addInPlace(keyJoyMap[joyKey]);
+          joyVector.addInPlace(keyJoyMap[joyKey].direction);
         }
       }
       // Enforce joystick being circular.
@@ -65,11 +77,13 @@ export default class KeyboardInput extends EventEmitter {
       // Mark as pressed.
       keyState[code] = true;
 
-      // Is it a joy key?
-      if (keyJoyMap[code]) {
-        updateJoy();
-        return;
-      }
+        // Is it a joy key?
+        const joy = keyJoyMap[code];
+        if (joy) {
+            updateJoy();
+            this.emit('buttondown', joy.button);
+            return;
+        }
 
       // Is it a button?
       var button = keyButtonMap[code];
@@ -89,11 +103,13 @@ export default class KeyboardInput extends EventEmitter {
 
       keyState[code] = false;
 
-      // Is it a joy key?
-      if (keyJoyMap[code]) {
-        updateJoy();
-        return;
-      }
+        // Is it a joy key?
+        const joy = keyJoyMap[code];
+        if (joy) {
+            updateJoy();
+            this.emit('buttonup', joy.button);
+            return;
+        }
 
       // Is it a button?
       var button = keyButtonMap[code];

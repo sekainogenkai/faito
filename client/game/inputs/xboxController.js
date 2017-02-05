@@ -48,7 +48,26 @@ class GamepadInput extends EventEmitter {
     gamepad.onbuttondown(buildButtonHandler('buttondown'));
     gamepad.onbuttonup(buildButtonHandler('buttonup'));
     let xIsZeroed = false;
-    let yIsZeroed = false;
+      let yIsZeroed = false;
+      const virtualButtonStates = [
+          {
+              button: Buttons.JoyLeft,
+              getFactor: joy => -joy.x,
+          },
+          {
+              button: Buttons.JoyRight,
+              getFactor: joy => joy.x,
+          },
+          {
+              button: Buttons.JoyUp,
+              getFactor: joy => -joy.y,
+          },
+          {
+              button: Buttons.JoyDown,
+              getFactor: joy => joy.y,
+          },
+      ];
+      virtualButtonStates.forEach(s => s.down = false);
     const joyVector = new BABYLON.Vector2(0, 0);
     gamepad.onleftstickchanged(values => {
       // Treat stuff close to 0 as 0 so that when the player intends
@@ -75,6 +94,29 @@ class GamepadInput extends EventEmitter {
         this.emit('joychanged', joyVector);
       }
     }
+
+        // Virtual D-pad like control but from the joystick.
+
+        // The distance from 0 that must be passed to press the
+        // virtual button.
+        const virtualDirectionalDownThreshold = 0.75;
+        // The closness to 0 that must be passed to release the
+        // virtual button.
+        const virtualDirectionalUpThreshold = 0.5;
+        for (const virtualButtonState of virtualButtonStates) {
+            const factor = virtualButtonState.getFactor(values);
+            if (virtualButtonState.pressed) {
+                if (factor < virtualDirectionalUpThreshold) {
+                    virtualButtonState.pressed = false;
+                    this.emit('buttonup', virtualButtonState.button);
+                }
+            } else {
+                if (factor > virtualDirectionalDownThreshold) {
+                    virtualButtonState.pressed = true;
+                    this.emit('buttondown', virtualButtonState.button);
+                }
+            }
+        }
     });
   }
 };

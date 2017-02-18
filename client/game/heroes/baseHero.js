@@ -61,7 +61,7 @@ export default class Hero {
         this.mesh.position.y = -3  + 1.9 - .1;
         this.mesh.position.z = .6;
         // Add the player mesh to the shadowGenerator
-        this.game.shadowGenerator.getShadowMap().renderList.push(this.mesh);
+        this.game.scene.shadowGenerator.getShadowMap().renderList.push(this.mesh);
         this.mesh.receiveShadows = true;
 
         // Add material for debug
@@ -253,8 +253,8 @@ export default class Hero {
   }
 
   addCollisionToGroup (impostorBody) {
-    impostorBody.collisionFilterGroup = this.game.collisionGroupNormal;
-    impostorBody.collisionFilterMask = this.game.collisionGroupGround | this.game.collisionGroupNormal | this.game.collisionGroupFall;
+    impostorBody.collisionFilterGroup = this.game.scene.collisionGroupNormal;
+    impostorBody.collisionFilterMask = this.game.scene.collisionGroupGround | this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupFall;
   }
 
   checkGround() {
@@ -338,7 +338,7 @@ export default class Hero {
         this.onGround = false;
         movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
         this.jumpTimer = this.jumpTimerStart;
-        this.game.SoundEffects.jump.play();
+        this.game.scene.sound.jump.play();
         // Emit
         this.dustParticleEmitter.emitManual(6, new BABYLON.Vector3(this.mask.position.x, this.mask.position.y - 0.5, this.mask.position.z));
     } else if (this.jumpTimer > 0) {

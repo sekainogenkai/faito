@@ -37,7 +37,7 @@ export default class testPower extends basePower {
         ball.material = material;
 
         // Add the mask to the shadowGenerator
-        this.game.shadowGenerator.getShadowMap().renderList.push(ball);
+        this.game.scene.shadowGenerator.getShadowMap().renderList.push(ball);
         ball.receiveShadows = true;
 
         // Set the position and apply force
@@ -56,8 +56,8 @@ export default class testPower extends basePower {
     buttonUp(i) {
         if (this.ball) {
             this.ball.setPhysicsState(BABYLON.PhysicsEngine.SphereImpostor, {mass:10, friction:0.1, restitution:0.9});
-            this.ball.physicsImpostor.physicsBody.collisionFilterGroup = this.game.collisionGroupNormal;
-            this.ball.physicsImpostor.physicsBody.collisionFilterMask = this.game.collisionGroupGround;
+            this.ball.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupNormal;
+            this.ball.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupGround;
             this.ball.userData[joySymbol] = null;
             this.ball = null;
             this.hero.setJoyTarget();

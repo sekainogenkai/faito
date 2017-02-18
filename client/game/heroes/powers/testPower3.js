@@ -30,7 +30,7 @@ const updateWall = mesh => {
             mesh.userData[wallRemainingAnimationSymbol]--;
         } else {
             mesh.userData[wallRemainingAnimationSymbol] = undefined;
-            mesh.physicsImpostor.physicsBody.collisionFilterMask = mesh.userData[wallGameReferenceSymbol].collisionGroupGround | mesh.userData[wallGameReferenceSymbol].collisionGroupNormal;
+            mesh.physicsImpostor.physicsBody.collisionFilterMask = mesh.userData[wallGameReferenceSymbol].scene.collisionGroupGround | mesh.userData[wallGameReferenceSymbol].scene.collisionGroupNormal;
         }
     }
 };
@@ -57,7 +57,7 @@ export default class testPower extends basePower {
         ball.material = material;
 
         // Add the mask to the shadowGenerator
-        this.game.shadowGenerator.getShadowMap().renderList.push(ball);
+        this.game.scene.shadowGenerator.getShadowMap().renderList.push(ball);
         ball.receiveShadows = true;
 
         // Set the position and apply force
@@ -90,13 +90,13 @@ export default class testPower extends basePower {
             wall.userData[wallGameReferenceSymbol] = this.game;
             registerAfterSceneRender(wall, updateWall);
             wall.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:0, friction:0.1, restitution:0.9});
-            wall.physicsImpostor.physicsBody.collisionFilterGroup = this.game.collisionGroupGround;
-            wall.physicsImpostor.physicsBody.collisionFilterMask = this.game.collisionGroupNormal;
+            wall.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
+            wall.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal;
 
             console.log(wall.getBoundingInfo().boundingBox.extendSize.y)
             console.log(wallHeight)
             // Add the wall to the shadowGenerator
-            this.game.shadowGenerator.getShadowMap().renderList.push(wall);
+            this.game.scene.shadowGenerator.getShadowMap().renderList.push(wall);
             wall.receiveShadows = true;
             configureAutoRemove(wall, 5, 2);
 

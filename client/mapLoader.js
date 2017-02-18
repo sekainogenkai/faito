@@ -15,17 +15,16 @@ export default class MapLoader {
              }
         });
     }
-    
+
     setImpostors (tag, impostorType) {
         this.game.scene.getMeshesByTags(tag).forEach(function(mesh) {
             mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, impostorType, {move: false});
             // Collision groups
-            mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.collisionGroupGround;
-            mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.collisionGroupNormal | this.game.collisionGroupGround;
+            mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
+            mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
             // Shadows
-            this.game.shadowGenerator.getShadowMap().renderList.push(mesh);
+            this.game.scene.shadowGenerator.getShadowMap().renderList.push(mesh);
             mesh.receiveShadows = true;
         }, this);
     }
 }
-

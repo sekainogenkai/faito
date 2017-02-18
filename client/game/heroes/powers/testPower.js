@@ -16,14 +16,14 @@ export default class testPower extends basePower {
         // Create collision ball
         this.ball = BABYLON.Mesh.CreateSphere("power", 10, 2, this.game.scene);
         this.ball.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:10, friction:0.1, restitution:0.9});
-        this.ball.physicsImpostor.physicsBody.collisionFilterGroup = this.game.collisionGroupNormal;
-        this.ball.physicsImpostor.physicsBody.collisionFilterMask = this.game.collisionGroupNormal | this.game.collisionGroupGround;
+        this.ball.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupNormal;
+        this.ball.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
         var material = new BABYLON.StandardMaterial("red_material", this.game.scene);
         material.diffuseColor = BABYLON.Color3.Red();
         this.ball.material = material;
 
         // Add the ball to the shadowGenerator
-        this.game.shadowGenerator.getShadowMap().renderList.push(this.ball);
+        this.game.scene.shadowGenerator.getShadowMap().renderList.push(this.ball);
         this.ball.receiveShadows = true;
 
         // Set the position and apply force

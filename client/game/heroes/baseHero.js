@@ -109,7 +109,7 @@ export default class Hero {
     this.defense2 = new defense2(game, this);
     this.defense3 = new defense3(game, this);
     this.defense4 = new defense4(game, this);
-    
+
     // Add particle emitters for stuff
     this.dustParticleEmitter = new ParticleEmitter(this.game, 'dustParticle', './textures/effects/circle.png');
     // Add update loop to Babylon
@@ -487,8 +487,11 @@ export default class Hero {
         return true;
     }
 
+    takeDynamicDamage(damage, magnitude, contactNormal) {
+        this.takeDamage(damage * magnitude * contactNormal);
+    }
+
     /**
-     * Sets the joy target. The joy target must have a joyChanged
      * function accepting a Vector2. If null the hero will start
      * responding to joy again.
      */

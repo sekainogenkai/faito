@@ -109,7 +109,7 @@ export default class Hero {
     this.defense2 = new defense2(game, this);
     this.defense3 = new defense3(game, this);
     this.defense4 = new defense4(game, this);
-
+    
     // Add particle emitters for stuff
     this.dustParticleEmitter = new ParticleEmitter(this.game, 'dustParticle', './textures/effects/circle.png');
     // Add update loop to Babylon
@@ -288,7 +288,7 @@ export default class Hero {
     this.animations();
 
     this._manageMana();
-    this._udpateDisplayBar(this.healthBar, (this._health/maxHealth)); //TODO: put into manageHealth function
+    this._manageHealth();
   }
 
   // use this to make xbox controller movement is smoove and doesn't go over the speed limit
@@ -420,26 +420,30 @@ export default class Hero {
     return bar;
   }
 
-  _udpateDisplayBar (bar, displayValue) {
-    //http://www.babylonjs-playground.com/#1MSEBT#3
-    // Displays the mana bar
-    var step = ((Math.PI * 2) / (bar.tessellation-1.2)) * (displayValue);
-    for(var i = 0; i < bar.path.length; i++) {
-      var x = -bar.radius * Math.cos(step * i);
-      var z = -bar.radius * Math.sin(step * i);
-      bar.path[i].x = x;
-      bar.path[i].z = z;
+    _udpateDisplayBar (bar, displayValue) {
+      //http://www.babylonjs-playground.com/#1MSEBT#3
+      // Displays the mana bar
+      var step = ((Math.PI * 2) / (bar.tessellation-1.2)) * (displayValue);
+      for(var i = 0; i < bar.path.length; i++) {
+        var x = -bar.radius * Math.cos(step * i);
+        var z = -bar.radius * Math.sin(step * i);
+        bar.path[i].x = x;
+        bar.path[i].z = z;
+      }
+      bar = BABYLON.Mesh.ExtrudeShapeCustom(null, bar.shape, bar.path, null, null, null, null, null, null, null, null, bar);
+      bar.position.copyFrom(this.mask.position); // We don't parent the bar to the mask so it has a fixed rotation
+      bar.position.y -= 1;
     }
-    bar = BABYLON.Mesh.ExtrudeShapeCustom(null, bar.shape, bar.path, null, null, null, null, null, null, null, null, bar);
-    bar.position.copyFrom(this.mask.position); // We don't parent the bar to the mask so it has a fixed rotation
-    bar.position.y -= 1;
-  }
 
     _manageMana() {
         if (this._mana < maxMana) {
             this._mana = Math.min(maxMana, this._mana + ((this.mask.physicsImpostor.getLinearVelocity().length() < 1)?this.manaGainIdle:this.manaGainMoving));
         }
         this._udpateDisplayBar(this.manaBar, (this._mana/maxMana));
+    }
+
+    _manageHealth() {
+        this._udpateDisplayBar(this.healthBar, (this._health/maxHealth));
     }
 
     _initNameTag(name) {
@@ -471,6 +475,15 @@ export default class Hero {
         this.useAbilityTimer = this.useAbilityTimerStart;
 
         this._mana -= amount;
+        return true;
+    }
+
+    takeDamage(amount) {
+        if (this._health < amount) {
+            return false;
+        }
+
+        this._health -= amount;
         return true;
     }
 

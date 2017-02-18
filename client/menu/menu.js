@@ -115,35 +115,48 @@ export class MenuPage extends React.Component {
         this.state = {
             currentIndex: 0,
         };
-        this.actions = [];
+        this.items = [];
     }
 
     handleMenuItemMounted(i, menuItem) {
-        this.actions[i] = () => menuItem.action(this.props.menu);
+        this.items[i] = menuItem;
+        if (!menuItem.selectable && this.state.currentIndex == i) {
+          this.setState({
+            currentIndex: this.state.currentIndex + 1,
+          });
+        }
     }
 
     action() {
-        const action = this.actions[this.state.currentIndex];
-        if (!action) {
-            return;
-        }
-        action();
+        this.items[this.state.currentIndex].action(this.props.menu);
     }
 
     componentDidMount() {
         this.props.menu.setMenuInputTarget(this);
     }
 
+    move(direction) {
+      let newIndex = this.state.currentIndex;
+      while (true) {
+        newIndex += direction;
+        if (newIndex < 0 || newIndex >= this.items.length) {
+          return;
+        }
+        if ((this.items[newIndex] || {}).selectable) {
+          break;
+        }
+      }
+      this.setState({
+        currentIndex: newIndex,
+      });
+    }
+
     down() {
-        this.setState({
-            currentIndex: Math.min(this.state.currentIndex + 1, React.Children.count(this.props.children) - 1),
-        });
+      this.move(1);
     }
 
     up() {
-        this.setState({
-            currentIndex: Math.max(this.state.currentIndex - 1, 0),
-        });
+        this.move(-1);
     }
 
     render() {
@@ -160,6 +173,7 @@ export class MenuPage extends React.Component {
 export class MenuItem extends React.Component {
     constructor(props) {
         super(props);
+        this.selectable = true;
     }
 
     componentDidMount() {
@@ -183,4 +197,11 @@ export class ButtonMenuItem extends MenuItem {
     action(menu) {
         this.props.action(menu);
     }
+}
+
+export class LabelMenuItem extends MenuItem {
+  constructor(props){
+    super(props);
+    this.selectable = false;
+  }
 }

@@ -7,9 +7,11 @@ import {render} from 'react-dom';
 import BABYLON from 'babylonjs';
 import {BabylonJS} from './react-babylonjs.js';
 import Hero from './game/heroes/baseHero';
-import {default as Menu, MenuPage, ButtonMenuItem} from './menu/menu';
+import {default as Menu, MenuPage, ButtonMenuItem, LabelMenuItem} from './menu/menu';
 import loadGameScene from './game/gameScene';
 import loadMenuScene from './menu/menuScene';
+import MainMenu from './menu/main-menu';
+import MapLoader from './mapLoader.js';
 
 class Game extends EventEmitter {
   constructor() {
@@ -119,7 +121,12 @@ class Ui extends React.Component {
         <BabylonJS onEngineCreated={engine => this.handleEngineCreated(engine)} onEngineAbandoned={engine => this.handleEngineAbandoned(engine)}/>
           {this.state.menu ? <Menu players={this.props.game.players} onHide={() => this.handleMenuHidden()}>
            <MenuPage>
+           <LabelMenuItem>Menu</LabelMenuItem>
+           <ButtonMenuItem action={menu => menu.pushMenuPage(
+             <MainMenu players={this.props.game.players}/>
+           )}>Play</ButtonMenuItem>
            <ButtonMenuItem action={menu => menu.popMenuPage()}>Continue</ButtonMenuItem>
+           <LabelMenuItem>There</LabelMenuItem>
            <ButtonMenuItem action={menu => menu.pushMenuPage(
                <MenuPage>
                    <ButtonMenuItem action={menu => menu.popMenuPage()}>Return</ButtonMenuItem>

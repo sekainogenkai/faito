@@ -240,7 +240,6 @@ export default class Hero {
     this.body.updateMassProperties();
   }
 
-
   createSphere (name, detail, size, posY, mass, friction, restitution) {
       // Make sphere mesh
       let sphere = BABYLON.Mesh.CreateSphere(name, detail, size, this.game.scene);

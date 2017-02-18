@@ -2,16 +2,17 @@ import React from 'react';
 import BABYLON from 'babylonjs';
 
 export class BabylonJS extends React.Component {
-  get defaultProps() {
-    return {
-      antialias: true,
-      onEngineCreated: () => {},
-      onEngineAbandoned: () => {},
-    };
-  }
+    get defaultProps() {
+        return {
+            antialias: true,
+            options: {},
+            onEngineCreated: () => {},
+            onEngineAbandoned: () => {},
+        };
+    }
 
-  componentDidMount() {
-    this.engine = new BABYLON.Engine(this.canvas, this.props.antialias);
+    componentDidMount() {
+        this.engine = new BABYLON.Engine(this.canvas, this.props.antialias, this.props.options);
     this.props.onEngineCreated(this.engine);
     this.handleWindowResize = () => this.engine.resize();
     window.addEventListener('resize', this.handleWindowResize);

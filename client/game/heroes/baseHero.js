@@ -271,7 +271,7 @@ export default class Hero {
         this.contactNormal.copy(contact.ni);
         collision = true;
       }
-      if(collision && this.contactNormal.dot(upAxis) > 0.5){ // 0.5 is the threshold
+      if(collision && this.contactNormal.dot(upAxis) > 0.6){ // 0.5 is the threshold
         this.onGround = onGroundPadding;
       }
     }, this);

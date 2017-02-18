@@ -168,7 +168,7 @@ export class MenuItem extends React.Component {
 
     render() {
         return <div className="menu-item" style={{
-            backgroundColor: this.props.active ? 'green' : 'white',
+            backgroundColor: this.props.active ? 'red' : 'white',
         }}>
             {this.props.children}
             </div>;

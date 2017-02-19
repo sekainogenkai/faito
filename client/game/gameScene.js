@@ -3,6 +3,8 @@ import MapLoader from '../mapLoader.js';
 import Camera from './camera';
 
 export default function loadGameScene (game) {
+  // clear current scene
+  game.scene.dispose();
   // Initialize camera
   var camera = new Camera(game);
 

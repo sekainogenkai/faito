@@ -2,6 +2,8 @@ import BABYLON from 'babylonjs';
 import MapLoader from '../mapLoader.js';
 
 export default function loadMenuScene (game) {
+  // clear current scene
+  game.scene.dispose();
   // Initialize camera
   var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 10, new BABYLON.Vector3.Zero(), game.scene);
   camera.setPosition(new BABYLON.Vector3(0, 40, -40));

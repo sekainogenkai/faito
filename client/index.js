@@ -120,18 +120,7 @@ class Ui extends React.Component {
     return <div style={{width: '100%', height: '100%',}}>
         <BabylonJS onEngineCreated={engine => this.handleEngineCreated(engine)} onEngineAbandoned={engine => this.handleEngineAbandoned(engine)}/>
           {this.state.menu ? <Menu players={this.props.game.players} onHide={() => this.handleMenuHidden()}>
-           <MenuPage>
-           <LabelMenuItem>Menu</LabelMenuItem>
-           <ButtonMenuItem action={menu => menu.pushMenuPage(
              <MainMenu players={this.props.game.players}/>
-           )}>Play</ButtonMenuItem>
-           <ButtonMenuItem action={menu => menu.popMenuPage()}>Continue</ButtonMenuItem>
-           <LabelMenuItem>There</LabelMenuItem>
-           <ButtonMenuItem action={menu => menu.pushMenuPage(
-               <MenuPage>
-                   <ButtonMenuItem action={menu => menu.popMenuPage()}>Return</ButtonMenuItem>
-                   </MenuPage>)}>Quit to DOS</ButtonMenuItem>
-           </MenuPage>
            </Menu>: []}
       </div>;
   }

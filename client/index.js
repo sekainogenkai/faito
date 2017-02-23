@@ -60,24 +60,20 @@ class Game extends EventEmitter {
     this.engine = engine;
     engine.runRenderLoop(this.handleRenderLoop = () => this.doRenderLoop());
     this.scene = new BABYLON.Scene(this.engine);
+    // Set path to shaders
     BABYLON.Engine.ShadersRepository = "./shaders/";
-    loadMenuScene(this);
-
-    //change scene example
-    this.changeScene('game');
-
+    // Load the game
+    this.loadGame();
 
     new InputManager(this);
   }
 
-  changeScene(scene) {
-    this.scene.dispose();
-    if (scene === 'game'){
-      loadGameScene(this);
-    } else {
-      loadMenuScene(this);
-    }
+  loadMenu () {
+    loadMenuScene(this);
+  }
 
+  loadGame () {
+    loadGameScene(this);
   }
 
   abandonEngine(engine) {

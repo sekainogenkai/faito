@@ -4,6 +4,7 @@ import {Buttons} from '../input';
 import {registerBeforeSceneRender} from '../mesh-util';
 import ParticleEmitter from '../particle';
 import testPower from './powers/testPower';
+import Power1 from './powers/power1';
 import testPower2 from './powers/testPower2';
 import testPower3 from './powers/testPower3';
 import testPower4 from './powers/testPower4';
@@ -17,8 +18,7 @@ const onGroundPadding = 10;
 export default class Hero {
   constructor(
     game, name, meshFileName='omi', speed=12, airSpeed=4, jumpStrength=150, rollGroundSpeed=20, rollAirSpeed=10,
-    attack1=testPower, attack2=testPower4, attack3=testPower3, attack4=testPower,
-    defense1=testPower, defense2=testPower, defense3=testPower, defense4=testPower){
+    attack1=testPower, attack2=testPower4, attack3=testPower3, attack4=Power1){
     this.game = game;
     this.name = name;
     this._mana = maxMana;
@@ -104,11 +104,6 @@ export default class Hero {
     this.attack2 = new attack2(game, this);
     this.attack3 = new attack3(game, this);
     this.attack4 = new attack4(game, this);
-
-    this.defense1 = new defense1(game, this);
-    this.defense2 = new defense2(game, this);
-    this.defense3 = new defense3(game, this);
-    this.defense4 = new defense4(game, this);
 
     // Add particle emitters for stuff
     this.dustParticleEmitter = new ParticleEmitter(this.game, 'dustParticle', './textures/effects/circle.png');

@@ -13,3 +13,5 @@ before_script:
   - node_modules/.bin/node-babylonjs-blender-install
 addons:
   artifacts: true
+    paths:
+      - $(find build -type f -printf ':%h/%f' | tail -c +2)

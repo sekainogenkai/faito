@@ -26,9 +26,6 @@ export default class Power1 {
 
     buttonDown(i) {
       this.cursor = new PointCursor(this.game, this.hero, directionVec, 3);
-      if (!this.cursor) {
-        this.buttonUp();
-      }
     }
 
     buttonUp(i) {

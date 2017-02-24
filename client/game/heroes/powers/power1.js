@@ -1,6 +1,7 @@
 import BABYLON from 'babylonjs';
 import DirectionCursor from './cursors/directionCursor';
 import PointCursor from './cursors/pointCursor';
+import JoyCursor from './cursors/joyCursor';
 
 const directionVec = new BABYLON.Vector3(0, 0, -1);
 
@@ -11,7 +12,7 @@ export default class Power1 {
         this.cursor = undefined;
     }
 
-    // TODO: fix the mesh spawning at 0,0,0 and hitting the players
+    // TODO: fix the mesh spawning at 0,0,0 and hitting the players, I forgot how to do that
     createMesh (position) {
       this.mesh = BABYLON.Mesh.CreateBox('mesh', 5, this.game.scene);
       this.mesh.position.copyFrom(this.cursor.mesh.position);
@@ -25,12 +26,12 @@ export default class Power1 {
     }
 
     buttonDown(i) {
-      this.cursor = new PointCursor(this.game, this.hero, directionVec, 3);
+      this.cursor = new JoyCursor(this.game, this.hero);
     }
 
     buttonUp(i) {
       this.createMesh();
-      this.cursor.mesh.dispose();
+      this.cursor.destroy();
       delete this.cursor;
     }
 }

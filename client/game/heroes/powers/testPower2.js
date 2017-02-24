@@ -8,13 +8,13 @@ const joySymbol = Symbol('joy');
 const updatePositionVec = new BABYLON.Vector3(0, 0, 0);
 const update = mesh => {
     const joy = mesh.userData[joySymbol];
-    if (!joy) {
-        return;
-    }
-    updatePositionVec.x = joy.x;
-    updatePositionVec.z = joy.y;
-    updatePositionVec.scaleInPlace(0.25);
-    mesh.position.addInPlace(updatePositionVec);
+      if (!joy) {
+          return;
+      }
+      updatePositionVec.x = joy.x;
+      updatePositionVec.z = joy.y;
+      updatePositionVec.scaleInPlace(0.25);
+      mesh.position.addInPlace(updatePositionVec);
 };
 
 export default class testPower extends basePower {

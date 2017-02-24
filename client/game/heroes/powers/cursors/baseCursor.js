@@ -17,4 +17,8 @@ export default class BaseCursor {
     }
 
     update () {}
+
+    destroy() {
+      this.mesh.dispose();
+    }
 }

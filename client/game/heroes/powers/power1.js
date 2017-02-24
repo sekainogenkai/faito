@@ -1,5 +1,8 @@
 import BABYLON from 'babylonjs';
 import DirectionCursor from './cursors/directionCursor';
+import PointCursor from './cursors/pointCursor';
+
+const directionVec = new BABYLON.Vector3(0, 0, -1);
 
 export default class Power1 {
     constructor(game, hero) {
@@ -22,7 +25,10 @@ export default class Power1 {
     }
 
     buttonDown(i) {
-      this.cursor = new DirectionCursor(this.game, this.hero);
+      this.cursor = new PointCursor(this.game, this.hero, directionVec, 3);
+      if (!this.cursor) {
+        this.buttonUp();
+      }
     }
 
     buttonUp(i) {

@@ -36,7 +36,6 @@ export default class Power1 {
         this.setRotation(this.hero.mask.rotationQuaternion);
       }
       this.cursor.destroy();
-      delete this.cursor;
     }
 
     setRotation (rotation) {

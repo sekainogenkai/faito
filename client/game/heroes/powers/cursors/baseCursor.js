@@ -1,4 +1,5 @@
 import BABYLON from 'babylonjs';
+import {registerBeforeSceneRender} from '../../../mesh-util';
 
 export default class BaseCursor {
     constructor(game, hero) {
@@ -11,7 +12,7 @@ export default class BaseCursor {
       this.mesh.material = material;
       // set position to the player
       this.mesh.position.copyFrom(this.hero.mask.position);
-      this.game.scene.registerBeforeRender(() => this.update());
+      registerBeforeSceneRender(this.mesh, () => this.update());
     }
 
     update () {}

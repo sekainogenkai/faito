@@ -34,6 +34,16 @@ export default class BasePower {
   spawn(vector1, vector2, range) {
     this.mesh.spawnAnimation = new BABYLON.Animation('spawnAnimation', 'position', 60,
                               BABYLON.Animation.ANIMATIONTYPE_VECTOR3);
+
+    var spawnEndEvent = new BABYLON.AnimationEvent(range, function() {
+      console.log('ye');
+      // Switch to powerUpdate state
+      this._currentState = 1;
+    });
+
+    this.mesh.spawnAnimation.addEvent(spawnEndEvent);
+
+
     this.mesh.spawnAnimationKeys = [];
     this.mesh.spawnAnimationRange = range;
     this.mesh.spawnAnimationKeys.push({
@@ -47,7 +57,9 @@ export default class BasePower {
     // Set the keys
     this.mesh.spawnAnimation.setKeys(this.mesh.spawnAnimationKeys);
     this.mesh.animations.push(this.mesh.spawnAnimation);
+
     this.game.scene.beginAnimation(this.mesh, 0, this.mesh.spawnAnimationRange, false);
+
   }
 
   powerUpdate() {

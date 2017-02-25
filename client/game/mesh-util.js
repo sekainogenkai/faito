@@ -86,6 +86,8 @@ const registerBeforeAfterSceneRender = function (mesh, beforeAfterFunctionName, 
  * This is different than Mesh.registerBeforeRender() because it fires
  * even when the object is not visible (would not actually be rendered
  * because of occlusion).
+ *
+ * @param {function(Mesh)} handler
  */
 export function registerBeforeSceneRender(mesh, handler) {
     registerBeforeAfterSceneRender(mesh, 'registerBeforeRender', sceneBeforeRenderHandlersSymbol, sceneBeforeRenderSymbol, handler);

@@ -18,7 +18,7 @@ export default class BasePower {
       // main update loop of power
       this.powerUpdate();
     } else if (this._currentState == 2) {
-      this.destroy();
+
     }
   }
 
@@ -31,33 +31,17 @@ export default class BasePower {
   }
 
   spawn(vector1, vector2, range) {
-    this.mesh.spawnAnimation = new BABYLON.Animation('spawnAnimation', 'position', 60,
-                              BABYLON.Animation.ANIMATIONTYPE_VECTOR3);
-
-    var spawnEndEvent = new BABYLON.AnimationEvent(range, function() {
+    this.mesh.spawnEndEvent = new BABYLON.AnimationEvent(range, function() {
+      console.log('End animation event');
       // Switch to powerUpdate state
       this._currentState = 1;
     }.bind(this));
 
-    this.mesh.spawnAnimation.addEvent(spawnEndEvent);
+    this.mesh.destroyEndEvent = new BABYLON.AnimationEvent(range, function() {
+      this.mesh.dispose();
+    }).bind(this);
 
-
-    this.mesh.spawnAnimationKeys = [];
-    this.mesh.spawnAnimationRange = range;
-    this.mesh.spawnAnimationKeys.push({
-      frame: 0,
-      value: vector1
-    });
-    this.mesh.spawnAnimationKeys.push({
-      frame: range,
-      value: vector2
-    });
-    // Set the keys
-    this.mesh.spawnAnimation.setKeys(this.mesh.spawnAnimationKeys);
-    this.mesh.animations.push(this.mesh.spawnAnimation);
-
-    this.game.scene.beginAnimation(this.mesh, 0, this.mesh.spawnAnimationRange, false);
-
+    this.moveAnimation(vector1, vector2, range, spawnEndEvent);
   }
 
   powerUpdate() {
@@ -67,4 +51,27 @@ export default class BasePower {
   destroy() {
 
   }
+
+  moveAnimation(vector1, vector2, range, endEvent) {
+    this.mesh.moveAnimation = new BABYLON.Animation('moveAnimation', 'position', 60,
+                              BABYLON.Animation.ANIMATIONTYPE_VECTOR3);
+
+    this.mesh.moveAnimation.addEvent(endEvent);
+    this.mesh.moveAnimationKeys = [];
+    this.mesh.moveAnimationRange = range;
+    this.mesh.moveAnimationKeys.push({
+      frame: 0,
+      value: vector1
+    });
+    this.mesh.moveAnimationKeys.push({
+      frame: range,
+      value: vector2
+    });
+    // Set the keys
+    this.mesh.moveAnimation.setKeys(this.mesh.moveAnimationKeys);
+    this.mesh.animations.push(this.mesh.moveAnimation);
+
+    this.game.scene.beginAnimation(this.mesh, 0, this.mesh.moveAnimationRange, false);
+  }
+
 }

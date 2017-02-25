@@ -69,5 +69,8 @@ export const getHeightAtCoordinates = function(mesh, x=0, z=0) {
   var maxHeight = 256;
   var ray = new BABYLON.Ray(new BABYLON.Vector3(x, maxHeight, z), new BABYLON.Vector3(0, -1, 0), 2*maxHeight);
   var res = mesh.intersects(ray, true);
-  return res.pickedPoint.y;
+  if ( res.pickedPoint ) {
+    return res.pickedPoint.y;
+  }
+  return 0;
 }

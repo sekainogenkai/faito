@@ -1,5 +1,5 @@
 import BABYLON from 'babylonjs';
-import {getHeightAtCoordinates} from './powerUtils/mainUtils';
+import {getHeightAtCoordinates, secondsToTicks} from './powerUtils/mainUtils';
 import BasePower from './powers/basePower';
 import DirectionCursor from './cursors/directionCursor';
 import PointCursor from './cursors/pointCursor';
@@ -8,7 +8,9 @@ import JoyCursor from './cursors/joyCursor';
 const directionVec = new BABYLON.Vector3(0, 0, 1);
 const distance = 10;
 const fixedRotation = false;
-const meshSize = 5;
+const meshSize = 8;
+const lifeSpan = secondsToTicks(5);
+
 
 export default class Power1 extends BasePower {
     constructor(game, hero) {
@@ -20,19 +22,19 @@ export default class Power1 extends BasePower {
       // Set the spawn vector
       this.spawnVec = new BABYLON.Vector3(
         this.cursor.mesh.position.x,
-        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - meshSize - 3,
+        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - (meshSize/2) - 2,
         this.cursor.mesh.position.z
       );
 
       // Set the target vector
       this.targetVec = new BABYLON.Vector3(
         this.cursor.mesh.position.x,
-        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + meshSize - 1,
+        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + (meshSize/2) - 2,
         this.cursor.mesh.position.z
       );
 
       // Create the mesh
-      this.mesh = new BABYLON.Mesh.CreateBox('mesh', meshSize*2, this.game.scene);
+      this.mesh = new BABYLON.Mesh.CreateBox('mesh', meshSize, this.game.scene);
       this.mesh.position.copyFrom(this.spawnVec);
       BABYLON.Tags.EnableFor(this.mesh);
       BABYLON.Tags.AddTagsTo(this.mesh, "checkJump");
@@ -41,9 +43,16 @@ export default class Power1 extends BasePower {
       this.mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal;
       this.game.scene.shadowGenerator.getShadowMap().renderList.push(this.mesh);
       this.mesh.receiveShadows = true;
-
+      this.mesh.removeCounter = lifeSpan;
       // run spawn
       this.spawn(this.spawnVec, this.targetVec, 100);
+    }
+
+    powerUpdate() {
+      this.mesh.removeCounter--;
+      if (!this.mesh.removeCounter) {
+        this._currentState = 2;
+      }
     }
 
     buttonDown(i) {
@@ -57,7 +66,6 @@ export default class Power1 extends BasePower {
         this.setRotation(this.hero.mask.rotationQuaternion);
       }
       this.cursor.destroy();
-      delete this.cursor;
     }
 
     setRotation (rotation) {

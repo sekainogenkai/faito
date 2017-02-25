@@ -14,7 +14,6 @@ export default class BasePower {
   }
   update() {
     if (this._currentState == 0) {
-
     } else if (this._currentState == 1) {
       // main update loop of power
       this.powerUpdate();
@@ -36,10 +35,9 @@ export default class BasePower {
                               BABYLON.Animation.ANIMATIONTYPE_VECTOR3);
 
     var spawnEndEvent = new BABYLON.AnimationEvent(range, function() {
-      console.log('ye');
       // Switch to powerUpdate state
       this._currentState = 1;
-    });
+    }.bind(this));
 
     this.mesh.spawnAnimation.addEvent(spawnEndEvent);
 

@@ -20,19 +20,19 @@ export default class Power1 extends BasePower {
       // Set the spawn vector
       this.spawnVec = new BABYLON.Vector3(
         this.cursor.mesh.position.x,
-        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - meshSize,
+        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - meshSize - 3,
         this.cursor.mesh.position.z
       );
 
       // Set the target vector
       this.targetVec = new BABYLON.Vector3(
         this.cursor.mesh.position.x,
-        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + meshSize,
+        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + meshSize - 1,
         this.cursor.mesh.position.z
       );
 
       // Create the mesh
-      this.mesh = new BABYLON.Mesh.CreateBox('mesh', meshSize, this.game.scene);
+      this.mesh = new BABYLON.Mesh.CreateBox('mesh', meshSize*2, this.game.scene);
       this.mesh.position.copyFrom(this.spawnVec);
       BABYLON.Tags.EnableFor(this.mesh);
       BABYLON.Tags.AddTagsTo(this.mesh, "checkJump");

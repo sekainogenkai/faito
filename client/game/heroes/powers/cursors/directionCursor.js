@@ -20,5 +20,7 @@ export default class DirectionCursor extends BaseCursor {
       if (this._directionVec) {
           this.mesh.position.addInPlace(this._directionVec);
       }
+
+      super.update();
     }
 }

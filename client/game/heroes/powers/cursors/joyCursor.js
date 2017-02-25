@@ -18,6 +18,8 @@ export default class JoyCursor extends BaseCursor {
       this._updatePositionVec.z = this.joy.y;
       this._updatePositionVec.scaleInPlace(this._speed);
       this.mesh.position.addInPlace(this._updatePositionVec);
+
+      super.update();
     }
 
     joyChanged(joy) {

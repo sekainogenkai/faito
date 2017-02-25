@@ -22,6 +22,8 @@ export default class PointCursor extends BaseCursor {
         this.mesh.position.copyFrom(this.hero.mask.position);
         this.setPoint();
       }
+      
+      super.update();
     }
 
     setPoint () {

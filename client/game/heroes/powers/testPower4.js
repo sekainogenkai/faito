@@ -1,4 +1,4 @@
-import baseDirectionCursor from './powerTemplates/baseDirectionCursor';
+import baseDirectionCursor from './powers/baseDirectionCursor';
 import BABYLON from 'babylonjs';
 
 export default class testPower extends baseDirectionCursor {

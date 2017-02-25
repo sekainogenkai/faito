@@ -4,12 +4,12 @@ import PointCursor from './cursors/pointCursor';
 import JoyCursor from './cursors/joyCursor';
 
 const directionVec = new BABYLON.Vector3(0, 0, 1);
+const distance = 10
 const fixedRotation = false;
 export default class Power1 {
     constructor(game, hero) {
       this.game = game;
       this.hero = hero;
-      this.cursor = undefined;
     }
 
     // TODO: fix the mesh spawning at 0,0,0 and hitting the players, I forgot how to do that
@@ -26,11 +26,12 @@ export default class Power1 {
     }
 
     buttonDown(i) {
-      this.cursor = new PointCursor(this.game, this.hero, directionVec, 10, true);
+      this.cursor = new PointCursor(this.game, this.hero, directionVec, distance, true);
     }
 
     buttonUp(i) {
       this.createMesh();
+      this.game.scene.registerBeforeRender(() => this.update());
       if (!fixedRotation) {
         this.setRotation(this.hero.mask.rotationQuaternion);
       }

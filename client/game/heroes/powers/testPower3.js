@@ -1,4 +1,4 @@
-import basePower from './powerTemplates/basePower';
+import basePower from './powers/basePower';
 import BABYLON from 'babylonjs';
 import {registerAfterSceneRender, registerBeforeSceneRender} from '../../mesh-util';
 import {secondsToTicks, configureAutoRemove} from './powerUtils/mainUtils';

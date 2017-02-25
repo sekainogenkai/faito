@@ -18,12 +18,21 @@ export default function loadGameScene (game) {
   let dirLightStrength = 1;
   dirLight.diffuse = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
   dirLight.specular = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
+
+  // Make lighting look better for the shadows at different angles.
+  var dirLight2 = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(.2, -1, .5), game.scene);
+  dirLightStrength = .25;
+  dirLight2.diffuse = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
+  dirLight2.specular = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
+
+
   var hemLight = new BABYLON.HemisphericLight("dir02", new BABYLON.Vector3(0,1,0), game.scene);
-  let hemLightStrength = .7;
+  let hemLightStrength = .2;
   hemLight.diffuse = new BABYLON.Color3(hemLightStrength,hemLightStrength,hemLightStrength);
   hemLight.specular = new BABYLON.Color3(hemLightStrength,hemLightStrength,hemLightStrength);
 
   // Skybox
+  /*
   var skybox = BABYLON.Mesh.CreateSphere("skyBox", 10, 2500, game.scene);
   var shader = new BABYLON.ShaderMaterial("gradient", game.scene, "gradient", {});
   shader.setFloat("offset", 0);
@@ -32,9 +41,10 @@ export default function loadGameScene (game) {
   shader.setColor3("bottomColor", BABYLON.Color3.FromInts(240,240, 255));
   shader.backFaceCulling = false;
   skybox.material = shader;
+  */
 
   // Add shadow generator
-  game.scene.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,10), dirLight);
+  game.scene.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,11), dirLight);
   game.scene.shadowGenerator.setDarkness(0);
   //this.shadowGenerator.bias = 0.01;
 

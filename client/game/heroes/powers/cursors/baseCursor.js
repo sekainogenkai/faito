@@ -10,9 +10,7 @@ export default class BaseCursor {
       material.diffuseColor = BABYLON.Color3.Red();
       this.mesh.material = material;
       // set position to the player
-      this.mesh.position.x = this.hero.mask.position.x;
-      this.mesh.position.z = this.hero.mask.position.z;
-      this.mesh.position.y = this.hero.mask.position.y;
+      this.mesh.position.copyFrom(this.hero.mask.position);
       this.game.scene.registerBeforeRender(() => this.update());
     }
 

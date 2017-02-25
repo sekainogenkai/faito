@@ -19,9 +19,7 @@ export default class PointCursor extends BaseCursor {
 
     update () {
       if (this._fixed) {
-        this.mesh.position.x = this.hero.mask.position.x;
-        this.mesh.position.y = this.hero.mask.position.y;
-        this.mesh.position.z = this.hero.mask.position.z;
+        this.mesh.position.copyFrom(this.hero.mask.position);
         this.setPoint();
       }
     }

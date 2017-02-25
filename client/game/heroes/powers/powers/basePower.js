@@ -1,18 +1,20 @@
 import BABYLON from 'babylonjs';
 
-
 export default class BasePower {
   constructor(game, hero, power) {
     this.game = game;
     this.hero = hero;
     this.power = power;
     this.cursor = undefined;
+    this.mesh = undefined;
     this._currentState = 0;
-    this.game.scene.registerBeforeRender(() => this.update());
+    this.spawnVec = undefined;
+    this.targetVec = undefined;
+    this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
   }
   update() {
     if (this._currentState == 0) {
-      this.spawn();
+
     } else if (this._currentState == 1) {
       // main update loop of power
       this.powerUpdate();
@@ -29,11 +31,26 @@ export default class BasePower {
 
   }
 
-  spawn() {
-
+  spawn(vector1, vector2, range) {
+    this.mesh.spawnAnimation = new BABYLON.Animation('spawnAnimation', 'position', 60,
+                              BABYLON.Animation.ANIMATIONTYPE_VECTOR3);
+    this.mesh.spawnAnimationKeys = [];
+    this.mesh.spawnAnimationRange = range;
+    this.mesh.spawnAnimationKeys.push({
+      frame: 0,
+      value: vector1
+    });
+    this.mesh.spawnAnimationKeys.push({
+      frame: range,
+      value: vector2
+    });
+    // Set the keys
+    this.mesh.spawnAnimation.setKeys(this.mesh.spawnAnimationKeys);
+    this.mesh.animations.push(this.mesh.spawnAnimation);
+    this.game.scene.beginAnimation(this.mesh, 0, this.mesh.spawnAnimationRange, false);
   }
 
-  poweUpdate() {
+  powerUpdate() {
 
   }
 

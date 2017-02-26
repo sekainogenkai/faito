@@ -20,14 +20,14 @@ export default class Power1 extends BasePower {
     // TODO: fix the mesh spawning at 0,0,0 and hitting the players, I forgot how to do that
     createMesh () {
       // Set the spawn vector
-      this.spawnVec = new BABYLON.Vector3(
+      this.vectorStart = new BABYLON.Vector3(
         this.cursor.mesh.position.x,
         (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - (meshSize/2) - 2,
         this.cursor.mesh.position.z
       );
 
       // Set the target vector
-      this.targetVec = new BABYLON.Vector3(
+      this.vectorEnd = new BABYLON.Vector3(
         this.cursor.mesh.position.x,
         (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + (meshSize/2) - 2,
         this.cursor.mesh.position.z
@@ -35,7 +35,7 @@ export default class Power1 extends BasePower {
 
       // Create the mesh
       this.mesh = new BABYLON.Mesh.CreateBox('mesh', meshSize, this.game.scene);
-      this.mesh.position.copyFrom(this.spawnVec);
+      this.mesh.position.copyFrom(this.vectorStart);
       BABYLON.Tags.EnableFor(this.mesh);
       BABYLON.Tags.AddTagsTo(this.mesh, "checkJump");
       this.mesh.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:0, friction:0.1, restitution:0.9});
@@ -45,14 +45,7 @@ export default class Power1 extends BasePower {
       this.mesh.receiveShadows = true;
       this.mesh.removeCounter = lifeSpan;
       // run spawn
-      this.spawn(this.spawnVec, this.targetVec, 100);
-    }
-
-    powerUpdate() {
-      this.mesh.removeCounter--;
-      if (!this.mesh.removeCounter) {
-        this._currentState = 2;
-      }
+      this.createBasePowerObject(this.mesh, this.vectorStart, this.vectorEnd, 100);
     }
 
     buttonDown(i) {
@@ -61,7 +54,7 @@ export default class Power1 extends BasePower {
 
     buttonUp(i) {
       this.createMesh();
-      this.game.scene.registerBeforeRender(() => this.update());
+      this.game.scene.registerBeforeRender(() => this.update()); // TODO this does something or nothing?
       if (!fixedRotation) {
         this.setRotation(this.hero.mask.rotationQuaternion);
       }

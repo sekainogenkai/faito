@@ -39,9 +39,9 @@ export default class BasePower {
 
     this.mesh.destroyEndEvent = new BABYLON.AnimationEvent(range, function() {
       this.mesh.dispose();
-    }).bind(this);
+    }.bind(this));
 
-    this.moveAnimation(vector1, vector2, range, spawnEndEvent);
+    this.moveAnimation(vector1, vector2, range, this.mesh.spawnEndEvent);
   }
 
   powerUpdate() {

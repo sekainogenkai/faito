@@ -12,22 +12,17 @@ export default class BasePower {
     this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
   }
 
-  createBasePowerObject(mesh, vectorStart, vectorEnd, range) {
+  createBasePowerObject(mesh, vectorStart, vectorEnd, range, lifeSpan) {
     console.log(vectorStart);
-    this.newPowerObject = new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, range);
+    this.newPowerObject = new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, range, lifeSpan);
   }
 
-  update() {};
-
   buttonDown(i) {
-
   }
 
   buttonUp(i) {
-
   }
 
   destroy() {
-
   }
 }

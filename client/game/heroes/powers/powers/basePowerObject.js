@@ -1,8 +1,9 @@
 import BABYLON from 'babylonjs';
-
+import {registerBeforeSceneRender} from '../../../mesh-util'
+import {getHeightAtCoordinates} from '../powerUtils/mainUtils';
 
 export default class BasePowerObject {
-  constructor(game, hero, mesh, vectorStart, vectorEnd, range) {
+  constructor(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan) {
     this.game = game;
     this.hero = hero;
     this.mesh = mesh;
@@ -10,8 +11,11 @@ export default class BasePowerObject {
     this.vectorStart = vectorStart;
     this.vectorEnd = vectorEnd;
     this.range = range;
+    this.lifeSpan = lifeSpan;
     this._currentState = 0;
+    this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
     this.spawn();
+    registerBeforeSceneRender(mesh, () => this.update());
   }
 
   update() {
@@ -24,41 +28,60 @@ export default class BasePowerObject {
     }
   }
 
+  powerUpdate() {
+    console.log('after spawn');
+    if (this.lifeSpan) {
+      this.lifeSpan--;
+    } else {
+      this._currentState = 2;
+      this.destroy();
+    }
+
+  }
+
   spawn() {
-    var spawnEndEvent = new BABYLON.AnimationEvent(this.range, function() {
+    const spawnEndEvent = new BABYLON.AnimationEvent(this.range, () => {
       console.log('End animation event');
       // Switch to powerUpdate state
       this._currentState = 1;
-    }.bind(this));
+    });
 
     this.moveAnimation(spawnEndEvent);
   }
 
   destroy() {
-        this.destroyEndEvent = new BABYLON.AnimationEvent(this.range, function() {
-          this.mesh.dispose();
-        }.bind(this));
+    const destroyEndEvent = new BABYLON.AnimationEvent(this.range, () => {
+      this.mesh.dispose();
+    });
+
+    this.vectorStart = this.mesh.position;
+    this.vectorEnd = this.mesh.position.clone();
+    this.vectorEnd.y = getHeightAtCoordinates(this.groundMesh, this.vectorEnd.x, this.vectorEnd.z) - this.mesh.getBoundingInfo().boundingBox.extendSize.y;
+
+    this.moveAnimation(destroyEndEvent);
   }
 
   moveAnimation(endEvent) {
     console.log('start pos', this.vectorStart);
     console.log('end pos', this.vectorEnd);
-    this.moveAnimation = new BABYLON.Animation('moveAnimation', 'position', 60,
-                              BABYLON.Animation.ANIMATIONTYPE_VECTOR3);
+    const moveAnimation = new BABYLON.Animation(
+      'moveAnimation', 'position', 60,
+      BABYLON.Animation.ANIMATIONTYPE_VECTOR3);
 
-    this.moveAnimation.addEvent(endEvent);
-    this.moveAnimationKeys = [];
-    this.moveAnimationKeys.push({
-      frame: 0,
-      value: this.vectorStart
-    });
-    this.moveAnimationKeys.push({
-      frame: this.range,
-      value: this.vectorEnd
-    });
+    moveAnimation.addEvent(endEvent);
+    const moveAnimationKeys = [
+      {
+        frame: 0,
+        value: this.vectorStart,
+      },
+      {
+        frame: this.range,
+        value: this.vectorEnd,
+      },
+    ];
     // Set the keys
-    this.moveAnimation.setKeys(this.moveAnimationKeys);
-    this.mesh.animations.push(this.moveAnimation);
+    moveAnimation.setKeys(moveAnimationKeys);
+    this.mesh.animations.push(moveAnimation);
 
     this.game.scene.beginAnimation(this.mesh, 0, this.range, false);
   }

@@ -12,7 +12,6 @@ export default class PointCursor extends BaseCursor {
       this._initialDirectionVec = direction;
       this._directionVec = new BABYLON.Vector3(0, 0, 0);
       var initialVec = this.hero.mask.physicsImpostor.getLinearVelocity();
-      this.mesh.applyImpulse(initialVec.normalize().scale(distance), this.mesh.getAbsolutePosition());
       // set the point
       this.setPoint();
     }
@@ -22,7 +21,7 @@ export default class PointCursor extends BaseCursor {
         this.mesh.position.copyFrom(this.hero.mask.position);
         this.setPoint();
       }
-      
+
       super.update();
     }
 

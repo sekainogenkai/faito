@@ -14,4 +14,4 @@ before_script:
 addons:
   artifacts:
     paths:
-      - "$(find build -type f -printf ':%h/%f' | tail -c +2)"
+      - $(find build -type f -printf ':%h/%f' | tail -c +2)

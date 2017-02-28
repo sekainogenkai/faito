@@ -1,18 +1,23 @@
 import BABYLON from 'babylonjs';
 import {getHeightAtCoordinates, secondsToTicks} from './powerUtils/mainUtils';
 import BasePower from './powers/basePower';
-import BasePowerObject from './powerObjects/basePowerObject';
+import ProjectileObject from './powerObjects/projectileObject';
 import DirectionCursor from './cursors/directionCursor';
 import PointCursor from './cursors/pointCursor';
 import JoyCursor from './cursors/joyCursor';
 
-const directionVec = new BABYLON.Vector3(0, 0, 1);
+const cursorDirectionVec = new BABYLON.Vector3(0, 0, 1);
 const distance = 10;
-const fixedRotation = false;
-const meshSize = 10;
+const fixedRotation = true;
+const meshSize = 2;
+const lifeSpan = secondsToTicks(50);
+const powerImpulseVec = new BABYLON.Vector3(0, 10, 30)
 
+/**
+Shoots out a porjectile at the enemy
+**/
 
-export default class Power1 extends BasePower {
+export default class Power2 extends BasePower {
     constructor(game, hero) {
       super(game, hero);
     }
@@ -22,23 +27,22 @@ export default class Power1 extends BasePower {
       // Set the spawn vector
       const vectorStart = new BABYLON.Vector3(
         this.cursor.mesh.position.x,
-        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - (meshSize/2) - 2,
+        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - (meshSize) - 2,
         this.cursor.mesh.position.z
       );
 
       // Set the target vector
       const vectorEnd = new BABYLON.Vector3(
         this.cursor.mesh.position.x,
-        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + (meshSize/2) - 2,
+        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + (meshSize) + 2,
         this.cursor.mesh.position.z
       );
 
       // Create the mesh
-      const mesh = new BABYLON.Mesh.CreateBox('mesh', meshSize, this.game.scene);
+      const mesh = new BABYLON.Mesh.CreateSphere('mesh', meshSize, meshSize, this.game.scene);
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
-      BABYLON.Tags.AddTagsTo(mesh, "checkJump");
-      mesh.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:0, friction:0.1, restitution:0.9});
+      mesh.setPhysicsState(BABYLON.PhysicsEngine.SphereImpostor, {mass:0, friction:0.1, restitution:0.9});
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal;
       this.game.scene.shadowGenerator.getShadowMap().renderList.push(mesh);
@@ -48,15 +52,24 @@ export default class Power1 extends BasePower {
       }
 
       // run spawn
-      new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 100, secondsToTicks(1));
+      new ProjectileObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(5), powerImpulseVec);
     }
 
     buttonDown(i) {
-      this.cursor = new JoyCursor(this.game, this.hero) || new PointCursor(this.game, this.hero, directionVec, distance, true);
+      this.cursor = new PointCursor(this.game, this.hero, cursorDirectionVec, distance, true);
     }
 
     buttonUp(i) {
       this.createMesh();
+      // this.game.scene.registerBeforeRender(() => this.update()); // TODO this does something or nothing?
+      if (!fixedRotation) {
+        this.setRotation(this.hero.mask.rotationQuaternion);
+      }
       this.cursor.destroy();
+    }
+
+    setRotation(rotation) {
+      // Set the mesh rotation to the rotation
+      this.mesh.rotationQuaternion.copyFrom(rotation)
     }
 }

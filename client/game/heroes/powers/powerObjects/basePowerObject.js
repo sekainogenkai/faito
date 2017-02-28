@@ -29,7 +29,6 @@ export default class BasePowerObject {
   }
 
   powerUpdate() {
-    console.log('after spawn');
     if (this.lifeSpan) {
       this.lifeSpan--;
     } else {
@@ -43,6 +42,7 @@ export default class BasePowerObject {
     const spawnEndEvent = new BABYLON.AnimationEvent(this.range, () => {
       console.log('End animation event');
       // Switch to powerUpdate state
+      this.onPowerSpawn();
       this._currentState = 1;
     });
 
@@ -84,5 +84,9 @@ export default class BasePowerObject {
     this.mesh.animations.push(moveAnimation);
 
     this.game.scene.beginAnimation(this.mesh, 0, this.range, false);
+  }
+
+  onPowerSpawn() {
+    // Called when power is spawned
   }
 }

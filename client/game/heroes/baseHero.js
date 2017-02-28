@@ -5,6 +5,8 @@ import {registerBeforeSceneRender} from '../mesh-util';
 import ParticleEmitter from '../particle';
 
 import Power1 from './powers/power1';
+import Power2 from './powers/power2';
+import Power3 from './powers/power3';
 
 const upAxis = new CANNON.Vec3(0, 1, 0);
 const zeroVector2 = new BABYLON.Vector2(0, 0);
@@ -15,7 +17,7 @@ const onGroundPadding = 10;
 export default class Hero {
   constructor(
     game, name, meshFileName='omi', speed=12, airSpeed=4, jumpStrength=150, rollGroundSpeed=20, rollAirSpeed=10,
-    attack1=Power1, attack2=Power1, attack3=Power1, attack4=Power1){
+    attack1=Power1, attack2=Power2, attack3=Power3, attack4=Power1){
     this.game = game;
     this.name = name;
     this._mana = maxMana;

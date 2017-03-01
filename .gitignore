@@ -7,3 +7,4 @@ build
 *.log.*
 # Ignore blender backup files.
 *.blend?*
+.env

@@ -7,6 +7,8 @@ import PointCursor from './cursors/pointCursor';
 import JoyCursor from './cursors/joyCursor';
 import {registerBeforeSceneRender} from '../../mesh-util';
 
+const manaCost = 50;
+
 const directionVec = new BABYLON.Vector3(0, 0, 1);
 const distance = 0;
 const fixedRotation = false;
@@ -69,8 +71,12 @@ export default class Power4 extends BasePower {
     update () {
       this.timer--;
       if (this.timer == 0) {
-        this.createMesh();
-        this.timer = timerStart2;
+        if (!this.hero.consumeMana(manaCost)){
+          this.cursor.destroy();
+        } else {
+          this.createMesh();
+          this.timer = timerStart2;
+        }
       }
     }
 

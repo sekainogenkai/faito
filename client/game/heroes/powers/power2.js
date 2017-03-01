@@ -6,12 +6,14 @@ import DirectionCursor from './cursors/directionCursor';
 import PointCursor from './cursors/pointCursor';
 import JoyCursor from './cursors/joyCursor';
 
+const manaCost = 100;
+
 const cursorDirectionVec = new BABYLON.Vector3(0, 0, 1);
 const distance = 10;
 const fixedRotation = true;
 const meshSize = 2;
 const lifeSpan = secondsToTicks(50);
-const powerImpulseVec = new BABYLON.Vector3(0, 10, 30)
+const powerImpulseVec = new BABYLON.Vector3(0, 7, 30)
 
 /**
 Shoots out a porjectile at the enemy
@@ -55,20 +57,24 @@ export default class Power2 extends BasePower {
     }
 
     buttonDown(i) {
+      // Consume and check is there is enough mana
+      if (!this.hero.consumeMana(manaCost)){
+        return;
+      }
       this.cursor = new PointCursor(this.game, this.hero, cursorDirectionVec, distance, true);
     }
 
     buttonUp(i) {
+      // Check for cursor presence
+      if (!this.cursor){
+        return;
+      }
       this.createMesh();
       // this.game.scene.registerBeforeRender(() => this.update()); // TODO this does something or nothing?
       if (!fixedRotation) {
-        this.setRotation(this.hero.mask.rotationQuaternion);
+        this.mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
       }
       this.cursor.destroy();
-    }
-
-    setRotation(rotation) {
-      // Set the mesh rotation to the rotation
-      this.mesh.rotationQuaternion.copyFrom(rotation)
+      this.cursor = undefined;
     }
 }

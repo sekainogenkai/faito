@@ -6,6 +6,8 @@ import DirectionCursor from './cursors/directionCursor';
 import PointCursor from './cursors/pointCursor';
 import JoyCursor from './cursors/joyCursor';
 
+const manaCost = 100;
+
 const directionVec = new BABYLON.Vector3(0, 0, -1);
 const distance = 0;
 const fixedRotation = true;
@@ -53,11 +55,22 @@ export default class Power3 extends BasePower {
     }
 
     buttonDown(i) {
+      // consume and check to see if there is enough mana
+      if (!this.hero.consumeMana(manaCost)){
+        return;
+      }
+
       this.cursor = new PointCursor(this.game, this.hero, directionVec, distance, true);
     }
 
     buttonUp(i) {
+      // Make sure a cursor is present
+      if (!this.cursor){
+        return;
+      }
+
       this.createMesh();
       this.cursor.destroy();
+      this.cursor = undefined;
     }
 }

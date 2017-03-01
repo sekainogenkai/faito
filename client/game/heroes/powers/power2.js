@@ -22,7 +22,6 @@ export default class Power2 extends BasePower {
       super(game, hero);
     }
 
-    // TODO: fix the mesh spawning at 0,0,0 and hitting the players, I forgot how to do that
     createMesh () {
       // Set the spawn vector
       const vectorStart = new BABYLON.Vector3(

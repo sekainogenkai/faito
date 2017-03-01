@@ -11,13 +11,14 @@ const distance = 10;
 const fixedRotation = false;
 const meshSize = 10;
 
-
+/**
+* Makes a block using joy cursor
+*/
 export default class Power1 extends BasePower {
     constructor(game, hero) {
       super(game, hero);
     }
 
-    // TODO: fix the mesh spawning at 0,0,0 and hitting the players, I forgot how to do that
     createMesh () {
       // Set the spawn vector
       const vectorStart = new BABYLON.Vector3(

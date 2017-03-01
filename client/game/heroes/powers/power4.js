@@ -20,6 +20,7 @@ const meshHeight = 20;
 export default class Power4 extends BasePower {
     constructor(game, hero) {
       super(game, hero);
+      this.playerRotation = new BABYLON.Quaternion();
     }
 
     createMesh () {
@@ -43,13 +44,13 @@ export default class Power4 extends BasePower {
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
-      mesh.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:0, friction:1, restitution:0.9});
+      mesh.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass:0, friction:0.1, restitution:0.9});
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal;
       this.game.scene.shadowGenerator.getShadowMap().renderList.push(mesh);
       mesh.receiveShadows = true;
       if (!fixedRotation) {
-        mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
+        mesh.rotationQuaternion.copyFrom(this.playerRotation);
       }
 
       // run spawn
@@ -57,7 +58,9 @@ export default class Power4 extends BasePower {
     }
 
     buttonDown(i) {
-      this.cursor = new DirectionCursor(this.game, this.hero, directionVec, 0.5);
+      // Capture the rotation of the player at the beginning
+      this.playerRotation.copyFrom(this.hero.mask.rotationQuaternion);
+      this.cursor = new DirectionCursor(this.game, this.hero, directionVec, 1);
       // Add an update function to the power
       this.timer = timerStart;
       registerBeforeSceneRender(this.cursor.mesh, () => this.update());

@@ -6,6 +6,7 @@ const env = require('get-env')();
 const path = require('path');
 const promisify = require('promisify-node');
 const fs = promisify('fs');
+const WebpackEmitGitrev = require('./webpack-emit-gitrev');
 
 const getIndex = (() => {
   const getManifest = env === 'prod' ? () => Promise.resolve(require('./build/manifest.json')) : () => Promise.resolve({'main.js': 'main.js',});
@@ -53,7 +54,8 @@ if (env === 'dev') {
   const webpack = require('webpack');
   webpackConfig.entry.unshift('webpack-hot-middleware/client?reload=true');
   webpackConfig.output.path = __dirname;
-  webpackConfig.output.filename = 'main.js';
+    webpackConfig.output.filename = 'main.js';
+    webpackConfig.plugins = webpackConfig.plugins.filter(p => !(p instanceof WebpackEmitGitrev));
   webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
     webpackConfig.plugins.push(new webpack.NoEmitOnErrorsPlugin());
     const babelQuery = webpackConfig.module.loaders.find(plugin => plugin.loader === 'babel-loader').query;

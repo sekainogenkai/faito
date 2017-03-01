@@ -11,7 +11,7 @@ const directionVec = new BABYLON.Vector3(0, 0, 1);
 const distance = 0;
 const fixedRotation = false;
 const timerStart = 30;
-const timerStart2 = 10;
+const timerStart2 = 5;
 const meshHeight = 10;
 
 /**
@@ -53,7 +53,7 @@ export default class Power4 extends BasePower {
       }
 
       // run spawn
-      new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(1));
+      new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(1), 10);
     }
 
     buttonDown(i) {

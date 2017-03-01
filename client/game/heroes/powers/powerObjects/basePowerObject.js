@@ -3,7 +3,7 @@ import {registerBeforeSceneRender} from '../../../mesh-util'
 import {getHeightAtCoordinates} from '../powerUtils/mainUtils';
 
 export default class BasePowerObject {
-  constructor(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan) {
+  constructor(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan, dropHeight=0) {
     this.game = game;
     this.hero = hero;
     this.mesh = mesh;
@@ -12,6 +12,7 @@ export default class BasePowerObject {
     this.vectorEnd = vectorEnd;
     this.range = range;
     this.lifeSpan = lifeSpan;
+    this.dropHeight = dropHeight;
     this._currentState = 0;
     this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
     this.spawn();
@@ -56,7 +57,7 @@ export default class BasePowerObject {
 
     this.vectorStart = this.mesh.position;
     this.vectorEnd = this.mesh.position.clone();
-    this.vectorEnd.y = getHeightAtCoordinates(this.groundMesh, this.vectorEnd.x, this.vectorEnd.z) - this.mesh.getBoundingInfo().boundingBox.extendSize.y;
+    this.vectorEnd.y = getHeightAtCoordinates(this.groundMesh, this.vectorEnd.x, this.vectorEnd.z) - (this.dropHeight?this.dropHeight:this.mesh.getBoundingInfo().boundingBox.extendSize.y);
 
     this.moveAnimation(destroyEndEvent);
   }

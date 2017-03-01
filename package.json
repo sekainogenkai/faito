@@ -32,6 +32,7 @@
     "express": "^4.14.0",
     "express-autoserve": "0.0.2",
     "get-env": "^0.5.10",
+    "git-rev": "^0.2.1",
     "imports-loader": "^0.7.0",
     "mini-signals": "^1.1.1",
     "promisify-node": "^0.4.0",

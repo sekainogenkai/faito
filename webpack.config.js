@@ -3,6 +3,7 @@
 const fs = require('fs');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const path = require('path');
+const WebpackEmitGitrev = require('./webpack-emit-gitrev');
 
 const outdir = path.join(__dirname, 'build');
 
@@ -40,6 +41,7 @@ module.exports = {
     filename: '[name].[chunkhash].js',
   },
   plugins: [
-    new ManifestPlugin(),
+      new ManifestPlugin(),
+      new WebpackEmitGitrev(),
   ],
 };

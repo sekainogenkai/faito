@@ -15,3 +15,7 @@ addons:
   artifacts:
     paths:
       - $(find build -type f -printf ':%h/%f' | tail -c +2)
+# Use deploy because it runs after the artifacts are uploaded.
+deploy:
+  provider: script
+  script: curl https://sam.ohnopub.net/~faito/webhook-pull/index.cgi/simple/faito/"${WEBHOOK_PULL_KEY}"/

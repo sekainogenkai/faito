@@ -9,9 +9,10 @@ import {registerBeforeSceneRender} from '../../mesh-util';
 
 const directionVec = new BABYLON.Vector3(0, 0, 1);
 const distance = 0;
-const fixedRotation = true;
+const fixedRotation = false;
 const meshSize = 6;
-const timerStart = 20;
+const timerStart = 30;
+const timerStart2 = 10;
 
 /**
 * Makes a line of things fly out!
@@ -65,7 +66,7 @@ export default class Power4 extends BasePower {
       this.timer--;
       if (this.timer == 0) {
         this.createMesh();
-        this.timer = timerStart;
+        this.timer = timerStart2;
       }
     }
 

@@ -10,9 +10,9 @@ import {registerBeforeSceneRender} from '../../mesh-util';
 const directionVec = new BABYLON.Vector3(0, 0, 1);
 const distance = 0;
 const fixedRotation = false;
-const timerStart = 30;
-const timerStart2 = 5;
-const meshHeight = 10;
+const timerStart = 7;
+const timerStart2 = 2;
+const meshHeight = 20;
 
 /**
 * Makes a line of things fly out!
@@ -53,11 +53,11 @@ export default class Power4 extends BasePower {
       }
 
       // run spawn
-      new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(1), 10);
+      new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(3), 10);
     }
 
     buttonDown(i) {
-      this.cursor = new DirectionCursor(this.game, this.hero, directionVec, 2000);
+      this.cursor = new DirectionCursor(this.game, this.hero, directionVec, 2);
       // Add an update function to the power
       this.timer = timerStart;
       registerBeforeSceneRender(this.cursor.mesh, () => this.update());

@@ -6,19 +6,18 @@ const matrix = new BABYLON.Matrix();
 export default class DirectionCursor extends BaseCursor {
     constructor(game, hero, direction, speed=1) {
       super(game, hero);
-      this._initialDirectionVec = direction;
-      this._directionVec = new BABYLON.Vector3(0, 0, 0);
-      var initialVec = this.hero.mask.physicsImpostor.getLinearVelocity();
-      this.mesh.applyImpulse(initialVec, this.mesh.getAbsolutePosition());
+      this.initialDirectionVec = direction;
+      this.directionVec = new BABYLON.Vector3(0, 0, 0);
       // Get current rotation of player
       this.hero.mask.rotationQuaternion.toRotationMatrix(matrix);
-      BABYLON.Vector3.TransformCoordinatesToRef(this._initialDirectionVec, matrix, this._directionVec);
-      this._directionVec.scaleInPlace(speed);
+      BABYLON.Vector3.TransformCoordinatesToRef(this.initialDirectionVec, matrix, this.directionVec);
+      // scale the vector to the speed
+      this.directionVec.scaleInPlace(speed);
     }
 
     update () {
-      if (this._directionVec) {
-          this.mesh.position.addInPlace(this._directionVec);
+      if (this.directionVec) {
+          this.mesh.position.addInPlace(this.directionVec);
       }
 
       super.update();

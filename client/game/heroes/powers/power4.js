@@ -57,7 +57,7 @@ export default class Power4 extends BasePower {
     }
 
     buttonDown(i) {
-      this.cursor = new DirectionCursor(this.game, this.hero, directionVec, 2);
+      this.cursor = new DirectionCursor(this.game, this.hero, directionVec, 0.5);
       // Add an update function to the power
       this.timer = timerStart;
       registerBeforeSceneRender(this.cursor.mesh, () => this.update());

@@ -6,7 +6,7 @@ const path = require('path');
 
 module.exports = class WebpackEmitGitrev {
     apply(compiler) {
-        compiler.plugin('emit', (compilation, callback) => {
+        compiler.plugin('after-emit', (compilation, callback) => {
             gitRev.long(commitHash => {
                 if (commitHash == '') {
                     return callback(new Error('fail'));

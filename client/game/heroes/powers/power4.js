@@ -10,7 +10,7 @@ import {registerBeforeSceneRender} from '../../mesh-util';
 const manaCost = 50;
 
 const directionVec = new BABYLON.Vector3(0, 0, 1);
-const distance = 0;
+const cursorSpeed = 1;
 const fixedRotation = false;
 const timerStart = 7;
 const timerStart2 = 2;
@@ -62,7 +62,7 @@ export default class Power4 extends BasePower {
     buttonDown(i) {
       // Capture the rotation of the player at the beginning
       this.playerRotation.copyFrom(this.hero.mask.rotationQuaternion);
-      this.cursor = new DirectionCursor(this.game, this.hero, directionVec, 1);
+      this.cursor = new DirectionCursor(this.game, this.hero, directionVec, cursorSpeed);
       // Add an update function to the power
       this.timer = timerStart;
       registerBeforeSceneRender(this.cursor.mesh, () => this.update());

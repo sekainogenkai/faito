@@ -50,12 +50,6 @@ export default class Hero {
         // console.log("the player mesh", this.mesh);
         this.mesh.isVisible = true;
 
-        // outline
-        this.mesh.outlineWidth = .1;
-        this.mesh.renderOutline = true;
-        this.mesh.outlineColor = new BABYLON.Color4(0,0,0, .01);
-        this.mesh.outlineAlpha = .1;
-
         this.mesh.id = this.name;
         this.mesh.parent = this.mask;
         this.mesh.position.y = -3  + 1.9 - .1;

@@ -44,7 +44,7 @@ export default function loadGameScene (game) {
   */
 
   // Add shadow generator
-  game.scene.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,9), dirLight);
+  game.scene.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,10), dirLight);
   game.scene.shadowGenerator.setDarkness(0);
   //this.shadowGenerator.bias = 0.01;
 

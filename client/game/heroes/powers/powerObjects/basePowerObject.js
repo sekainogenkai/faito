@@ -3,7 +3,7 @@ import {registerBeforeSceneRender} from '../../../mesh-util'
 import {getHeightAtCoordinates} from '../powerUtils/mainUtils';
 
 export default class BasePowerObject {
-  constructor(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan, dropHeight=0) {
+  constructor(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan, dropHeight=0, dropRange=null) {
     this.game = game;
     this.hero = hero;
     this.mesh = mesh;
@@ -15,6 +15,7 @@ export default class BasePowerObject {
     this.dropHeight = dropHeight;
     this._currentState = 0;
     this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
+    this.dropRange = dropRange;
     this.spawn();
     registerBeforeSceneRender(mesh, () => this.update());
   }
@@ -51,6 +52,7 @@ export default class BasePowerObject {
   }
 
   destroy() {
+    this.range = this.dropRange?this.dropRange:this.range;
     const destroyEndEvent = new BABYLON.AnimationEvent(this.range, () => {
       this.mesh.dispose();
     });

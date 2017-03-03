@@ -64,10 +64,6 @@ export default class Hero {
         this.game.scene.shadowGenerator.getShadowMap().renderList.push(this.mesh);
         this.mesh.receiveShadows = true;
 
-        // Add material for debug
-        var material = new BABYLON.StandardMaterial("blue_material", game.scene);
-        material.diffuseColor = BABYLON.Color3.Blue();
-        this.mesh.material = material;
         this.initAnimations();
     });
 

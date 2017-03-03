@@ -10,7 +10,7 @@ import {registerBeforeSceneRender} from '../../mesh-util';
 const manaCost = 50;
 
 const directionVec = new BABYLON.Vector3(0, 0, 1);
-const cursorSpeed = 1;
+const cursorSpeed = 1.9;
 const fixedRotation = false;
 const timerStart = 7;
 const timerStart2 = 2;

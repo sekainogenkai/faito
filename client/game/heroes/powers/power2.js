@@ -9,11 +9,11 @@ import JoyCursor from './cursors/joyCursor';
 const manaCost = 100;
 
 const cursorDirectionVec = new BABYLON.Vector3(0, 0, 1);
-const distance = 10;
+const distance = -10;
 const fixedRotation = true;
-const meshSize = 2;
+const meshSize = 8;
 const lifeSpan = secondsToTicks(50);
-const powerImpulseVec = new BABYLON.Vector3(0, 7, 30)
+const powerImpulseVec = new BABYLON.Vector3(0, 0, 30)
 
 /**
 Shoots out a porjectile at the enemy
@@ -35,7 +35,7 @@ export default class Power2 extends BasePower {
       // Set the target vector
       const vectorEnd = new BABYLON.Vector3(
         this.cursor.mesh.position.x,
-        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + (meshSize) + 2,
+        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + (meshSize) + 7,
         this.cursor.mesh.position.z
       );
 

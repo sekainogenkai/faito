@@ -11,11 +11,11 @@ before_install:
   - sudo apt-get install blender -y
 before_script:
   - node_modules/.bin/node-babylonjs-blender-install
-addons:
-  artifacts:
-    paths:
-      - $(find build -type f -printf ':%h/%f' | tail -c +2)
-# Use deploy because it runs after the artifacts are uploaded.
-deploy:
-  provider: script
-  script: curl https://sam.ohnopub.net/~faito/webhook-pull/index.cgi/simple/faito/"${WEBHOOK_PULL_KEY}"/
+after_success:
+  - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
+  - export ARTIFACTS_PATHS=$(find build -type f -printf ':%h/%f' | tail -c +2)
+  - export ARTIFACTS_TARGET_PATHS=${TRAVIS_REPO_SLUG}/${TRAVIS_BUILD_NUMBER}/${TRAVIS_JOB_NUMBER}
+  - DO_DEPLOY=$([ "${TRAVIS_PULL_REQUEST}" == false ] && [ "${TRAVIS_BRANCH}" == master ] && echo true || echo false)
+  - echo DO_DEPLOY="${DO_DEPLOY}"
+  - [ "${DO_DEPLOY}" == true ] && artifacts -D upload
+  - curl https://sam.ohnopub.net/~faito/webhook-pull/index.cgi/simple/faito/"${WEBHOOK_PULL_KEY}"/

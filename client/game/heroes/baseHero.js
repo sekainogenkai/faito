@@ -184,8 +184,6 @@ export default class Hero {
     // Create collision mask m0
     this.mask = this.createSphere('m0', detail, 2.3, 0, 4, 0.05, .01);
 
-    this.mask.physicsImpostor.onCollide = function() {}
-
     // create collision mask m1
     this.mask1 = this.createSphere('m1', detail, 2.3, 1.9, 1, 0, .2);
     this.body1 = this.mask1.physicsImpostor.physicsBody;

@@ -16,9 +16,11 @@ export default class ProjectileObject extends BasePowerObject {
   }
 
   onPowerSpawn() {
-    console.log('I just spawned');
     this.mesh.physicsImpostor.physicsBody.type = 1; // Make the object kinematic
+<<<<<<< HEAD
     this.mesh.physicsImpostor.physicsBody.mass = this.mass;
+=======
+>>>>>>> a1e789070226dcec61a03acb0c97a305380564c5
     this.mesh.physicsImpostor.physicsBody.updateMassProperties();
     this.mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupGround | this.game.scene.collisionGroupNormal;
 

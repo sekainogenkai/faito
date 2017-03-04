@@ -95,4 +95,8 @@ export default class BasePowerObject {
   onPowerSpawn() {
     // Called when power is spawned
   }
+
+  onPowerCollide() {
+    // Called when the power collides
+  }
 }

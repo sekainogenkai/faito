@@ -13,7 +13,7 @@ const distance = -10;
 const fixedRotation = true;
 const meshSize = 8;
 const lifeSpan = secondsToTicks(50);
-const powerImpulseVec = new BABYLON.Vector3(0, 0, 3000)
+const powerImpulseVec = new BABYLON.Vector3(0, 0, 3000);
 
 /**
 Shoots out a porjectile at the enemy
@@ -43,7 +43,11 @@ export default class Power2 extends BasePower {
       const mesh = new BABYLON.Mesh.CreateSphere('mesh', meshSize, meshSize, this.game.scene);
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
+<<<<<<< HEAD
       mesh.setPhysicsState(BABYLON.PhysicsEngine.SphereImpostor, {mass:99999999, friction:0.1, restitution:0.9});
+=======
+      mesh.setPhysicsState(BABYLON.PhysicsEngine.SphereImpostor, {mass:10, friction:0.1, restitution:0.9});
+>>>>>>> a1e789070226dcec61a03acb0c97a305380564c5
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal;
       this.game.scene.shadowGenerator.getShadowMap().renderList.push(mesh);

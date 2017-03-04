@@ -36,7 +36,7 @@ class Game extends EventEmitter {
   }
 
     handleMenuHidden() {
-        this.players.setInputTargetFinder((i, player) => this.heroes[i] || (this.heroes[i] = new Hero(this, `${player.name}のヒーロー`)));
+        this.players.setInputTargetFinder((i, player) => this.heroes[i] || (this.heroes[i] = new Hero(this, player.name)));
     }
 
     handlePlayersChanged() {

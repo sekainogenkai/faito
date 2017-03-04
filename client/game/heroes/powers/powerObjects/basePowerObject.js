@@ -7,6 +7,14 @@ export default class BasePowerObject {
     this.game = game;
     this.hero = hero;
     this.mesh = mesh;
+
+    // setup mesh impostor
+    this.mesh.physicsImpostor.onCollide = this.onPowerCollide.bind(this);
+
+    mesh.physicsImpostor.forceUpdate();
+    this.game.scene.shadowGenerator.getShadowMap().renderList.push(mesh);
+    mesh.receiveShadows = true;
+
     // console.log('vectorstart', vectorStart);
     this.vectorStart = vectorStart;
     this.vectorEnd = vectorEnd;
@@ -95,5 +103,9 @@ export default class BasePowerObject {
 
   onPowerSpawn() {
     // Called when power is spawned
+  }
+
+  onPowerCollide(e) {
+    // Called when object collides
   }
 }

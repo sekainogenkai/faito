@@ -18,7 +18,7 @@ export class PlayerManager {
 
     addInput(input) {
         const i = this.players.concat(undefined).indexOf(undefined);
-        const player = this.players[i] = new LocalPlayer(`Player ${i}`, input);
+        const player = this.players[i] = new LocalPlayer(`player ${i}`, input);
         console.log(`Added player ${player.name} (${input.name})`);
         player.endSignal.add(() => {
             this.players[i] = undefined;

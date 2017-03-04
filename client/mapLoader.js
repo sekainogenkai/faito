@@ -27,6 +27,7 @@ export default class MapLoader {
           this.game.scene.shadowGenerator.getShadowMap().renderList.push(mesh);
         }
         mesh.receiveShadows = true;
+        mesh.convertToFlatShadedMesh();
       }, this);
     }
   }

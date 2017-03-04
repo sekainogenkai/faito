@@ -53,7 +53,7 @@ export default class BasePowerObject {
   destroy() {
     this.range = this.dropRange;
     const destroyEndEvent = new BABYLON.AnimationEvent(this.range, () => {
-      console.log('End animation event!');
+      //console.log('End animation event!');
       this.mesh.dispose();
     });
 

@@ -38,6 +38,12 @@ export default class Hero {
     // Get physics impostor ready
     this.initCollider();
 
+    this.mask.physicsImpostor.physicsBody.parent = this;
+    // Add Tags
+    BABYLON.Tags.EnableFor(this.mask.physicsImpostor.physicsBody);
+    BABYLON.Tags.AddTagsTo(this.mask.physicsImpostor.physicsBody, "hero");
+    console.log(this.mask.physicsImpostor.physicsBody.id)
+
     this.nameTag = this._initNameTag(name)
 
     // Create the mana bar
@@ -469,8 +475,8 @@ export default class Hero {
         return true;
     }
 
-    takeDynamicDamage(damage, magnitude, contactNormal) {
-        this.takeDamage(damage * magnitude * contactNormal);
+    takeDynamicDamage(damage, contact) {
+        this.takeDamage(damage * contact);
     }
 
     /**

@@ -4,7 +4,7 @@ import {registerBeforeSceneRender} from '../../../mesh-util'
 import {getHeightAtCoordinates} from '../powerUtils/mainUtils';
 
 const matrix = new BABYLON.Matrix();
-const damageAmount = 10;
+const damageMult = 10;
 
 export default class ProjectileObject extends BasePowerObject {
   constructor(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan, dropHeight, dropRange, vectorImpulse) {
@@ -12,6 +12,7 @@ export default class ProjectileObject extends BasePowerObject {
     this.vectorImpulse = vectorImpulse;
     this.directionVec = new BABYLON.Vector3(0, 0, 0);
     this.active = true;
+    this.contactVelocity = new CANNON.Vec3();
     // Get current rotation of player
     this.hero.mask.rotationQuaternion.toRotationMatrix(matrix);
   }
@@ -27,7 +28,7 @@ export default class ProjectileObject extends BasePowerObject {
   }
 
   destroy() {
-    this.mesh.physicsImpostor.physicsBody.type = 0; // Make the object kinematic
+    this.mesh.physicsImpostor.physicsBody.type = 0; // Make the object not kinematic
     this.mesh.physicsImpostor.physicsBody.mass = 0;
     this.mesh.physicsImpostor.physicsBody.updateMassProperties();
     this.mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal;
@@ -35,14 +36,12 @@ export default class ProjectileObject extends BasePowerObject {
   }
 
   onPowerCollide(e) {
-
-    this.game.heroes.forEach(function(hero){
-
-      if (this.hero.id != hero.name && this.active){
-        console.log(e)
-        //hero.takeDynamicDamage(damageAmount, )
+    if (BABYLON.Tags.HasTags(e.body) && e.body.matchesTagsQuery("hero") && e.body.parent.name != this.hero.name) {
+        // e.body.parent is the hero that the object is colliding with
+        this.contactVelocity.copy(this.mesh.physicsImpostor.getLinearVelocity())
+        // apply the damage
+        e.body.parent.takeDynamicDamage(damageMult, Math.abs(this.contactVelocity.dot(e.contact.ni)));
         this.active = false;
       }
-    }, this)
   }
 }

@@ -3,16 +3,16 @@ import BABYLON from 'babylonjs';
 
 export default class MapLoader {
   constructor (mapName='test1', game) {
-  this.game = game;
-  require(`../models/maps/${mapName}.blend`).ImportMesh(BABYLON.SceneLoader, null,          this.game.scene, loadedMeshes => {
-  try {
-    this.setImpostors('boxImpostor', BABYLON.PhysicsImpostor.BoxImpostor);
-    this.setImpostors('heightFieldImpostor', BABYLON.PhysicsImpostor.HeightmapImpostor);
-    this.setImpostors('sphereImpostor', BABYLON.PhysicsImpostor.SphereImpostor);
-    this.setImpostors('cylinderImpostor', BABYLON.PhysicsImpostor.CylinderImpostor);
-  } catch (e) {
-    console.error(e);
-  }
+    this.game = game;
+    require(`../models/maps/${mapName}.blend`).ImportMesh(BABYLON.SceneLoader, null,          this.game.scene, loadedMeshes => {
+    try {
+      this.setImpostors('boxImpostor', BABYLON.PhysicsImpostor.BoxImpostor);
+      this.setImpostors('heightFieldImpostor', BABYLON.PhysicsImpostor.HeightmapImpostor);
+      this.setImpostors('sphereImpostor', BABYLON.PhysicsImpostor.SphereImpostor);
+      this.setImpostors('cylinderImpostor', BABYLON.PhysicsImpostor.CylinderImpostor);
+    } catch (e) {
+      console.error(e);
+    }
   });
 }
 

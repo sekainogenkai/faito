@@ -6,10 +6,11 @@ import {getHeightAtCoordinates} from '../powerUtils/mainUtils';
 const matrix = new BABYLON.Matrix();
 
 export default class ProjectileObject extends BasePowerObject {
-  constructor(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan, vectorImpulse) {
+  constructor(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan, vectorImpulse, mass=1) {
     super(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan)
     this.vectorImpulse = vectorImpulse;
     this.directionVec = new BABYLON.Vector3(0, 0, 0);
+    this.mass = mass;
     // Get current rotation of player
     this.hero.mask.rotationQuaternion.toRotationMatrix(matrix);
   }
@@ -17,7 +18,7 @@ export default class ProjectileObject extends BasePowerObject {
   onPowerSpawn() {
     console.log('I just spawned');
     this.mesh.physicsImpostor.physicsBody.type = 1; // Make the object kinematic
-    this.mesh.physicsImpostor.physicsBody.mass = 1;
+    this.mesh.physicsImpostor.physicsBody.mass = this.mass;
     this.mesh.physicsImpostor.physicsBody.updateMassProperties();
     this.mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupGround | this.game.scene.collisionGroupNormal;
 

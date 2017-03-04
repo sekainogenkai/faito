@@ -3,11 +3,11 @@ import {registerBeforeSceneRender} from '../../../mesh-util'
 import {getHeightAtCoordinates} from '../powerUtils/mainUtils';
 
 export default class BasePowerObject {
-  constructor(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan, dropHeight=0, dropRange=null) {
+  constructor(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan, dropHeight=0, dropRange=0) {
     this.game = game;
     this.hero = hero;
     this.mesh = mesh;
-    console.log('vectorstart', vectorStart);
+    // console.log('vectorstart', vectorStart);
     this.vectorStart = vectorStart;
     this.vectorEnd = vectorEnd;
     this.range = range;
@@ -15,7 +15,7 @@ export default class BasePowerObject {
     this.dropHeight = dropHeight;
     this._currentState = 0;
     this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
-    this.dropRange = dropRange;
+    this.dropRange = dropRange?dropRange:range;
     this.spawn();
     registerBeforeSceneRender(mesh, () => this.update());
   }
@@ -42,18 +42,18 @@ export default class BasePowerObject {
 
   spawn() {
     const spawnEndEvent = new BABYLON.AnimationEvent(this.range, () => {
-      console.log('End animation event');
       // Switch to powerUpdate state
       this.onPowerSpawn();
       this._currentState = 1;
     });
 
-    this.moveAnimation(spawnEndEvent);
+    this.moveAnimation('spawn', spawnEndEvent);
   }
 
   destroy() {
-    this.range = this.dropRange?this.dropRange:this.range;
+    this.range = this.dropRange;
     const destroyEndEvent = new BABYLON.AnimationEvent(this.range, () => {
+      console.log('End animation event!');
       this.mesh.dispose();
     });
 
@@ -61,18 +61,20 @@ export default class BasePowerObject {
     this.vectorEnd = this.mesh.position.clone();
     this.vectorEnd.y = getHeightAtCoordinates(this.groundMesh, this.vectorEnd.x, this.vectorEnd.z) - (this.dropHeight?this.dropHeight:this.mesh.getBoundingInfo().boundingBox.extendSize.y);
 
-    this.moveAnimation(destroyEndEvent);
+    //console.log('what is the range', this.dropRange);
+
+    this.moveAnimation('destroy', destroyEndEvent);
   }
 
-  moveAnimation(endEvent) {
-    console.log('start pos', this.vectorStart);
-    console.log('end pos', this.vectorEnd);
-    const moveAnimation = new BABYLON.Animation(
-      'moveAnimation', 'position', 60,
+  moveAnimation(animationName, endEvent) {
+    //console.log('start pos', this.vectorStart);
+    //console.log('end pos', this.vectorEnd);
+    var moveAnimation = new BABYLON.Animation(
+      animationName, 'position', 60,
       BABYLON.Animation.ANIMATIONTYPE_VECTOR3);
 
     moveAnimation.addEvent(endEvent);
-    const moveAnimationKeys = [
+    var moveAnimationKeys = [
       {
         frame: 0,
         value: this.vectorStart,
@@ -84,6 +86,7 @@ export default class BasePowerObject {
     ];
     // Set the keys
     moveAnimation.setKeys(moveAnimationKeys);
+    this.mesh.animations = [];
     this.mesh.animations.push(moveAnimation);
 
     this.game.scene.beginAnimation(this.mesh, 0, this.range, false);

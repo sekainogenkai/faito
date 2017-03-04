@@ -56,7 +56,7 @@ export default class Power4 extends BasePower {
       }
 
       // run spawn
-      new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(3), 10);
+      new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(3), 50);
     }
 
     buttonDown(i) {

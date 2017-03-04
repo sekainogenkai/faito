@@ -16,11 +16,7 @@ export default class BasePowerObject {
     this._currentState = 0;
     this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
     this.dropRange = dropRange?dropRange:range;
-    // set collision function
-    // this.mesh.physicsImpostor.onCollideEvent = (ignoredMyImpostor, otherImpostor) => {
-    //   console.log('collided with mesh', otherImpostor.object);
-    //   this.onPowerCollide();
-    // };
+
     this.spawn();
     registerBeforeSceneRender(mesh, () => this.update());
   }
@@ -99,10 +95,5 @@ export default class BasePowerObject {
 
   onPowerSpawn() {
     // Called when power is spawned
-  }
-
-  onPowerCollide() {
-    // Called when object collides
-    console.log('hey')
   }
 }

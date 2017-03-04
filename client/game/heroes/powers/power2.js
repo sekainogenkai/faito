@@ -44,6 +44,10 @@ export default class Power2 extends BasePower {
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.SphereImpostor, {mass:100, friction:0.1, restitution:0.9}, this.game.scene);
+      mesh.physicsImpostor.onCollide = function () {
+        console.log(arguments);
+      };
+      mesh.physicsImpostor.forceUpdate();
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal;
       this.game.scene.shadowGenerator.getShadowMap().renderList.push(mesh);

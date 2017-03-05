@@ -80,6 +80,7 @@ export default class Hero {
     this.airSpeed = airSpeed;
     this.moveBool = true;
     this.powerBool = true;
+    this.dead = false;
     this.rollGroundSpeed = rollGroundSpeed;
     this.rollAirSpeed = rollAirSpeed;
     this.useAbilityTimer = 0;
@@ -120,11 +121,13 @@ export default class Hero {
       this.powerAnimation = this.mesh.skeleton.getAnimationRange('ability');
       this.rollAnimation = this.mesh.skeleton.getAnimationRange('roll');
       this.rollingAnimation = this.mesh.skeleton.getAnimationRange('rolling');
+      this.deathAnimation = this.mesh.skeleton.getAnimationRange('death');
       const animatable = this.game.scene.beginAnimation(this.mesh.skeleton, 0, 120, true, 2);
+      /*
       setTimeout(() => {
           animatable.speedRatio /= 8;
       }, 4000);
-
+      */
       this.currentAnimation = null;
       this.currentAnimatable = null;
 
@@ -144,12 +147,19 @@ export default class Hero {
   }
 
   animations () {
+        if (this.dead) {
+          this.startAnimationNew(this.deathAnimation, false, 10);
+          this.currentAnimatable.speedRatio = .5;
+        }
+
+
         // walk animation
         var magnitude =
         Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.z * this.body.velocity.z);
+
         if (this.rollTimer) {
                 if (magnitude > 1) { // roll animation
-                    this.startAnimationNew(this.rollingAnimation, true, 10);
+                    this.startAnimationNew(this.rollingAnimation, false, 1);
                     this.currentAnimatable.speedRatio = 2.6;
                 } else { // duck animation
                     this.startAnimationNew(this.rollAnimation, false);
@@ -506,5 +516,6 @@ export default class Hero {
     onDeath() {
         this.moveBool = false;
         this.powerBool = false;
+        this.dead = true;
     }
 }

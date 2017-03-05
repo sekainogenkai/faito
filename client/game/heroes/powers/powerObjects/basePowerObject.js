@@ -12,8 +12,9 @@ export default class BasePowerObject {
     this.mesh = mesh;
 
     // setup mesh impostor
+    this.collisionActive = false;
     if (collisionCallBack) {
-      this.active = true;
+      this.collisionActive = true;
       this.contactVelocity = new BABYLON.Vector3();
       this.damageMult = damageMult;
       this.mesh.physicsImpostor.onCollide = this.onPowerCollide.bind(this);
@@ -60,6 +61,7 @@ export default class BasePowerObject {
 
   spawn() {
     const spawnEndEvent = new BABYLON.AnimationEvent(this.range, () => {
+      this.collisionActive = false; // stops the object from colliding with player after moving
       // Switch to powerUpdate state
       this.onPowerSpawn();
       this._currentState = 1;
@@ -117,25 +119,21 @@ export default class BasePowerObject {
   onPowerCollide(e) {
     // Called when object collides
     // Uses Cannon.js vectors
-    if (BABYLON.Tags.HasTags(e.body) && e.body.matchesTagsQuery("hero") && e.body.parent.name != this.hero.name && this.active) {
+    if (BABYLON.Tags.HasTags(e.body) && e.body.matchesTagsQuery("hero") && e.body.parent.name != this.hero.name && this.collisionActive) {
         // e.body.parent is the hero that the object is colliding with
-        console.log( this.mesh.physicsImpostor.getLinearVelocity());
         this.contactVelocity.copyFrom(this.mesh.physicsImpostor.getLinearVelocity());
 
         // If it does not have a velocity calculate it.
         if ( this.contactVelocity.equals(zeroVector) ) {
           this.contactVelocity = this.vectorEnd.subtract(this.vectorStart);
           let magnitude = this.contactVelocity.length();
-          console.log(this.range, magnitude)
           this.contactVelocity.normalize().scaleInPlace(magnitude/this.range);
         }
 
         this.contactVelocity = this.babylonToCannonVector(this.contactVelocity);
-
-        console.log('contact velocity', this.contactVelocity);
         // apply the damage
         e.body.parent.takeDynamicDamage(this.damageMult, Math.abs(this.contactVelocity.dot(e.contact.ni)));
-        this.active = false;
+        this.collisionActive = false;
     }
   }
 

@@ -16,6 +16,7 @@ export default class ProjectileObject extends BasePowerObject {
   }
 
   onPowerSpawn() {
+    this.collisionActive = true; // so it can collide with player after spawn
     this.mesh.physicsImpostor.physicsBody.type = 1; // Make the object kinematic
 
     this.mesh.physicsImpostor.physicsBody.updateMassProperties();

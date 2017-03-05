@@ -79,6 +79,7 @@ export default class Hero {
     this.speed = speed;
     this.airSpeed = airSpeed;
     this.moveBool = true;
+    this.powerBool = true;
     this.rollGroundSpeed = rollGroundSpeed;
     this.rollAirSpeed = rollAirSpeed;
     this.useAbilityTimer = 0;
@@ -358,6 +359,9 @@ export default class Hero {
   }
 
   buttonDown(button) {
+    if (!this.powerBool) {
+      return;
+    }
     this._handleButton(button, true);
     switch (button) {
         case Buttons.RB: this.Input.JUMP = true; break;
@@ -370,6 +374,9 @@ export default class Hero {
   }
 
   buttonUp(button) {
+    if (!this.powerBool) {
+      return;
+    }
     this._handleButton(button, false);
     switch (button) {
         case Buttons.A: this.attack1.buttonUp(0); this.animatePower=false; break;
@@ -468,6 +475,8 @@ export default class Hero {
 
     takeDamage(amount) {
         if (this._health < amount) {
+            this._health = 0;
+            this.onDeath();
             return false;
         }
 
@@ -492,5 +501,10 @@ export default class Hero {
         this._joyTarget = target;
         // Emit 0 to help target with preinitializing itself.
         this.joyChanged(zeroVector2);
+    }
+
+    onDeath() {
+        this.moveBool = false;
+        this.powerBool = false;
     }
 }

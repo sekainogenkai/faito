@@ -1,6 +1,7 @@
 import BABYLON from 'babylonjs';
 import {registerBeforeSceneRender} from '../../../mesh-util'
 import {getHeightAtCoordinates} from '../powerUtils/mainUtils';
+import ParticleEmitter from '../../../particle';
 
 const zeroVector = new BABYLON.Vector3.Zero();
 
@@ -34,6 +35,15 @@ export default class BasePowerObject {
     this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
     this.dropRange = dropRange?dropRange:range;
 
+    this.dustParticleEmitter = new ParticleEmitter(this.game, 'dustParticle', './textures/effects/circle.png',
+      new BABYLON.Vector3(0, 0, 0), //position
+      new BABYLON.Vector3(30, 0, -30), //directionwdw
+      new BABYLON.Vector3(-30, 0, 30), //direction
+      new BABYLON.Vector3(0,-1,0), //gravity
+      new BABYLON.Color3(1, 1, 1),
+      new BABYLON.Color3(1, 1, 1));
+    this.dustParticleEmitter.emitConstant(20, new BABYLON.Vector3(this.vectorEnd.x, getHeightAtCoordinates(this.groundMesh, this.vectorEnd.x, this.vectorEnd.z) + 1, this.vectorEnd.z));
+
     this.spawn();
     registerBeforeSceneRender(mesh, () => this.update());
   }
@@ -61,6 +71,7 @@ export default class BasePowerObject {
 
   spawn() {
     const spawnEndEvent = new BABYLON.AnimationEvent(this.range, () => {
+      this.dustParticleEmitter.stop();
       this.collisionActive = false; // stops the object from colliding with player after moving
       // Switch to powerUpdate state
       this.onPowerSpawn();

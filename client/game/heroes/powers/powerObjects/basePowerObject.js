@@ -121,7 +121,11 @@ export default class BasePowerObject {
     // Uses Cannon.js vectors
     if (BABYLON.Tags.HasTags(e.body) && e.body.matchesTagsQuery("hero") && e.body.parent.name != this.hero.name && this.collisionActive) {
         // e.body.parent is the hero that the object is colliding with
-        this.contactVelocity.copyFrom(this.mesh.physicsImpostor.getLinearVelocity());
+        try { // It has thrown an error once, idk why
+          this.contactVelocity.copyFrom(this.mesh.physicsImpostor.getLinearVelocity());
+        } catch(err) {
+          this.contactVelocity.copyFrom(zeroVector);
+        }
 
         // If it does not have a velocity calculate it.
         if ( this.contactVelocity.equals(zeroVector) ) {

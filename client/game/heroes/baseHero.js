@@ -105,6 +105,14 @@ export default class Hero {
 
     // Add particle emitters for stuff
     this.dustParticleEmitter = new ParticleEmitter(this.game, 'dustParticle', './textures/effects/circle.png');
+    this.hurtParticleEmitter = new ParticleEmitter(this.game, 'hurtParticle', './textures/effects/circle.png',
+        new BABYLON.Vector3(0, 0, 0), //position
+        new BABYLON.Vector3(5, 0, -20), //directionwdw
+        new BABYLON.Vector3(-5, 0, -20), //direction
+        new BABYLON.Vector3(0,30,0), //gravity
+        new BABYLON.Color3(1, 0, 0),
+        new BABYLON.Color3(1, 0, 0));
+
     // Add update loop to Babylon
     registerBeforeSceneRender(this.mesh, () => {
         this.update();
@@ -339,7 +347,7 @@ export default class Hero {
         this.onGround = false;
         movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
         this.jumpTimer = this.jumpTimerStart;
-        this.game.scene.sound.jump.play();
+        this.game.scene.sound.jump[Math.floor((Math.random()*this.game.scene.sound.jump.length))].play();
         // Emit
         this.dustParticleEmitter.emitManual(6, new BABYLON.Vector3(this.mask.position.x, this.mask.position.y - 0.5, this.mask.position.z));
     } else if (this.jumpTimer > 0) {
@@ -493,6 +501,11 @@ export default class Hero {
         }
 
         this._health -= amount;
+        //effects
+        // Emit
+        this.hurtParticleEmitter.emitManual(6, new BABYLON.Vector3(this.mask.position.x, this.mask.position.y, this.mask.position.z));
+        // sound
+        this.game.scene.sound.hurt[Math.floor((Math.random()*this.game.scene.sound.hurt.length))].play();
         return true;
     }
 
@@ -519,5 +532,7 @@ export default class Hero {
         this.moveBool = false;
         this.powerBool = false;
         this.dead = true;
+        // effects
+        this.game.scene.sound.hurt3.play();
     }
 }

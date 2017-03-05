@@ -12,7 +12,7 @@ import Power4 from './powers/power4';
 const upAxis = new CANNON.Vec3(0, 1, 0);
 const zeroVector2 = new BABYLON.Vector2(0, 0);
 const maxMana = 5000;
-const maxHealth = 5000;
+const maxHealth = 500;
 const onGroundPadding = 10;
 
 export default class Hero {
@@ -420,7 +420,7 @@ export default class Hero {
       }
       bar = BABYLON.Mesh.ExtrudeShapeCustom(null, bar.shape, bar.path, null, null, null, null, null, null, null, null, bar);
       bar.position.copyFrom(this.mask.position); // We don't parent the bar to the mask so it has a fixed rotation
-      bar.position.y -= 1;
+      bar.position.y += .2;
     }
 
     _manageMana() {

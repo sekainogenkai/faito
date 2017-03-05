@@ -2,16 +2,24 @@ import BABYLON from 'babylonjs';
 import {registerBeforeSceneRender} from '../../../mesh-util'
 import {getHeightAtCoordinates} from '../powerUtils/mainUtils';
 
+const zeroVector = new BABYLON.Vector3.Zero();
+
 export default class BasePowerObject {
-  constructor(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan, dropHeight=0, dropRange=0) {
+  constructor(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan, dropHeight=0, dropRange=0,
+              collisionCallBack=true, damageMult=10) {
     this.game = game;
     this.hero = hero;
     this.mesh = mesh;
 
     // setup mesh impostor
-    this.mesh.physicsImpostor.onCollide = this.onPowerCollide.bind(this);
+    if (collisionCallBack) {
+      this.active = true;
+      this.contactVelocity = new BABYLON.Vector3();
+      this.damageMult = damageMult;
+      this.mesh.physicsImpostor.onCollide = this.onPowerCollide.bind(this);
+      mesh.physicsImpostor.forceUpdate();
+    }
 
-    mesh.physicsImpostor.forceUpdate();
     this.game.scene.shadowGenerator.getShadowMap().renderList.push(mesh);
     mesh.receiveShadows = true;
 
@@ -28,6 +36,7 @@ export default class BasePowerObject {
     this.spawn();
     registerBeforeSceneRender(mesh, () => this.update());
   }
+
 
   update() {
     if (this._currentState == 0) {
@@ -107,5 +116,30 @@ export default class BasePowerObject {
 
   onPowerCollide(e) {
     // Called when object collides
+    // Uses Cannon.js vectors
+    if (BABYLON.Tags.HasTags(e.body) && e.body.matchesTagsQuery("hero") && e.body.parent.name != this.hero.name && this.active) {
+        // e.body.parent is the hero that the object is colliding with
+        console.log( this.mesh.physicsImpostor.getLinearVelocity());
+        this.contactVelocity.copyFrom(this.mesh.physicsImpostor.getLinearVelocity());
+
+        // If it does not have a velocity calculate it.
+        if ( this.contactVelocity.equals(zeroVector) ) {
+          this.contactVelocity = this.vectorEnd.subtract(this.vectorStart);
+          let magnitude = this.contactVelocity.length();
+          console.log(this.range, magnitude)
+          this.contactVelocity.normalize().scaleInPlace(magnitude/this.range);
+        }
+
+        this.contactVelocity = this.babylonToCannonVector(this.contactVelocity);
+
+        console.log('contact velocity', this.contactVelocity);
+        // apply the damage
+        e.body.parent.takeDynamicDamage(this.damageMult, Math.abs(this.contactVelocity.dot(e.contact.ni)));
+        this.active = false;
+    }
+  }
+
+  babylonToCannonVector(babylonVec) {
+      return new CANNON.Vec3(babylonVec.x, babylonVec.y, babylonVec.z);
   }
 }

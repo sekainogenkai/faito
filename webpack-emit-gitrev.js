@@ -6,15 +6,18 @@ const path = require('path');
 
 module.exports = class WebpackEmitGitrev {
     apply(compiler) {
-        compiler.plugin('after-emit', (compilation, callback) => {
+        compiler.plugin('emit', (compilation, callback) => {
             gitRev.long(commitHash => {
                 if (commitHash == '') {
-                    return callback(new Error('fail'));
+                    callback(new Error('fail'));
+                    return;
                 }
-                const outPath = path.join(compiler.outputPath, 'git-rev.json');
-                fs.writeFile(outPath, JSON.stringify(commitHash), (ex) => {
-                    callback(ex);
-                });
+                const result = JSON.stringify(commitHash);
+                compilation.assets['git-rev.json'] = {
+                    source: () => result,
+                    size: () => result.length,
+                };
+                callback();
             });
         });
     }

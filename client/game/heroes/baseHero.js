@@ -147,53 +147,53 @@ export default class Hero {
   }
 
   animations () {
-        // death animation
-        if (this.dead) {
-          this.startAnimationNew(this.deathAnimation, false, 10);
-          this.currentAnimatable.speedRatio = .5;
-          return;
-        }
-
-
-        // walk animation
-        var magnitude =
-        Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.z * this.body.velocity.z);
-
-        if (this.rollTimer) {
-                if (magnitude > 1) { // roll animation
-                    this.startAnimationNew(this.rollingAnimation, false, 1);
-                    this.currentAnimatable.speedRatio = 2.6;
-                } else { // duck animation
-                    this.startAnimationNew(this.rollAnimation, false);
-                    this.currentAnimatable.speedRatio = 2;
-                }
-        } else if (this.onGround) {
-            //console.log("mag: ", magnitude);
-            if (magnitude < 1) {// Idle Animation
-                if (!this.animatePower) {
-                    this.startAnimationNew(this.idleAnimation);
-                } else { // Power animation
-                    this.startAnimationNew(this.powerAnimation, false);
-                    this.currentAnimatable.speedRatio = 1.5;
-                }
-            } else if (magnitude < 9) { // Walk animation
-                this.startAnimationNew(this.walkAnimation);
-                this.currentAnimatable.speedRatio = .34 * magnitude;
-            } else { // Run animation
-                this.startAnimationNew(this.runAnimation);
-                this.currentAnimatable.speedRatio = .9 + .02 * magnitude;
-            }
-      } else {
-          // jump up
-          if (this.body.velocity.y >=0) {
-            this.startAnimationNew(this.jumpUpAnimation, false);
-          } else {
-              // jump down
-              this.startAnimationNew(this.jumpDownAnimation, false);
-          }
-          this.currentAnimatable.speedRatio = .8;
-
+      // death animation
+      if (this.dead) {
+        this.startAnimationNew(this.deathAnimation, false, 10);
+        this.currentAnimatable.speedRatio = .5;
+        return;
       }
+
+
+      // walk animation
+      var magnitude =
+      Math.sqrt(this.body.velocity.x * this.body.velocity.x + this.body.velocity.z * this.body.velocity.z);
+
+      if (this.rollTimer) {
+              if (magnitude > 1) { // roll animation
+                  this.startAnimationNew(this.rollingAnimation, false, 1);
+                  this.currentAnimatable.speedRatio = 2.6;
+              } else { // duck animation
+                  this.startAnimationNew(this.rollAnimation, false);
+                  this.currentAnimatable.speedRatio = 2;
+              }
+      } else if (this.onGround) {
+          //console.log("mag: ", magnitude);
+          if (magnitude < 1) {// Idle Animation
+              if (!this.animatePower) {
+                  this.startAnimationNew(this.idleAnimation);
+              } else { // Power animation
+                  this.startAnimationNew(this.powerAnimation, false);
+                  this.currentAnimatable.speedRatio = 1.5;
+              }
+          } else if (magnitude < 9) { // Walk animation
+              this.startAnimationNew(this.walkAnimation);
+              this.currentAnimatable.speedRatio = .34 * magnitude;
+          } else { // Run animation
+              this.startAnimationNew(this.runAnimation);
+              this.currentAnimatable.speedRatio = .9 + .02 * magnitude;
+          }
+    } else {
+        // jump up
+        if (this.body.velocity.y >=0) {
+          this.startAnimationNew(this.jumpUpAnimation, false);
+        } else {
+            // jump down
+            this.startAnimationNew(this.jumpDownAnimation, false);
+        }
+        this.currentAnimatable.speedRatio = .8;
+
+    }
   }
 
   initCollider (width=2) {

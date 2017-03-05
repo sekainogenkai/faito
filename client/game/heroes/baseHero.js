@@ -351,7 +351,7 @@ export default class Hero {
     //console.log('ONGROUND:', this.mask.physicsImpostor.onGround);
     this.mask.applyImpulse(movementVector, this.mask.position);
 
-    if (this.body.velocity.length() > 1 && (this.Input.AXIS_X || this.Input.AXIS_Y) ) {
+    if (this.Input.AXIS_X || this.Input.AXIS_Y) {
         this.setRotation();
     }
   }

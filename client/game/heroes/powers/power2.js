@@ -6,17 +6,18 @@ import DirectionCursor from './cursors/directionCursor';
 import PointCursor from './cursors/pointCursor';
 import JoyCursor from './cursors/joyCursor';
 
-const manaCost = 100;
+const manaCost = 800; // mana cost of the power
+const collisionDamage = 5; // the amount of damage it does when it collides
 
-const cursorDirectionVec = new BABYLON.Vector3(0, 0, 1);
-const distance = -10;
+const cursorDirectionVec = new BABYLON.Vector3(0, 0, 1); // direction of the ball
+const distance = -10; // cursor offset
+
 const fixedRotation = true;
 const meshSize = 8;
-const lifeSpan = secondsToTicks(50);
-const powerImpulseVec = new BABYLON.Vector3(0, 0, 3000);
+const powerImpulseVec = new BABYLON.Vector3(0, 0, 3000); // impulse applied to projectile on spawn
 
 /**
-Shoots out a porjectile at the enemy
+Shoots out a projectile at the enemy
 **/
 
 export default class Power2 extends BasePower {
@@ -45,7 +46,7 @@ export default class Power2 extends BasePower {
       BABYLON.Tags.EnableFor(mesh);
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.SphereImpostor, {mass:100, friction:0.1, restitution:0.9}, this.game.scene);
       // run spawn
-      new ProjectileObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(5), 0, 0, powerImpulseVec);
+      new ProjectileObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(5), 0, 0, powerImpulseVec, true, collisionDamage);
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal;
       if (!fixedRotation) {

@@ -6,16 +6,18 @@ import DirectionCursor from './cursors/directionCursor';
 import PointCursor from './cursors/pointCursor';
 import JoyCursor from './cursors/joyCursor';
 
-const manaCost = 100;
+const manaCost = 1000; // mana cost of the power
+const collisionDamage = 10; // the amount of damage it does when it collides
 
-const directionVec = new BABYLON.Vector3(0, 0, -1);
-const distance = 0;
+const directionVec = new BABYLON.Vector3(0, 0, 0);  // point spawn for the cursor
+
 const fixedRotation = true;
 const meshSize = 10;
 
-/**
+/*
 * Jump Ball!
 */
+
 export default class Power3 extends BasePower {
     constructor(game, hero) {
       super(game, hero);
@@ -43,7 +45,7 @@ export default class Power3 extends BasePower {
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.SphereImpostor, {mass:0, friction:0.1, restitution:4}, this.game.scene);
       // run spawn
-      new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 1, secondsToTicks(1), 10, 100);
+      new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 1, secondsToTicks(1), 10, 100, true, collisionDamage);
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
       if (!fixedRotation) {
@@ -57,7 +59,7 @@ export default class Power3 extends BasePower {
         return;
       }
 
-      this.cursor = new PointCursor(this.game, this.hero, directionVec, distance, true);
+      this.cursor = new PointCursor(this.game, this.hero, directionVec, 1, true);
     }
 
     buttonUp(i) {

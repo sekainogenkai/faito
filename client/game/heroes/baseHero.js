@@ -86,8 +86,8 @@ export default class Hero {
     this.useAbilityTimer = 0;
     this.useAbilityTimerStart = 20;
     // Mana variables
-    this.manaGainIdle = 10;
-    this.manaGainMoving = 1;
+    this.manaGainIdle = 20;
+    this.manaGainMoving = 10;
 
     // Input
     this.Input = {
@@ -147,9 +147,11 @@ export default class Hero {
   }
 
   animations () {
+        // death animation
         if (this.dead) {
           this.startAnimationNew(this.deathAnimation, false, 10);
           this.currentAnimatable.speedRatio = .5;
+          return;
         }
 
 

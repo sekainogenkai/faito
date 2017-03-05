@@ -7,18 +7,21 @@ import PointCursor from './cursors/pointCursor';
 import JoyCursor from './cursors/joyCursor';
 import {registerBeforeSceneRender} from '../../mesh-util';
 
-const manaCost = 50;
+const manaCost = 70; // mana cost of the power
+const collisionDamage = 50; // the amount of damage it does when it collides
 
-const directionVec = new BABYLON.Vector3(0, 0, 1);
-const cursorSpeed = 1.9;
+const directionVec = new BABYLON.Vector3(0, 0, 1); // direction of the cursor
+const cursorSpeed = 1.9; // speed of the cursor
 const fixedRotation = false;
+
 const timerStart = 7;
 const timerStart2 = 2;
 const meshHeight = 20;
 
-/**
+/*
 * Makes a line of things fly out!
 */
+
 export default class Power4 extends BasePower {
     constructor(game, hero) {
       super(game, hero);
@@ -42,13 +45,13 @@ export default class Power4 extends BasePower {
 
       // Create the mesh
       const mesh = new BABYLON.Mesh.CreateBox('mesh', 1, this.game.scene);
-      mesh.scaling = new BABYLON.Vector3(2, meshHeight, 3);
+      mesh.scaling = new BABYLON.Vector3(2, meshHeight, 4);
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:0.9}, this.game.scene);
       // run spawn
-      new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(3), 50);
+      new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(3), 50, 0, true, collisionDamage);
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
       if (!fixedRotation) {

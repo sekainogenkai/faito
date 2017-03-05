@@ -6,14 +6,16 @@ import DirectionCursor from './cursors/directionCursor';
 import PointCursor from './cursors/pointCursor';
 import JoyCursor from './cursors/joyCursor';
 
-const manaCost = 100;
+const manaCost = 500; // mana cost of the power
+const collisionDamage = 500; // the amount of damage it does when it collides
 
-const directionVec = new BABYLON.Vector3(0, 0, 1);
-const distance = 10;
+const directionVec = new BABYLON.Vector3(0, 0, 1); // position of the cursor
+const distance = 10; // cursor scalar
+
 const fixedRotation = false;
 const meshSize = 10;
 
-/**
+/*
 * Makes a block using joy cursor
 */
 export default class Power1 extends BasePower {
@@ -43,7 +45,7 @@ export default class Power1 extends BasePower {
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:0.9}, this.game.scene);
       // run spawn
-      new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 100, secondsToTicks(1));
+      new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 100, secondsToTicks(1), 0, 0, true, collisionDamage);
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
       if (!fixedRotation) {

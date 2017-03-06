@@ -31,7 +31,13 @@ class GamepadInput extends EventEmitter {
       this.gamepad.onbuttonup(null);
       this.gamepad.onleftstickchanged(null);
       this.gamepad.onrightstickchanged(null);
-      this.gamepad.onleftstickchanged(null);
+        this.gamepad.onleftstickchanged(null);
+        if (this.gamepad.onlefttriggerchanged) {
+            this.gamepad.onlefttriggerchanged(null);
+        }
+        if (this.gamepad.onrighttriggerchanged) {
+            this.gamepad.onrighttriggerchanged(null);
+        }
     }
     this.gamepad = gamepad;
     this.name = `${gamepad.id} ${gamepad.index}`;
@@ -118,6 +124,29 @@ class GamepadInput extends EventEmitter {
             }
         }
     });
+      const buildTriggerChangedHandler = button => {
+          const zeroSensitivity = 0.15;
+          let down = false;
+          return value => {
+              if (value < zeroSensitivity) {
+                  if (down) {
+                      this.emit('buttonup', button);
+                      down = false;
+                  }
+              } else {
+                  if (!down) {
+                      this.emit('buttondown', button);
+                      down = true;
+                  }
+              }
+          };
+      };
+      if (this.gamepad.onlefttriggerchanged) {
+          this.gamepad.onlefttriggerchanged(buildTriggerChangedHandler(Buttons.LB));
+      }
+      if (this.gamepad.onrighttriggerchanged) {
+          this.gamepad.onrighttriggerchanged(buildTriggerChangedHandler(Buttons.RB));
+      }
   }
 };
 

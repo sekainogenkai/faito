@@ -17,5 +17,5 @@ after_success:
   - export ARTIFACTS_TARGET_PATHS=${TRAVIS_REPO_SLUG}/${TRAVIS_BUILD_NUMBER}/${TRAVIS_JOB_NUMBER}
   - DO_DEPLOY=$([ "${TRAVIS_PULL_REQUEST}" == false ] && [ "${TRAVIS_BRANCH}" == deploy ] && echo true || echo false)
   - echo DO_DEPLOY="${DO_DEPLOY}"
-  - '[ "${DO_DEPLOY}" == true ] && artifacts -D upload'
+  - '[ "${DO_DEPLOY}" == true ] && artifacts upload'
   - curl https://sam.ohnopub.net/~faito/webhook-pull/index.cgi/simple/faito/"${WEBHOOK_PULL_KEY}"/

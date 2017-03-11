@@ -63,9 +63,7 @@ export default class Hero {
         let color = new BABYLON.Color3(colId(id + .1, 50), colId(id + .2, -100), colId(id + 1, 200));
         console.log(color);
         material.diffuseColor = color;
-        material.ambientColor = color;
         material.specularColor = new BABYLON.Color3(1, 1, 1);
-        material.backFaceCulling = false;
 
         this.mesh.material = material;
 

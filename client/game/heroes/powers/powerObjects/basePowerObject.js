@@ -13,9 +13,8 @@ export default class BasePowerObject {
     this.mesh = mesh;
 
     // setup mesh impostor
-    this.collisionActive = false;
+    this.collidedWith = [];
     if (collisionCallBack) {
-      this.collisionActive = true;
       this.damageMult = damageMult;
       this.mesh.physicsImpostor.onCollide = this.onPowerCollide.bind(this);
       mesh.physicsImpostor.forceUpdate();
@@ -71,7 +70,6 @@ export default class BasePowerObject {
   spawn() {
     const spawnEndEvent = new BABYLON.AnimationEvent(this.range, () => {
       this.dustParticleEmitter.stop();
-      this.collisionActive = false; // stops the object from colliding with player after moving
       // Switch to powerUpdate state
       this.onPowerSpawn();
       this._currentState = 1;
@@ -129,7 +127,7 @@ export default class BasePowerObject {
   onPowerCollide(e) {
     // Called when object collides
     // Uses Cannon.js vectors
-    if (BABYLON.Tags.HasTags(e.body) && e.body.matchesTagsQuery("hero") && e.body.parent.name != this.hero.name && this.collisionActive) {
+    if (BABYLON.Tags.HasTags(e.body) && e.body.matchesTagsQuery("hero") && e.body.parent.name != this.hero.name && this.checkHeroCollidedWith(e.body.parent.name)) {
         // e.body.parent is the hero that the object is colliding with
 
         let contactVelocity = new BABYLON.Vector3();
@@ -147,8 +145,20 @@ export default class BasePowerObject {
         // apply the damage
         e.body.parent.takeDynamicDamage(this.damageMult, Math.abs(cannonContactVelocity.dot(e.contact.ni)));
 
-        this.collisionActive = false;
+        this.collidedWith.push(e.body.parent.name);
     }
+  }
+
+   checkHeroCollidedWith(playerContacted) {
+     console.log(this.collidedWith);
+    for (let collided of this.collidedWith) {
+      if (collided == playerContacted) {
+        console.log('collided with is false');
+        return false;
+      }
+    }
+    console.log('collided with is true');
+    return true;
   }
 
   babylonToCannonVector(babylonVec) {

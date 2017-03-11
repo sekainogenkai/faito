@@ -40,6 +40,7 @@ export default class Power1 extends BasePower {
 
       // Create the mesh
       const mesh = new BABYLON.Mesh.CreateBox('mesh', meshSize, this.game.scene);
+      console.log(mesh.material);
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");

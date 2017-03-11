@@ -17,7 +17,7 @@ const onGroundPadding = 10;
 
 export default class Hero {
   constructor(
-    game, name, meshFileName='omi', speed=12, airSpeed=4, jumpStrength=150, rollGroundSpeed=20, rollAirSpeed=10,
+    game, name, id, meshFileName='omi', speed=12, airSpeed=4, jumpStrength=150, rollGroundSpeed=20, rollAirSpeed=10,
     attack1=Power3, attack2=Power2, attack3=Power1, attack4=Power4){
     this.game = game;
     this.name = name;
@@ -54,7 +54,21 @@ export default class Hero {
         // Add the mesh
         this.mesh = loadedMeshes[0];//.clone(this.name); // 2 is the index of the player mesh
         // console.log("the player mesh", this.mesh);
-        this.mesh.isVisible = true;
+        //this.mesh.isVisible = true;
+
+        var material = new BABYLON.StandardMaterial(id + 'playermaterial', this.game.scene);
+        let colId = function (id, mult) {
+          return Math.abs(((id * mult) % 255) / 255);
+        }
+        let color = new BABYLON.Color3(colId(id + .1, 50), colId(id + .2, -100), colId(id + 1, 200));
+        console.log(color);
+        material.diffuseColor = color;
+        material.ambientColor = color;
+        material.specularColor = new BABYLON.Color3(1, 1, 1);
+        material.backFaceCulling = false;
+
+        this.mesh.material = material;
+
 
         this.mesh.id = this.name;
         this.mesh.parent = this.mask;

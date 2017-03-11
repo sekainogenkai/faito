@@ -11,6 +11,8 @@ export default class BasePowerObject {
     this.game = game;
     this.hero = hero;
     this.mesh = mesh;
+    // Material copy form parent
+    this.mesh.material = this.hero.mesh.material;
 
     // setup mesh impostor
     this.collidedWith = [];

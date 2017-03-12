@@ -40,8 +40,8 @@ export default class BasePowerObject {
       new BABYLON.Vector3(30, 0, -30), //directionwdw
       new BABYLON.Vector3(-30, 0, 30), //direction
       new BABYLON.Vector3(0,-1,0), //gravity
-      new BABYLON.Color3(1, 1, 1),
-      new BABYLON.Color3(1, 1, 1));
+      this.hero.mesh.material.diffuseColor,
+      this.hero.mesh.material.diffuseColor);
     this.dustParticleEmitter.emitConstant(20, new BABYLON.Vector3(this.vectorEnd.x, getHeightAtCoordinates(this.groundMesh, this.vectorEnd.x, this.vectorEnd.z) + 1, this.vectorEnd.z));
 
     this.spawn();

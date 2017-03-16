@@ -36,9 +36,10 @@ export default class Power2 extends BasePower {
       // Set the target vector
       const vectorEnd = new BABYLON.Vector3(
         this.cursor.mesh.position.x,
-        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + (meshSize) + 7,
+        this.hero.mask.position.y + 15,
         this.cursor.mesh.position.z
       );
+      console.log('y position', this.hero.mask.position.y);
 
       // Create the mesh
       const mesh = new BABYLON.Mesh.CreateSphere('mesh', meshSize, meshSize, this.game.scene);

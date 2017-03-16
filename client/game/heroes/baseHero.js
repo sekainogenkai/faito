@@ -4,7 +4,7 @@ import {Buttons} from '../input';
 import {registerBeforeSceneRender} from '../mesh-util';
 import ParticleEmitter from '../particle';
 
-import Power1 from './powers/blockRise';
+import Power1 from './powers/manySmallRocks';
 import Power2 from './powers/boulderShoot';
 import Power3 from './powers/jumpBall';
 import Power4 from './powers/wallRiser';

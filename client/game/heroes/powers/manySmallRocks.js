@@ -9,35 +9,35 @@ import JoyCursor from './cursors/joyCursor';
 const manaCost = 800; // mana cost of the power
 const collisionDamage = 5; // the amount of damage it does when it collides
 
-const cursorDirectionVec = new BABYLON.Vector3(0, 0, 1); // direction of the ball
+//const cursorDirectionVec = new BABYLON.Vector3(0, 0, 1); // direction of the ball
 const distance = -10; // cursor offset
 
 const fixedRotation = true;
-const meshSize = 8;
-const powerImpulseVec = new BABYLON.Vector3(0, 0, 3000); // impulse applied to projectile on spawn
+const meshSize = 1.5;
+const powerImpulseVec = new BABYLON.Vector3(0, 0, 120); // impulse applied to projectile on spawn
 
 /**
 Shoots out a projectile at the enemy
 **/
-
 export default class Power2 extends BasePower {
     constructor(game, hero) {
       super(game, hero);
     }
 
-    createMesh () {
+    createMesh (cursor) {
       // Set the spawn vector
       const vectorStart = new BABYLON.Vector3(
-        this.cursor.mesh.position.x,
-        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - (meshSize) - 2,
-        this.cursor.mesh.position.z
+        cursor.mesh.position.x,
+        (getHeightAtCoordinates(this.groundMesh, cursor.mesh.position.x, cursor.mesh.position.z)) - (meshSize) - 2,
+        cursor.mesh.position.z
       );
 
       // Set the target vector
       const vectorEnd = new BABYLON.Vector3(
-        this.cursor.mesh.position.x,
-        this.hero.mask.position.y + 15,
-        this.cursor.mesh.position.z
+        cursor.mesh.position.x,
+        Math.max((getHeightAtCoordinates(this.groundMesh, cursor.mesh.position.x, cursor.mesh.position.z)) + 2, 
+        this.hero.mask.position.y + 5),
+        cursor.mesh.position.z
       );
       // console.log('y position', this.hero.mask.position.y);
 
@@ -45,7 +45,7 @@ export default class Power2 extends BasePower {
       const mesh = new BABYLON.Mesh.CreateSphere('mesh', meshSize, meshSize, this.game.scene);
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
-      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.SphereImpostor, {mass:100, friction:0.1, restitution:0.9}, this.game.scene);
+      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.SphereImpostor, {mass:10, friction:2, restitution:0.01}, this.game.scene);
       // run spawn
       new ProjectileObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(5), 0, 0, powerImpulseVec, true, collisionDamage);
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
@@ -60,20 +60,29 @@ export default class Power2 extends BasePower {
       if (!this.hero.consumeMana(manaCost)){
         return;
       }
-      this.cursor = new PointCursor(this.game, this.hero, cursorDirectionVec, distance, true);
+
+      this.cursors = [];
+      for (let i = 0; i < 6; i++) {
+        this.cursors.push(new PointCursor(this.game, this.hero, new BABYLON.Vector3(i*2/10-.5, 0, 1 - Math.abs(i*2/10-.5)), 10, true));
+      }
     }
 
     buttonUp(i) {
       // Check for cursor presence
-      if (!this.cursor){
+      // console.log(this.cursors);
+      if (this.cursors.length <= 0){
         return;
       }
-      this.createMesh();
+      for (let cursor of this.cursors) {
+        this.createMesh(cursor);
+      }
       // this.game.scene.registerBeforeRender(() => this.update()); // TODO this does something or nothing?
       if (!fixedRotation) {
         this.mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
       }
-      this.cursor.destroy();
-      this.cursor = undefined;
+      for (let cursor of this.cursors) {
+        cursor.destroy();
+      }
+      this.cursors = [];
     }
 }

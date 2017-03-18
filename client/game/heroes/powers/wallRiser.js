@@ -22,7 +22,7 @@ const meshHeight = 20;
 * Makes a line of things fly out!
 */
 
-export default class Power4 extends BasePower {
+export default class Power5 extends BasePower {
     constructor(game, hero) {
       super(game, hero);
       this.playerRotation = new BABYLON.Quaternion();

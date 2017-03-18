@@ -1,6 +1,9 @@
 import BABYLON from 'babylonjs';
 import {registerAfterSceneRender} from '../../../mesh-util.js';
 
+const forwardVector = new BABYLON.Vector3(0, 0, 1);
+const upVector = new BABYLON.Vector3.Up();
+
 export const freezeHero = function (hero) {
     hero.moveBool = false;
 };

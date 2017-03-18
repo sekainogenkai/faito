@@ -35,7 +35,7 @@ export default class Power2 extends BasePower {
       // Set the target vector
       const vectorEnd = new BABYLON.Vector3(
         cursor.mesh.position.x,
-        Math.max((getHeightAtCoordinates(this.groundMesh, cursor.mesh.position.x, cursor.mesh.position.z)) + 2, 
+        Math.max((getHeightAtCoordinates(this.groundMesh, cursor.mesh.position.x, cursor.mesh.position.z)) + 2,
         this.hero.mask.position.y + 5),
         cursor.mesh.position.z
       );
@@ -45,9 +45,9 @@ export default class Power2 extends BasePower {
       const mesh = new BABYLON.Mesh.CreateSphere('mesh', meshSize, meshSize, this.game.scene);
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
-      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.SphereImpostor, {mass:10, friction:2, restitution:0.01}, this.game.scene);
+      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.SphereImpostor, {mass:0, friction:2, restitution:0.01}, this.game.scene);
       // run spawn
-      new ProjectileObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(5), 0, 0, powerImpulseVec, true, collisionDamage);
+      new ProjectileObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(5), 0, 0, powerImpulseVec, 10, collisionDamage);
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal;
       if (!fixedRotation) {

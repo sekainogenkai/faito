@@ -82,6 +82,10 @@ export default class BasePowerObject {
   }
 
   destroy() {
+    if (this.mesh.physicsImpostor.physicsBody.type != 0) {
+      this.makeStatic();
+    }
+
     this.range = this.dropRange;
     const destroyEndEvent = new BABYLON.AnimationEvent(this.range, () => {
       //console.log('End animation event!');
@@ -121,6 +125,23 @@ export default class BasePowerObject {
     this.mesh.animations.push(moveAnimation);
 
     this.game.scene.beginAnimation(this.mesh, 0, this.range, false);
+  }
+
+  makeKinematic(mass) {
+    if (this._currentState != 2) { //making an object kinematic during the destruction pahse would be bad
+      this.collidedWith = []; // so it can collide with player after spawn
+      this.mesh.physicsImpostor.physicsBody.type = 1; // Make the object kinematic
+      this.mesh.physicsImpostor.physicsBody.mass = mass;
+      this.mesh.physicsImpostor.physicsBody.updateMassProperties();
+      this.mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupGround | this.game.scene.collisionGroupNormal;
+    }
+  }
+
+  makeStatic() {
+    this.mesh.physicsImpostor.physicsBody.type = 0; // Make the object not kinematic
+    this.mesh.physicsImpostor.physicsBody.mass = 0;
+    this.mesh.physicsImpostor.physicsBody.updateMassProperties();
+    this.mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal;
   }
 
   onPowerSpawn() {

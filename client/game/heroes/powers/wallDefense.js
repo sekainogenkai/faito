@@ -6,9 +6,9 @@ import DirectionCursor from './cursors/directionCursor';
 import PointCursor from './cursors/pointCursor';
 import JoyCursor from './cursors/joyCursor';
 
-const manaCost = 500; // mana cost of the power
+const manaCost = 1000; // mana cost of the power
 const collisionDamage = 5; // the amount of damage it does when it collides
-const mass = 200;
+const mass = 1000;
 const powerImpulseVec = new BABYLON.Vector3(0, 0, 0); // impulse applied to projectile on spawn
 
 const distance = 15; // cursor scalar
@@ -25,7 +25,7 @@ export default class Power1 extends BasePower {
       this.powerObjs = [];
     }
 
-    createMesh (cursor) {
+    createMesh (cursor, index) {
       // Set the spawn vector
       const vectorStart = new BABYLON.Vector3(
         cursor.mesh.position.x,
@@ -42,7 +42,7 @@ export default class Power1 extends BasePower {
 
       // Create the mesh
       const mesh = new BABYLON.Mesh.CreateBox('mesh', 1, this.game.scene);
-      mesh.scaling = new BABYLON.Vector3(meshSize*1.5, meshSize, 1.5);
+      mesh.scaling = new BABYLON.Vector3(meshSize*1.5, meshSize, 2);
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
@@ -53,7 +53,13 @@ export default class Power1 extends BasePower {
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
       if (!fixedRotation) {
         mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
-        console.log(mesh.rotationQuaternion);
+      }
+      // Rotate to get a nice circular wall formation
+      switch (index) {
+        case 0:
+          mesh.rotation.y += 70;
+        case 2:
+          mesh.rotation.y += 20;
       }
     }
 
@@ -62,6 +68,7 @@ export default class Power1 extends BasePower {
       if (!this.hero.consumeMana(manaCost)){
         return;
       }
+      // Create three walls that protect the player
       this.cursors = [];
       var offset = -0.5;
       for (let i = 0; i < 3; i++) {
@@ -76,9 +83,9 @@ export default class Power1 extends BasePower {
         return;
       }
 
-      for (let cursor of this.cursors) {
-        this.createMesh(cursor)
-      }
+      this.cursors.forEach(function(cursor, i) {
+        this.createMesh(cursor, i);
+      }, this)
 
       for (let cursor of this.cursors) {
         cursor.destroy();

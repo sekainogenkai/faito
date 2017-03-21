@@ -17,12 +17,11 @@ const fixedRotation = false;
 const meshSize = 8;
 
 /*
-* Makes a wall around the player, can be moved once the button is released
+* Makes a wall around the player for protection
 */
 export default class Power1 extends BasePower {
     constructor(game, hero) {
       super(game, hero);
-      this.powerObjs = [];
     }
 
     createMesh (cursor, index) {
@@ -46,7 +45,7 @@ export default class Power1 extends BasePower {
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
-      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:0}, this.game.scene);
+      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:0.01}, this.game.scene);
       // run spawn
       new ProjectileObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(5), 0, 0, powerImpulseVec, mass, collisionDamage);
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;

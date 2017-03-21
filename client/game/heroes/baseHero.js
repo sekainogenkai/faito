@@ -9,6 +9,7 @@ import Power2 from './powers/boulderShoot';
 import Power3 from './powers/jumpBall';
 import Power4 from './powers/wallRiser';
 import Power5 from './powers/wallDefense';
+import Power6 from './powers/blockChain';
 
 const upAxis = new CANNON.Vec3(0, 1, 0);
 const zeroVector2 = new BABYLON.Vector2(0, 0);
@@ -19,7 +20,7 @@ const onGroundPadding = 10;
 export default class Hero {
   constructor(
     game, name, id, meshFileName='omi', speed=10, airSpeed=5, jumpStrength=150, rollGroundSpeed=15, rollAirSpeed=9,
-    attack1=Power3, attack2=Power2, attack3=Power1, attack4=Power5){
+    attack1=Power3, attack2=Power2, attack3=Power1, attack4=Power6){
     this.game = game;
     this.name = name;
     this._mana = maxMana;

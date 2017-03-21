@@ -89,6 +89,7 @@ export default class BasePowerObject {
     this.range = this.dropRange;
     const destroyEndEvent = new BABYLON.AnimationEvent(this.range, () => {
       //console.log('End animation event!');
+      this.onPowerDestroy();
       this.mesh.dispose();
     });
 
@@ -146,6 +147,10 @@ export default class BasePowerObject {
 
   onPowerSpawn() {
     // Called when power is spawned
+  }
+
+  onPowerDestroy() {
+    // Called when power is destroyed
   }
 
   onPowerCollide(e) {

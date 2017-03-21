@@ -22,6 +22,7 @@ export default class JointObject extends BasePowerObject {
 
   onPowerDestroy() {
     // Remove the joint
-    //this.target.physicsImpostor.removeJoint(this.mesh.physicsImpostor, this.joint);
+    // http://www.html5gamedevs.com/topic/29237-how-to-properly-remove-physics-joint/#comment-168123
+    this.game.scene.getPhysicsEngine().removeJoint(this.target.physicsImpostor, this.mesh.physicsImpostor, this.joint);
   }
 }

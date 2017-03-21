@@ -51,7 +51,9 @@ export default class BlockChain extends BasePower {
       var joint = new BABYLON.DistanceJoint({
         maxDistance: chainLength
       });
+      // Create the joint object that we will use for binding the power to the hero
       new JointObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(10), 0, 0, this.hero.mask, joint, mass, collisionDamage);
+
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
       if (!fixedRotation) {

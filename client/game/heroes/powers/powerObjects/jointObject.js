@@ -21,7 +21,7 @@ export default class JointObject extends BasePowerObject {
   }
 
   onPowerDestroy() {
-    // remove the joint
-    this.target.physicsImpostor.removeJoint(this.mesh.physicsImpostor, this.joint);
+    // Remove the joint
+    //this.target.physicsImpostor.removeJoint(this.mesh.physicsImpostor, this.joint);
   }
 }

@@ -53,7 +53,7 @@ export default class BlockChain extends BasePower {
         maxDistance: chainLength
       });
       // Create the joint object that we will use for binding the power to the hero
-      this.powerObjects.push(new JointObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(10), 0, 0, this.hero.mask, joint, mass, collisionDamage));
+      this.powerObjects.push(new JointObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(10), 0, 150, this.hero.mask, joint, mass, collisionDamage));
       console.log(this.powerObjects);
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;

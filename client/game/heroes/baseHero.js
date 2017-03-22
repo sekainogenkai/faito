@@ -19,9 +19,10 @@ const onGroundPadding = 10;
 
 export default class Hero {
   constructor(
-    game, name, id, meshFileName='omi',
-    movOpts={speed:10, airSpeed:5, jumpStrength:150, rollGroundSpeed:15, rollAirSpeed:9},
-    attack1=Power3, attack2=Power2, attack3=Power1, attack4=Power5){
+  game, name, id, meshFileName='omi',
+  movOpts={speed:10, airSpeed:5, jumpStrength:150, rollGroundSpeed:15, rollAirSpeed:9},
+  attack1=Power3, attack2=Power2, attack3=Power1, attack4=Power5) {
+
     this.game = game;
     this.name = name;
     this._mana = maxMana;

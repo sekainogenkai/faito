@@ -63,7 +63,8 @@ export default class Power2 extends BasePower {
 
       this.cursors = [];
       for (let i = 0; i < 6; i++) {
-        this.cursors.push(new PointCursor(this.game, this.hero, new BABYLON.Vector3(i*2/10-.5, 0, 1 - Math.abs(i*2/10-.5)), 10, true));
+        this.cursors.push(new PointCursor(this.game, this.hero,
+          {direction: new BABYLON.Vector3(i*2/10-.5, 0, 1 - Math.abs(i*2/10-.5)), distance: 10, fixed: false}));
       }
     }
 

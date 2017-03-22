@@ -62,7 +62,8 @@ export default class Power2 extends BasePower {
       if (!this.hero.consumeMana(manaCost)){
         return;
       }
-      this.cursor = new PointCursor(this.game, this.hero, cursorDirectionVec, distance, true);
+      this.cursor = new PointCursor(this.game, this.hero,
+        {direction: cursorDirectionVec, distance: distance, fixed: true});
     }
 
     buttonUp(i) {

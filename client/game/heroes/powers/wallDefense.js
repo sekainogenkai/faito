@@ -71,7 +71,8 @@ export default class Power1 extends BasePower {
       this.cursors = [];
       var offset = -0.5;
       for (let i = 0; i < 3; i++) {
-        this.cursors.push(new PointCursor(this.game, this.hero, new BABYLON.Vector3(offset, 0, 0.8 - (0.5*Math.sin(Math.abs(offset)*Math.PI))), distance, true));
+        this.cursors.push(new PointCursor(this.game, this.hero,
+          {direction: new BABYLON.Vector3(offset, 0, 0.8 - (0.5*Math.sin(Math.abs(offset)*Math.PI))), distance: distance, fixed: true} ));
         offset += 0.5;
       }
     }

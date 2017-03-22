@@ -60,7 +60,7 @@ export default class Power1 extends BasePower {
         return;
       }
 
-      this.cursor = new JoyCursor(this.game, this.hero) || new PointCursor(this.game, this.hero, directionVec, distance, true);
+      this.cursor = new JoyCursor(this.game, this.hero, {speed:20});
     }
 
     buttonUp(i) {

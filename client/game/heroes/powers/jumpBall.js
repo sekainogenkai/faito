@@ -59,7 +59,8 @@ export default class Power3 extends BasePower {
         return;
       }
 
-      this.cursor = new PointCursor(this.game, this.hero, directionVec, 1, true);
+      this.cursor = new PointCursor(this.game, this.hero,
+        {direction:directionVec, distance:1, fixed:true});
     }
 
     buttonUp(i) {

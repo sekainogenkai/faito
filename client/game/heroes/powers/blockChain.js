@@ -72,7 +72,9 @@ export default class BlockChain extends BasePower {
             return;
           }
           // Create three walls that protect the player
-          this.cursor = new PointCursor(this.game, this.hero, directionVec, 1, true);
+          this.cursor = new PointCursor(this.game, this.hero,
+            {direction:directiondirectionVec, distance: 1, fixed: true} );
+
           break;
         case 1: // Remove the joints
           this.powerObjects.forEach(function(block, i) {

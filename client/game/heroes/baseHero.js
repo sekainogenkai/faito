@@ -4,12 +4,7 @@ import {Buttons} from '../input';
 import {registerBeforeSceneRender} from '../mesh-util';
 import ParticleEmitter from '../particle';
 
-import Power1 from './powers/manySmallRocks';
-import Power2 from './powers/boulderShoot';
-import Power3 from './powers/jumpBall';
-import Power4 from './powers/wallRiser';
-import Power5 from './powers/wallDefense';
-import Power6 from './powers/blockChain';
+import PowerHandler from './powers/heroPowers/stalagamite/powerHandler';
 
 const upAxis = new CANNON.Vec3(0, 1, 0);
 const zeroVector2 = new BABYLON.Vector2(0, 0);

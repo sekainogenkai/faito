@@ -1,6 +1,6 @@
 import BABYLON from 'babylonjs';
 import {getHeightAtCoordinates, secondsToTicks} from './powerUtils/mainUtils';
-import BasePower from './powers/basePower';
+import BasePower from './base/basePower';
 import BasePowerObject from './powerObjects/basePowerObject';
 import DirectionCursor from './cursors/directionCursor';
 import PointCursor from './cursors/pointCursor';

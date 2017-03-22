@@ -1,0 +1,1 @@
+import baseHero from './baseHero'

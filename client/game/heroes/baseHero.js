@@ -4,7 +4,7 @@ import {Buttons} from '../input';
 import {registerBeforeSceneRender} from '../mesh-util';
 import ParticleEmitter from '../particle';
 
-import PowerHandler from './powers/heroPowers/stalagamite/powerHandler';
+import PowerHandler from './powers/heroPowers/baseHero/aHandler';
 
 const upAxis = new CANNON.Vec3(0, 1, 0);
 const zeroVector2 = new BABYLON.Vector2(0, 0);
@@ -16,7 +16,7 @@ export default class Hero {
   constructor(
   game, name, id, meshFileName='omi',
   movOpts={speed:10, airSpeed:5, jumpStrength:150, rollGroundSpeed:15, rollAirSpeed:9},
-  attack1=Power3, attack2=Power2, attack3=Power1, attack4=Power5) {
+  powerHandler=PowerHandler) {
 
     this.game = game;
     this.name = name;
@@ -89,7 +89,6 @@ export default class Hero {
     this.rollTimerStart = 15;
     this.rollTimer = this.rollTimerStart;
     this.moveBool = true;
-    this.powerBool = true;
     this.dead = false;
     this.useAbilityTimer = 0;
     this.useAbilityTimerStart = 20;
@@ -105,11 +104,8 @@ export default class Hero {
       ROLL : false,
     };
 
-    // InitializePowers
-    this.attack1 = new attack1(game, this);
-    this.attack2 = new attack2(game, this);
-    this.attack3 = new attack3(game, this);
-    this.attack4 = new attack4(game, this);
+    // handle powers
+    this.powerHandler = new PowerHandler(game, this);
 
     // Add particle emitters for stuff
     this.dustParticleEmitter = new ParticleEmitter(this.game, 'dustParticle', './textures/effects/circle.png');
@@ -139,11 +135,7 @@ export default class Hero {
       this.rollingAnimation = this.mesh.skeleton.getAnimationRange('rolling');
       this.deathAnimation = this.mesh.skeleton.getAnimationRange('death');
       const animatable = this.game.scene.beginAnimation(this.mesh.skeleton, 0, 120, true, 2);
-      /*
-      setTimeout(() => {
-          animatable.speedRatio /= 8;
-      }, 4000);
-      */
+
       this.currentAnimation = null;
       this.currentAnimatable = null;
 
@@ -381,38 +373,38 @@ export default class Hero {
       this._joyTarget.joyChanged(joyVector);
   }
 
+/*
   _handleButton(button, pressed) {
     switch (button) {
     }
   }
-
+*/
   buttonDown(button) {
-    if (!this.powerBool) {
+    if (this.dead) {
+      console.log('returning on dead');
       return;
     }
-    this._handleButton(button, true);
+    //this._handleButton(button, true);
     switch (button) {
         case Buttons.RB: this.Input.JUMP = true; break;
         case Buttons.LB: this.Input.ROLL = true; break;
-        case Buttons.A: this.attack1.buttonDown(0); this.animatePower=true; break;
-        case Buttons.B: this.attack2.buttonDown(0); this.animatePower=true; break;
-        case Buttons.X: this.attack3.buttonDown(0); this.animatePower=true; break;
-        case Buttons.Y: this.attack4.buttonDown(0); this.animatePower=true; break;
     }
+
+    console.log('button DOOOOOOOOOOOOOOOWN');
+    this.powerHandler.buttonDown(button);
   }
 
   buttonUp(button) {
-    if (!this.powerBool) {
+    if (this.dead) {
       return;
     }
-    this._handleButton(button, false);
-    switch (button) {
-        case Buttons.A: this.attack1.buttonUp(0); this.animatePower=false; break;
-        case Buttons.B: this.attack2.buttonUp(0); this.animatePower=false; break;
-        case Buttons.X: this.attack3.buttonUp(0); this.animatePower=false; break;
-        case Buttons.Y: this.attack4.buttonUp(0); this.animatePower=false; break;
-    }
+    //this._handleButton(button, false);
+
+    console.log('button UUUUUUUUUUUUUP');
+    this.powerHandler.buttonUp(button);
   }
+
+
   _initDisplayBar (id, width, radius, tessellation, color) {
     //http://www.babylonjs-playground.com/#RF9W9#453
     var shape = [
@@ -538,7 +530,6 @@ export default class Hero {
 
     onDeath() {
         this.moveBool = false;
-        this.powerBool = false;
         this.dead = true;
         // effects
         this.game.scene.sound.hurt3.play();

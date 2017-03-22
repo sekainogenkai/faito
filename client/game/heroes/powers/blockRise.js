@@ -1,6 +1,6 @@
 import BABYLON from 'babylonjs';
 import {getHeightAtCoordinates, secondsToTicks} from './powerUtils/mainUtils';
-import BasePower from './powers/basePower';
+import BasePower from './base/basePower';
 import BasePowerObject from './powerObjects/basePowerObject';
 import DirectionCursor from './cursors/directionCursor';
 import PointCursor from './cursors/pointCursor';
@@ -60,7 +60,7 @@ export default class Power1 extends BasePower {
         return;
       }
 
-      this.cursor = new JoyCursor(this.game, this.hero) || new PointCursor(this.game, this.hero, directionVec, distance, true);
+      this.cursor = new JoyCursor(this.game, this.hero, {speed:20});
     }
 
     buttonUp(i) {

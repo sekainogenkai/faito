@@ -1,6 +1,6 @@
 import BABYLON from 'babylonjs';
 import {getHeightAtCoordinates, secondsToTicks} from './powerUtils/mainUtils';
-import BasePower from './powers/basePower';
+import BasePower from './base/basePower';
 import BasePowerObject from './powerObjects/basePowerObject';
 import DirectionCursor from './cursors/directionCursor';
 import PointCursor from './cursors/pointCursor';
@@ -62,7 +62,7 @@ export default class Power5 extends BasePower {
     buttonDown(i) {
       // Capture the rotation of the player at the beginning
       this.playerRotation.copyFrom(this.hero.mask.rotationQuaternion);
-      this.cursor = new DirectionCursor(this.game, this.hero, directionVec, cursorSpeed);
+      this.cursor = new DirectionCursor(this.game, this.hero, {direction: directionVec, speed: cursorSpeed});
       // Add an update function to the power
       this.timer = timerStart;
       registerBeforeSceneRender(this.cursor.mesh, () => this.update());

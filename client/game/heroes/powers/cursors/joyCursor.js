@@ -2,9 +2,9 @@ import BABYLON from 'babylonjs';
 import BaseCursor from './baseCursor.js'
 
 export default class JoyCursor extends BaseCursor {
-    constructor(game, hero, speed=1) {
+    constructor(game, hero, options={speed:0}) {
       super(game, hero);
-      this._speed = speed;
+      this._speed = options.speed;
       this._updatePositionVec = new BABYLON.Vector3(0, 0, 0);
       var initialVec = this.hero.mask.physicsImpostor.getLinearVelocity();
       // Get current rotation of player

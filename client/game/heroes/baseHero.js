@@ -19,8 +19,10 @@ const onGroundPadding = 10;
 
 export default class Hero {
   constructor(
-    game, name, id, meshFileName='omi', speed=10, airSpeed=5, jumpStrength=150, rollGroundSpeed=15, rollAirSpeed=9,
-    attack1=Power3, attack2=Power2, attack3=Power1, attack4=Power5){
+  game, name, id, meshFileName='omi',
+  movOpts={speed:10, airSpeed:5, jumpStrength:150, rollGroundSpeed:15, rollAirSpeed:9},
+  attack1=Power3, attack2=Power2, attack3=Power1, attack4=Power5) {
+
     this.game = game;
     this.name = name;
     this._mana = maxMana;
@@ -83,20 +85,17 @@ export default class Hero {
 
     // Movement variables
     //this.mask.physicsImpostor.onGround = false;
+    this.movOpts = movOpts; // passed in movement variables
+
     this.contactNormal = new CANNON.Vec3(); // Used in the onGround calculation
     this.onGround = onGroundPadding;
-    this.jumpStrength = jumpStrength;
     this.jumpTimerStart = 20;
     this.jumpTimer = this.jumpTimerStart;
     this.rollTimerStart = 15;
     this.rollTimer = this.rollTimerStart;
-    this.speed = speed;
-    this.airSpeed = airSpeed;
     this.moveBool = true;
     this.powerBool = true;
     this.dead = false;
-    this.rollGroundSpeed = rollGroundSpeed;
-    this.rollAirSpeed = rollAirSpeed;
     this.useAbilityTimer = 0;
     this.useAbilityTimerStart = 20;
     // Mana variables
@@ -343,9 +342,9 @@ export default class Hero {
 
     // Movement on ground
     if (this.onGround) {
-        movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollGroundSpeed:this.speed));
+        movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.movOpts.rollGroundSpeed:this.movOpts.speed));
     } else { // Movement in air
-        movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.rollAirSpeed:this.airSpeed));
+        movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.movOpts.rollAirSpeed:this.movOpts.airSpeed));
         if (this.body.velocity.y < 0) {
             movementVector = movementVector.add(new BABYLON.Vector3(0,-5,0));
         }
@@ -358,7 +357,7 @@ export default class Hero {
     if (this.onGround && this.Input.JUMP && this.jumpTimer == 0) {
         //console.log("jump!");
         this.onGround = false;
-        movementVector = movementVector.add(new BABYLON.Vector3(0,this.jumpStrength,0));
+        movementVector = movementVector.add(new BABYLON.Vector3(0,this.movOpts.jumpStrength,0));
         this.jumpTimer = this.jumpTimerStart;
         this.game.scene.sound.jump[Math.floor((Math.random()*this.game.scene.sound.jump.length))].play();
         // Emit

@@ -1,6 +1,6 @@
 import BABYLON from 'babylonjs';
 import {getHeightAtCoordinates, secondsToTicks} from './powerUtils/mainUtils';
-import BasePower from './powers/basePower';
+import BasePower from './base/basePower';
 import ProjectileObject from './powerObjects/projectileObject';
 import DirectionCursor from './cursors/directionCursor';
 import PointCursor from './cursors/pointCursor';
@@ -47,7 +47,14 @@ export default class Power1 extends BasePower {
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:0.01}, this.game.scene);
       // run spawn
-      new ProjectileObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(5), 20, 200, powerImpulseVec, mass, collisionDamage);
+      //new ProjectileObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(5), 20, 200, powerImpulseVec, mass, collisionDamage);
+      new ProjectileObject(this.game, this.hero,
+        // basePowerObject values
+        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(5),
+        dropHeight:20, dropRange:200, collisionCallBack:true, damageMult:collisionDamage},
+        // projectileObject values
+        {vectorImpulse:powerImpulseVec, mass:mass} );
+
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
       if (!fixedRotation) {
@@ -71,7 +78,8 @@ export default class Power1 extends BasePower {
       this.cursors = [];
       var offset = -0.5;
       for (let i = 0; i < 3; i++) {
-        this.cursors.push(new PointCursor(this.game, this.hero, new BABYLON.Vector3(offset, 0, 0.8 - (0.5*Math.sin(Math.abs(offset)*Math.PI))), distance, true));
+        this.cursors.push(new PointCursor(this.game, this.hero,
+          {direction: new BABYLON.Vector3(offset, 0, 0.8 - (0.5*Math.sin(Math.abs(offset)*Math.PI))), distance: distance, fixed: true} ));
         offset += 0.5;
       }
     }

@@ -1,6 +1,6 @@
 import BABYLON from 'babylonjs';
 import {getHeightAtCoordinates, secondsToTicks} from './powerUtils/mainUtils';
-import BasePower from './powers/basePower';
+import BasePower from './base/basePower';
 import BasePowerObject from './powerObjects/basePowerObject';
 import DirectionCursor from './cursors/directionCursor';
 import PointCursor from './cursors/pointCursor';
@@ -45,7 +45,10 @@ export default class Power3 extends BasePower {
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.SphereImpostor, {mass:0, friction:0.1, restitution:4}, this.game.scene);
       // run spawn
-      new BasePowerObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 1, secondsToTicks(1), 10, 100, true, collisionDamage);
+      new BasePowerObject(this.game, this.hero,
+        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:1, lifeSpan:secondsToTicks(1),
+        dropHeight:10, dropRange:100, collisionCallBack:true, damageMult:collisionDamage});
+
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
       if (!fixedRotation) {
@@ -59,7 +62,8 @@ export default class Power3 extends BasePower {
         return;
       }
 
-      this.cursor = new PointCursor(this.game, this.hero, directionVec, 1, true);
+      this.cursor = new PointCursor(this.game, this.hero,
+        {direction:directionVec, distance:1, fixed:true});
     }
 
     buttonUp(i) {

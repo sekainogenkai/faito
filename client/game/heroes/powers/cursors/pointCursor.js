@@ -5,7 +5,7 @@ const initialDirectionVec = new BABYLON.Vector3(0, 0, 1);
 const matrix = new BABYLON.Matrix();
 
 export default class PointCursor extends BaseCursor {
-    constructor(game, hero, options: {direction:null, distance:1, fixed:true}) {
+    constructor(game, hero, options={direction:null, distance:1, fixed:true}) {
       super(game, hero);
       this._fixed = options.fixed;
       this._distance = options.distance;

@@ -2,7 +2,7 @@ import BABYLON from 'babylonjs';
 import BaseCursor from './baseCursor.js'
 
 export default class JoyCursor extends BaseCursor {
-    constructor(game, hero, options: {speed:0}) {
+    constructor(game, hero, options={speed:0}) {
       super(game, hero);
       this._speed = options.speed;
       this._updatePositionVec = new BABYLON.Vector3(0, 0, 0);

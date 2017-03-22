@@ -13,7 +13,4 @@ export default class BasePower {
 
   buttonUp(i) {
   }
-
-  destroy() {
-  }
 }

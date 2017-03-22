@@ -57,8 +57,10 @@ export default class Power1 extends BasePower {
       switch (index) {
         case 0:
           mesh.rotation.y += 70;
+          break;
         case 2:
           mesh.rotation.y += 20;
+          break;
       }
     }
 

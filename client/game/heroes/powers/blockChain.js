@@ -24,6 +24,7 @@ const meshSize = 5;
 export default class BlockChain extends BasePower {
     constructor(game, hero) {
       super(game, hero);
+      this.powerObjects = [];
     }
 
     createMesh () {
@@ -52,7 +53,8 @@ export default class BlockChain extends BasePower {
         maxDistance: chainLength
       });
       // Create the joint object that we will use for binding the power to the hero
-      new JointObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(10), 0, 0, this.hero.mask, joint, mass, collisionDamage);
+      this.powerObjects.push(new JointObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(10), 0, 0, this.hero.mask, joint, mass, collisionDamage));
+      console.log(this.powerObjects);
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
@@ -62,22 +64,59 @@ export default class BlockChain extends BasePower {
     }
 
     buttonDown(i) {
-      // Consume and check to see if there is enough mana
-      if (!this.hero.consumeMana(manaCost)){
-        return;
+      this.updateList();
+      switch (i) {
+        case 0: // Create the power
+          // Consume and check to see if there is enough mana
+          if (!this.hero.consumeMana(manaCost)){
+            return;
+          }
+          // Create three walls that protect the player
+          this.cursor = new PointCursor(this.game, this.hero, directionVec, 1, true);
+          break;
+        case 1: // Remove the joints
+          this.powerObjects.forEach(function(block, i) {
+            block.removeJoint();
+          }, this);
+          break;
+        case 2: // Freeze the blocks
+          this.powerObjects.forEach(function(block, i) {
+            block.makeStatic();
+            // Make the blocks velocities to zero
+            block.mesh.physicsImpostor.physicsBody.velocity.setZero();
+            block.mesh.physicsImpostor.physicsBody.angularVelocity.setZero();
+          }, this);
+          break;
       }
-      // Create three walls that protect the player
-      this.cursor = new PointCursor(this.game, this.hero, directionVec, 1, true);
+
     }
 
     buttonUp(i) {
       // Make sure a cursor is present
-      if (!this.cursor){
-        return;
-      }
+      switch (i) {
+        case 0: // Create the power mesh
+          if (!this.cursor){
+            return;
+          }
 
-      this.createMesh();
-      this.cursor.destroy();
-      this.cursor = undefined;
+          this.createMesh();
+          this.cursor.destroy();
+          this.cursor = undefined;
+          break;
+        case 2: // unfreeze objects
+          this.powerObjects.forEach(function(block, i) {
+            block.makeKinematic(mass);
+          }, this);
+          break;
+      }
+    }
+
+    // Update the list of power objects we are keeping
+    updateList() {
+      this.powerObjects.forEach(function(block, i) {
+        if (block._currentState === 2) { // if the object is in the destory phase
+          this.powerObjects.splice(i, 1);
+        }
+      }, this);
     }
 }

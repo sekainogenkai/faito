@@ -20,7 +20,7 @@ const onGroundPadding = 10;
 export default class Hero {
   constructor(
     game, name, id, meshFileName='omi', speed=10, airSpeed=5, jumpStrength=150, rollGroundSpeed=15, rollAirSpeed=9,
-    attack1=Power3, attack2=Power2, attack3=Power1, attack4=Power6){
+    attack1=Power3, attack2=Power6, attack3=Power6, attack4=Power6){
     this.game = game;
     this.name = name;
     this._mana = maxMana;
@@ -113,9 +113,9 @@ export default class Hero {
 
     // InitializePowers
     this.attack1 = new attack1(game, this);
-    this.attack2 = new attack2(game, this);
-    this.attack3 = new attack3(game, this);
-    this.attack4 = new attack4(game, this);
+    this.attack2 = this.attack3 = this.attack4 = new attack2(game, this);
+    // this.attack3 = new attack3(game, this);
+    // this.attack4 = new attack4(game, this);
 
     // Add particle emitters for stuff
     this.dustParticleEmitter = new ParticleEmitter(this.game, 'dustParticle', './textures/effects/circle.png');
@@ -401,9 +401,9 @@ export default class Hero {
         case Buttons.RB: this.Input.JUMP = true; break;
         case Buttons.LB: this.Input.ROLL = true; break;
         case Buttons.A: this.attack1.buttonDown(0); this.animatePower=true; break;
-        case Buttons.B: this.attack2.buttonDown(0); this.animatePower=true; break;
+        case Buttons.B: this.attack2.buttonDown(2); this.animatePower=true; break;
         case Buttons.X: this.attack3.buttonDown(0); this.animatePower=true; break;
-        case Buttons.Y: this.attack4.buttonDown(0); this.animatePower=true; break;
+        case Buttons.Y: this.attack4.buttonDown(1); this.animatePower=true; break;
     }
   }
 
@@ -414,9 +414,9 @@ export default class Hero {
     this._handleButton(button, false);
     switch (button) {
         case Buttons.A: this.attack1.buttonUp(0); this.animatePower=false; break;
-        case Buttons.B: this.attack2.buttonUp(0); this.animatePower=false; break;
+        case Buttons.B: this.attack2.buttonUp(2); this.animatePower=false; break;
         case Buttons.X: this.attack3.buttonUp(0); this.animatePower=false; break;
-        case Buttons.Y: this.attack4.buttonUp(0); this.animatePower=false; break;
+        case Buttons.Y: this.attack4.buttonUp(1); this.animatePower=false; break;
     }
   }
   _initDisplayBar (id, width, radius, tessellation, color) {

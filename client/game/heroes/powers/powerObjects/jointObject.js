@@ -4,12 +4,18 @@ import {registerBeforeSceneRender} from '../../../mesh-util'
 import {getHeightAtCoordinates} from '../powerUtils/mainUtils';
 
 export default class JointObject extends BasePowerObject {
-  constructor(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan, dropHeight, dropRange, target, joint,
-              mass, damageMult=10) {
-    super(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan, dropHeight, dropRange, true, damageMult);
-    this.mass = mass;
-    this.target = target; // The mesh we want to join to
-    this.joint = joint; // the joint that is defined in the power class
+  constructor(game, hero,
+    // Base options
+    optionsBase={mesh:null, vectorStart:null, vectorEnd:null, range:null, lifeSpan:null,
+    dropHeight:0, dropRange:0, collisionCallBack:true, damageMult:10},
+    // JointObject options
+    options: {target:null, joint:null, mass:null} ) {
+
+    super(game, hero, optionsBase);
+
+    this.target = options.target; // The mesh we want to join to
+    this.joint = options.joint; // the joint that is defined in the power class
+    this.mass = options.mass;
   }
 
   onPowerSpawn() {

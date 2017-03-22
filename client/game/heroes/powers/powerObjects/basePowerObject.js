@@ -6,8 +6,13 @@ import {getHeightAtCoordinates} from '../powerUtils/mainUtils';
 const zeroVector = new BABYLON.Vector3.Zero();
 
 export default class BasePowerObject {
-  constructor(game, hero, mesh, vectorStart, vectorEnd, range, lifeSpan, dropHeight=0, dropRange=0,
-              collisionCallBack=true, damageMult=10) {
+  constructor(game, hero,
+    // options
+    options={mesh:null, vectorStart:null, vectorEnd:null, range:null, lifeSpan:null,
+      dropHeight:0, dropRange:0, collisionCallBack:true,
+      damageMult:10} ) {
+
+    let mesh = options.mesh;
     this.game = game;
     this.hero = hero;
     this.mesh = mesh;
@@ -16,8 +21,8 @@ export default class BasePowerObject {
 
     // setup mesh impostor
     this.collidedWith = [];
-    if (collisionCallBack) {
-      this.damageMult = damageMult;
+    if (options.collisionCallBack) {
+      this.damageMult = options.damageMult;
       this.mesh.physicsImpostor.onCollide = this.onPowerCollide.bind(this);
       mesh.physicsImpostor.forceUpdate();
     }
@@ -26,14 +31,14 @@ export default class BasePowerObject {
     mesh.receiveShadows = true;
 
     // console.log('vectorstart', vectorStart);
-    this.vectorStart = vectorStart;
-    this.vectorEnd = vectorEnd;
-    this.range = range;
-    this.lifeSpan = lifeSpan;
-    this.dropHeight = dropHeight;
+    this.vectorStart = options.vectorStart;
+    this.vectorEnd = options.vectorEnd;
+    this.range = options.range;
+    this.lifeSpan = options.lifeSpan;
+    this.dropHeight = options.dropHeight;
     this._currentState = 0;
     this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
-    this.dropRange = dropRange?dropRange:range;
+    this.dropRange = options.dropRange;
 
     /*
     this.dustParticleEmitter = new ParticleEmitter(this.game, 'dustParticle', './textures/effects/circle.png',

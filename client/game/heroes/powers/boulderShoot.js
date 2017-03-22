@@ -49,7 +49,13 @@ export default class Power2 extends BasePower {
       BABYLON.Tags.EnableFor(mesh);
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.SphereImpostor, {mass: 0, friction:0.1, restitution:0.9}, this.game.scene);
       // run spawn
-      new ProjectileObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(5), 0, 0, powerImpulseVec, mass, collisionDamage);
+      new ProjectileObject(this.game, this.hero,
+        // basePowerObject values
+        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(5),
+        dropHeight:10, dropRange:1000, collisionCallBack:true, damageMult:10},
+        // projectileObject values
+        {vectorImpulse:powerImpulseVec, mass:mass} );
+
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal;
       if (!fixedRotation) {

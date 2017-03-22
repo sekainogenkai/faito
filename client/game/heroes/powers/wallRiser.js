@@ -62,7 +62,7 @@ export default class Power5 extends BasePower {
     buttonDown(i) {
       // Capture the rotation of the player at the beginning
       this.playerRotation.copyFrom(this.hero.mask.rotationQuaternion);
-      this.cursor = new DirectionCursor(this.game, this.hero, directionVec, cursorSpeed);
+      this.cursor = new DirectionCursor(this.game, this.hero, {direction: directionVec, speed: cursorSpeed});
       // Add an update function to the power
       this.timer = timerStart;
       registerBeforeSceneRender(this.cursor.mesh, () => this.update());

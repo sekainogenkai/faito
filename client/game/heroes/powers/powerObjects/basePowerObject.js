@@ -114,6 +114,9 @@ export default class BasePowerObject {
   }
 
   destroy() {
+    // Call the on destory function
+    this.onPowerDestroy();
+    // Make the object static so it destroys nicely
     if (this.mesh.physicsImpostor.physicsBody.type != 0) {
       this.makeStatic();
     }
@@ -121,15 +124,12 @@ export default class BasePowerObject {
     this.range = this.dropRange;
     const destroyEndEvent = new BABYLON.AnimationEvent(this.range, () => {
       //console.log('End animation event!');
-      this.onPowerDestroy();
       this.mesh.dispose();
     });
 
     this.vectorStart = this.mesh.position;
     this.vectorEnd = this.mesh.position.clone();
     this.vectorEnd.y = getHeightAtCoordinates(this.groundMesh, this.vectorEnd.x, this.vectorEnd.z) - (this.dropHeight?this.dropHeight:this.mesh.getBoundingInfo().boundingBox.extendSize.y);
-
-    //console.log('what is the range', this.dropRange);
 
     this.moveAnimation('destroy', destroyEndEvent);
   }

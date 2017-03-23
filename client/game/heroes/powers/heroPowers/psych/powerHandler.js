@@ -2,7 +2,7 @@ import BABYLON from 'babylonjs';
 
 import {Buttons} from '../../../../input';
 
-import RockPsych from './blockChain';
+import RockPsych from './psychBlock';
 import JumpBall from '../baseHero/jumpBall';
 
 export default class PowerHandler {

@@ -7,12 +7,12 @@ import PointCursor from '../../cursors/pointCursor';
 import JoyCursor from '../../cursors/joyCursor';
 
 const manaCost = 2000; // mana cost of the power
-const collisionDamage = 10; // the amount of damage it does when it collides
+const collisionDamage = 8; // the amount of damage it does when it collides
 const chainLength = 20;
 const mass = 1;
 
 const directionVec = new BABYLON.Vector3(0, 0, -chainLength);  // point spawn for the cursor
-
+const distJoint = new BABYLON.DistanceJoint( {maxDistance: chainLength} );
 
 const fixedRotation = false;
 const meshSize = 5;
@@ -48,9 +48,6 @@ export default class BlockChain extends BasePower {
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:1}, this.game.scene);
       // run spawn
-      var distJoint = new BABYLON.DistanceJoint({
-        maxDistance: chainLength
-      });
       // Create the joint object that we will use for binding the power to the hero
       //this.powerObjects.push(new JointObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(10), 0, 150, this.hero.mask, joint, mass, collisionDamage));
       this.powerObjects.push(new JointObject(this.game, this.hero,

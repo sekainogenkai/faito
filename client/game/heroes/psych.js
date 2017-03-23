@@ -5,7 +5,7 @@ import PsychPowerHandler from './powers/heroPowers/psych/powerHandler';
 export default class physicsMan extends BaseHero {
   constructor(game, name, id) {
     super(game, name, id, 'omi',
-    {speed:10, airSpeed:5, jumpStrength:150, rollGroundSpeed:15, rollAirSpeed:9},
+    {speed:10, airSpeed:9, jumpStrength:150, rollGroundSpeed:15, rollAirSpeed:9},
     PsychPowerHandler);
   }
 }

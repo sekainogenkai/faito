@@ -5,12 +5,35 @@ import {getHeightAtCoordinates} from '../powerUtils/mainUtils';
 
 const zeroVector = new BABYLON.Vector3.Zero();
 
+// Collided with timer. I like objects.
+class CollidedWith {
+  constructor(player, timerMax=10) {
+    this.player = player;
+    this.timerMax = timerMax;
+    this.timer = this.timerMax; // TODO make this an option or something. Idk
+  }
+
+  subtractTimer() {
+    if (this.timer>0) {
+      this.timer--;
+    }
+  }
+
+  checkCollide() {
+    let checkCollideBool = this.timer <= 0;
+    if (checkCollideBool) {
+      this.timer = this.timerMax;
+    }
+    return checkCollideBool;
+  }
+}
+
 export default class BasePowerObject {
   constructor(game, hero,
     // options
     options={mesh:null, vectorStart:null, vectorEnd:null, range:null, lifeSpan:null,
       dropHeight:0, dropRange:0, collisionCallBack:true,
-      damageMult:10} ) {
+      damageMult:10, damageTimerMax:10} ) {
 
     let mesh = options.mesh;
     this.game = game;
@@ -21,6 +44,7 @@ export default class BasePowerObject {
 
     // setup mesh impostor
     this.collidedWith = [];
+
     if (options.collisionCallBack) {
       this.damageMult = options.damageMult;
       this.mesh.physicsImpostor.onCollide = this.onPowerCollide.bind(this);
@@ -39,6 +63,7 @@ export default class BasePowerObject {
     this._currentState = 0;
     this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
     this.dropRange = options.dropRange;
+    this.damageTimerMax = options.damageTimerMax?options.damageTimerMax:10;
 
     /*
     this.dustParticleEmitter = new ParticleEmitter(this.game, 'dustParticle', './textures/effects/circle.png',
@@ -56,6 +81,8 @@ export default class BasePowerObject {
 
 
   update() {
+    this.objectCollideTimerSubtract();
+
     if (this._currentState == 0) {
     } else if (this._currentState == 1) {
       // main update loop of power
@@ -179,19 +206,36 @@ export default class BasePowerObject {
         // apply the damage
         e.body.parent.takeDynamicDamage(this.damageMult, Math.abs(cannonContactVelocity.dot(e.contact.ni)));
 
-        this.collidedWith.push(e.body.parent.name);
+        if (this.checkHeroAlreadyCollidedWith(e.body.parent.name) == 'newHero') {
+          //console.log('newHero collided with');
+          this.collidedWith.push(new CollidedWith(e.body.parent.name, this.damageTimerMax));
+        }
     }
   }
 
-   checkHeroCollidedWith(playerContacted) {
-     console.log(this.collidedWith);
+  // collided with objects have timer until they are collided with again
+  objectCollideTimerSubtract() {
     for (let collided of this.collidedWith) {
-      if (collided == playerContacted) {
-        console.log('collided with is false');
-        return false;
+      collided.subtractTimer();
+    }
+  }
+
+  checkHeroAlreadyCollidedWith(playerContacted) {
+    //console.log(this.collidedWith);
+    for (let collided of this.collidedWith) {
+      if (collided.player == playerContacted) {
+        return collided.checkCollide();
       }
     }
-    console.log('collided with is true');
+    return 'newHero';
+  }
+
+  checkHeroCollidedWith(playerContacted) {
+    let check = this.checkHeroAlreadyCollidedWith(playerContacted)
+    if (check != 'newHero') {
+      // console.log('return check', check);
+      return check;
+    }
     return true;
   }
 

@@ -373,24 +373,15 @@ export default class Hero {
       this._joyTarget.joyChanged(joyVector);
   }
 
-/*
-  _handleButton(button, pressed) {
-    switch (button) {
-    }
-  }
-*/
   buttonDown(button) {
     if (this.dead) {
-      console.log('returning on dead');
       return;
     }
-    //this._handleButton(button, true);
     switch (button) {
         case Buttons.RB: this.Input.JUMP = true; break;
         case Buttons.LB: this.Input.ROLL = true; break;
     }
 
-    console.log('button DOOOOOOOOOOOOOOOWN');
     this.powerHandler.buttonDown(button);
   }
 
@@ -398,9 +389,6 @@ export default class Hero {
     if (this.dead) {
       return;
     }
-    //this._handleButton(button, false);
-
-    console.log('button UUUUUUUUUUUUUP');
     this.powerHandler.buttonUp(button);
   }
 

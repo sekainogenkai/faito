@@ -33,7 +33,7 @@ export default class BasePowerObject {
     // options
     options={mesh:null, vectorStart:null, vectorEnd:null, range:null, lifeSpan:null,
       dropHeight:0, dropRange:0, collisionCallBack:true,
-      damageMult:10, damageTimerMax:10} ) {
+      damageMult:10, damageTimerMax:10, shadow:true} ) {
 
     let mesh = options.mesh;
     this.game = game;
@@ -51,6 +51,7 @@ export default class BasePowerObject {
       mesh.physicsImpostor.forceUpdate();
     }
 
+    if (options.shadow || options.shadow === undefined )
     this.game.scene.shadowGenerator.getShadowMap().renderList.push(mesh);
     mesh.receiveShadows = true;
 

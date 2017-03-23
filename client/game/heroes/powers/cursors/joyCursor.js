@@ -5,8 +5,8 @@ export default class JoyCursor extends BaseCursor {
     constructor(game, hero, options={speed:1}) {
       super(game, hero);
       this._speed = options.speed;
-      this._updatePositionVec = new BABYLON.Vector3(0, 0, 0);
-      var initialVec = this.hero.mask.physicsImpostor.getLinearVelocity();
+      this._updatePositionVec = new BABYLON.Vector3(0, 400, 0);
+      // var initialVec = this.hero.mask.physicsImpostor.getLinearVelocity();
       // Get current rotation of player
       // this.mesh.applyImpulse(initialVec.normalize().scale(300), this.mesh.getAbsolutePosition());
       this.joy = new BABYLON.Vector2(0, 0);

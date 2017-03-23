@@ -109,7 +109,7 @@ export default class BasePowerObject {
       this._currentState = 1;
     });
 
-    this.moveAnimation('spawn', spawnEndEvent);
+    this.moveAnimation('spawn', [spawnEndEvent]);
   }
 
   destroy() {
@@ -119,32 +119,35 @@ export default class BasePowerObject {
     }
 
     this.range = this.dropRange;
-    const destroyEndEvent = new BABYLON.AnimationEvent(this.range, () => {
-      //console.log('End animation event!');
-      this.mesh.dispose();
-    });
 
-    const destroyStartEvent = new BABYLON.AnimationEvent(0, () => {
+    var destroyStartEvent = new BABYLON.AnimationEvent(0, () => {
       // Call the on destory function
       this.onPowerDestroy();
     });
 
+    var destroyEndEvent = new BABYLON.AnimationEvent(this.range, () => {
+      //console.log('End animation event!');
+      this.mesh.dispose();
+    });
+
+    console.log (destroyEndEvent)
     this.vectorStart = this.mesh.position;
     this.vectorEnd = this.mesh.position.clone();
     this.vectorEnd.y = getHeightAtCoordinates(this.groundMesh, this.vectorEnd.x, this.vectorEnd.z) - (this.dropHeight?this.dropHeight:this.mesh.getBoundingInfo().boundingBox.extendSize.y);
 
-    this.moveAnimation('destroy', destroyStartEvent, destroyEndEvent);
+    this.moveAnimation('destroy', [destroyStartEvent, destroyEndEvent]);
   }
 
-  moveAnimation(animationName, startEvent, endEvent) {
+  moveAnimation(animationName, events=[]) {
     //console.log('start pos', this.vectorStart);
     //console.log('end pos', this.vectorEnd);
     var moveAnimation = new BABYLON.Animation(
       animationName, 'position', 60,
       BABYLON.Animation.ANIMATIONTYPE_VECTOR3);
-
-    moveAnimation.addEvent(startEvent);
-    moveAnimation.addEvent(endEvent);
+    // Append all the different animation events
+    events.forEach(function(event) {
+      moveAnimation.addEvent(event);
+    });
 
     var moveAnimationKeys = [
       {

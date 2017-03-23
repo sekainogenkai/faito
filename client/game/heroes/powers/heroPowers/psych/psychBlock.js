@@ -98,7 +98,7 @@ export default class BlockChain extends BasePower {
       // Make sure a cursor is present
       switch (i) {
         case 0: // Create the power mesh
-          if (!this.cursor){
+          if (!this.cursor) {
             return;
           }
 

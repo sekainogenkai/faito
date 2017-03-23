@@ -126,7 +126,6 @@ export default class BasePowerObject {
     });
 
     const destroyStartEvent = new BABYLON.AnimationEvent(0, () => {
-      console.log("ani start");
       // Call the on destory function
       this.onPowerDestroy();
     });

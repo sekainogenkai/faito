@@ -8,8 +8,6 @@ export default class BasePowerHandler {
   constructor(game, hero, power1, power2, power3, power4) {
     this.game = game;
     this.hero = hero;
-    //this.cursor = undefined;
-    //this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
 
     this.power1 = new power1(game, hero);
     this.power2 = new power2(game, hero);
@@ -19,8 +17,6 @@ export default class BasePowerHandler {
   }
 
   buttonDown(button) {
-    console.log('handling button down');
-    //this._handleButton(button, true);
     switch (button) {
         case Buttons.A: this.power1.buttonDown(0); this.hero.animatePower=true; break;
         case Buttons.B: this.power2.buttonDown(0); this.hero.animatePower=true; break;
@@ -31,8 +27,6 @@ export default class BasePowerHandler {
 
 
   buttonUp(button) {
-    console.log('handling button up');
-    //this._handleButton(button, false);
     switch (button) {
         case Buttons.A: this.power1.buttonUp(0); this.hero.animatePower=false; break;
         case Buttons.B: this.power2.buttonUp(0); this.hero.animatePower=false; break;

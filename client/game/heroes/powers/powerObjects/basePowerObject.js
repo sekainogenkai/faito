@@ -123,6 +123,10 @@ export default class BasePowerObject {
     const destroyEndEvent = new BABYLON.AnimationEvent(this.range, () => {
       //console.log('End animation event!');
       this.mesh.dispose();
+    });
+
+    const destroyStartEvent = new BABYLON.AnimationEvent(0, () => {
+      console.log("ani start");
       // Call the on destory function
       this.onPowerDestroy();
     });
@@ -131,7 +135,7 @@ export default class BasePowerObject {
     this.vectorEnd = this.mesh.position.clone();
     this.vectorEnd.y = getHeightAtCoordinates(this.groundMesh, this.vectorEnd.x, this.vectorEnd.z) - (this.dropHeight?this.dropHeight:this.mesh.getBoundingInfo().boundingBox.extendSize.y);
 
-    this.moveAnimation('destroy', destroyEndEvent);
+    this.moveAnimation('destroy', destroyStartEvent, destroyEndEvent);
   }
 
   moveAnimation(animationName, endEvent) {

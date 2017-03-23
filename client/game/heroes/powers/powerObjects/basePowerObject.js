@@ -114,8 +114,6 @@ export default class BasePowerObject {
   }
 
   destroy() {
-    // Call the on destory function
-    this.onPowerDestroy();
     // Make the object static so it destroys nicely
     if (this.mesh.physicsImpostor.physicsBody.type != 0) {
       this.makeStatic();
@@ -125,6 +123,8 @@ export default class BasePowerObject {
     const destroyEndEvent = new BABYLON.AnimationEvent(this.range, () => {
       //console.log('End animation event!');
       this.mesh.dispose();
+      // Call the on destory function
+      this.onPowerDestroy();
     });
 
     this.vectorStart = this.mesh.position;

@@ -28,7 +28,6 @@ export default class JointObject extends BasePowerObject {
 
   onPowerDestroy() {
     // Remove the joint
-    console.log('joint removed');
     this.removeJoint();
   }
 

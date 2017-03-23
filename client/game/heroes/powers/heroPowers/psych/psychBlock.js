@@ -12,7 +12,6 @@ const chainLength = 20;
 const mass = 1;
 
 const directionVec = new BABYLON.Vector3(0, 0, -chainLength);  // point spawn for the cursor
-const distJoint = new BABYLON.DistanceJoint( {maxDistance: chainLength} );
 
 const fixedRotation = false;
 const meshSize = 5;
@@ -37,7 +36,8 @@ export default class BlockChain extends BasePower {
       // Set the target vector
       const vectorEnd = new BABYLON.Vector3(
         this.cursor.mesh.position.x,
-        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + (meshSize/2) + 2,
+        Math.max((getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + (meshSize/2) + 2,
+        this.hero.mask.position.y),
         this.cursor.mesh.position.z
       );
 
@@ -48,6 +48,8 @@ export default class BlockChain extends BasePower {
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:1}, this.game.scene);
       // run spawn
+      // Create a new joint, needs to be a new joint
+      var distJoint = new BABYLON.DistanceJoint( {maxDistance: chainLength} );
       // Create the joint object that we will use for binding the power to the hero
       //this.powerObjects.push(new JointObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(10), 0, 150, this.hero.mask, joint, mass, collisionDamage));
       this.powerObjects.push(new JointObject(this.game, this.hero,
@@ -80,6 +82,7 @@ export default class BlockChain extends BasePower {
         case 1: // Remove the joints
           this.powerObjects.forEach(function(block, i) {
             block.removeJoint();
+            console.log('boi')
           }, this);
           break;
         case 2: // Freeze the blocks

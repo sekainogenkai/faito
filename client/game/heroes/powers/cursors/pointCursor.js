@@ -29,7 +29,7 @@ export default class PointCursor extends BaseCursor {
       // Get current rotation of player
       this.hero.mask.rotationQuaternion.toRotationMatrix(matrix);
       BABYLON.Vector3.TransformCoordinatesToRef(this._initialDirectionVec, matrix, this._directionVec);
-      this._directionVec.scaleInPlace(this._distance);
+      this._directionVec.normalize().scaleInPlace(this._distance);
       // add the vector once
       this.mesh.position.addInPlace(this._directionVec);
     }

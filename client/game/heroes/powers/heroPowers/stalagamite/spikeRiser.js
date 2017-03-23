@@ -60,7 +60,7 @@ export default class Power5 extends BasePower {
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
 
-      
+
       if (!fixedRotation) {
         mesh.rotationQuaternion.copyFrom(this.playerRotation);
       }
@@ -69,7 +69,7 @@ export default class Power5 extends BasePower {
     buttonDown(i) {
       // Capture the rotation of the player at the beginning
       this.playerRotation.copyFrom(this.hero.mask.rotationQuaternion);
-      this.cursor = new JoyCursor(this.game, this.hero, {speed: 1});
+      this.cursor = new JoyCursor(this.game, this.hero, {speed: 1, direction: new BABYLON.Vector3(0,0,10), distance:10});
       // Add an update function to the power
       this.timer = timerStart;
       registerBeforeSceneRender(this.cursor.mesh, () => this.update());

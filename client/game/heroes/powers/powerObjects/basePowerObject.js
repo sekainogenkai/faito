@@ -131,7 +131,7 @@ export default class BasePowerObject {
       this.mesh.dispose();
     });
 
-    console.log (destroyEndEvent)
+    //console.log (destroyEndEvent)
     this.vectorStart = this.mesh.position;
     this.vectorEnd = this.mesh.position.clone();
     this.vectorEnd.y = getHeightAtCoordinates(this.groundMesh, this.vectorEnd.x, this.vectorEnd.z) - (this.dropHeight?this.dropHeight:this.mesh.getBoundingInfo().boundingBox.extendSize.y);

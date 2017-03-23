@@ -47,7 +47,7 @@ export default class Power3 extends BasePower {
       // run spawn
       new BasePowerObject(this.game, this.hero,
         {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:1, lifeSpan:secondsToTicks(1),
-        dropHeight:10, dropRange:100, collisionCallBack:true, damageMult:collisionDamage});
+        dropHeight:10, dropRange:100, collisionCallBack:true, damageMult:collisionDamage, damageTimerMax:50});
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;

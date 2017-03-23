@@ -7,9 +7,9 @@ const zeroVector = new BABYLON.Vector3.Zero();
 
 // Collided with timer. I like objects.
 class CollidedWith {
-  constructor(player) {
+  constructor(player, timerMax=10) {
     this.player = player;
-    this.timerMax = 10;
+    this.timerMax = timerMax;
     this.timer = this.timerMax; // TODO make this an option or something. Idk
   }
 
@@ -33,7 +33,7 @@ export default class BasePowerObject {
     // options
     options={mesh:null, vectorStart:null, vectorEnd:null, range:null, lifeSpan:null,
       dropHeight:0, dropRange:0, collisionCallBack:true,
-      damageMult:10} ) {
+      damageMult:10, damageTimerMax:10} ) {
 
     let mesh = options.mesh;
     this.game = game;
@@ -63,6 +63,7 @@ export default class BasePowerObject {
     this._currentState = 0;
     this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
     this.dropRange = options.dropRange;
+    this.damageTimerMax = options.damageTimerMax?options.damageTimerMax:10;
 
     /*
     this.dustParticleEmitter = new ParticleEmitter(this.game, 'dustParticle', './textures/effects/circle.png',
@@ -207,7 +208,7 @@ export default class BasePowerObject {
 
         if (this.checkHeroAlreadyCollidedWith(e.body.parent.name) == 'newHero') {
           //console.log('newHero collided with');
-          this.collidedWith.push(new CollidedWith(e.body.parent.name));
+          this.collidedWith.push(new CollidedWith(e.body.parent.name, this.damageTimerMax));
         }
     }
   }

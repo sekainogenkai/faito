@@ -1,11 +1,11 @@
-import baseHero from './baseHero'
+import BaseHero from './baseHero'
 
-//TODO Mark finish this please
+import StalagamitePowerHandler from './powers/heroPowers/stalagamite/aHandler';
 
-export default class physicsMan extends BaseHero {
-constructor(game, name, id) {
-  super(game, name, id, 'omi',
-  {speed:10, airSpeed:5, jumpStrength:150, rollGroundSpeed:15, rollAirSpeed:9},
-
-
+export default class Stalagamite extends BaseHero {
+  constructor(game, name, id) {
+    super(game, name, id, 'omi',
+    {speed:8, airSpeed:3, jumpStrength:100, rollGroundSpeed:9, rollAirSpeed:5},
+    StalagamitePowerHandler);
+  }
 }

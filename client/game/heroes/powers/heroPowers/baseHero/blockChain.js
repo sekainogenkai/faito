@@ -90,7 +90,6 @@ export default class BlockChain extends BasePower {
           }, this);
           break;
       }
-
     }
 
     buttonUp(i) {

@@ -82,7 +82,6 @@ export default class BlockChain extends BasePower {
         case 1: // Remove the joints
           this.powerObjects.forEach(function(block, i) {
             block.removeJoint();
-            console.log('boi')
           }, this);
           break;
         case 2: // Freeze the blocks

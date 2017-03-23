@@ -99,7 +99,6 @@ export default class BasePowerObject {
       this._currentState = 2;
       this.destroy();
     }
-
   }
 
   spawn() {
@@ -137,14 +136,16 @@ export default class BasePowerObject {
     this.moveAnimation('destroy', destroyStartEvent, destroyEndEvent);
   }
 
-  moveAnimation(animationName, endEvent) {
+  moveAnimation(animationName, startEvent, endEvent) {
     //console.log('start pos', this.vectorStart);
     //console.log('end pos', this.vectorEnd);
     var moveAnimation = new BABYLON.Animation(
       animationName, 'position', 60,
       BABYLON.Animation.ANIMATIONTYPE_VECTOR3);
 
+    moveAnimation.addEvent(startEvent);
     moveAnimation.addEvent(endEvent);
+
     var moveAnimationKeys = [
       {
         frame: 0,

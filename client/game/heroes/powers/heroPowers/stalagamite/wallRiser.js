@@ -48,7 +48,7 @@ export default class Power5 extends BasePower {
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
-      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:0.9}, this.game.scene);
+      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.CylinderImpostor, {mass:0, friction:0.1, restitution:0.9}, this.game.scene);
 
       // run spawn
       new BasePowerObject(this.game, this.hero,

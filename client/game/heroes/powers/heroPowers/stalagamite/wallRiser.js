@@ -16,7 +16,7 @@ const fixedRotation = false;
 
 const timerStart = 7;
 const timerStart2 = 2;
-const meshHeight = 20;
+const meshHeight = 6;
 
 /*
 * Makes a line of things fly out!
@@ -43,8 +43,8 @@ export default class Power5 extends BasePower {
       );
 
       // Create the mesh
-      const mesh = new BABYLON.Mesh.CreateBox('mesh', 1, this.game.scene);
-      mesh.scaling = new BABYLON.Vector3(2, meshHeight, 4);
+      const mesh = BABYLON.MeshBuilder.CreateCylinder('cone', {diameterTop: 0, tessellation: 10}, this.game.scene);//new BABYLON.Mesh.CreateBox('mesh', 1, this.game.scene);
+      mesh.scaling = new BABYLON.Vector3(5, meshHeight, 5);
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
@@ -53,7 +53,7 @@ export default class Power5 extends BasePower {
       // run spawn
       new BasePowerObject(this.game, this.hero,
       {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(3),
-        dropHeight:50, dropRange:100, collisionCallBack:true, damageMult:collisionDamage, damageTimerMax:120});
+        dropHeight:10, dropRange:300, collisionCallBack:true, damageMult:collisionDamage, damageTimerMax:120});
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
@@ -65,7 +65,7 @@ export default class Power5 extends BasePower {
     buttonDown(i) {
       // Capture the rotation of the player at the beginning
       this.playerRotation.copyFrom(this.hero.mask.rotationQuaternion);
-      this.cursor = new DirectionCursor(this.game, this.hero, {direction: directionVec, speed: cursorSpeed});
+      this.cursor = new JoyCursor(this.game, this.hero, {speed: 1});
       // Add an update function to the power
       this.timer = timerStart;
       registerBeforeSceneRender(this.cursor.mesh, () => this.update());

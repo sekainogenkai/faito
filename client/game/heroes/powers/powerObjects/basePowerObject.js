@@ -233,7 +233,7 @@ export default class BasePowerObject {
   checkHeroCollidedWith(playerContacted) {
     let check = this.checkHeroAlreadyCollidedWith(playerContacted)
     if (check != 'newHero') {
-      console.log('return check', check);
+      // console.log('return check', check);
       return check;
     }
     return true;

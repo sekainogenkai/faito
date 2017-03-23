@@ -12,7 +12,7 @@ export default class DirectionCursor extends BaseCursor {
       this.hero.mask.rotationQuaternion.toRotationMatrix(matrix);
       BABYLON.Vector3.TransformCoordinatesToRef(this.initialDirectionVec, matrix, this.directionVec);
       // scale the vector to the speed
-      this.directionVec.scaleInPlace(options.speed);
+      this.directionVec.normalize().scaleInPlace(options.speed);
     }
 
     update () {

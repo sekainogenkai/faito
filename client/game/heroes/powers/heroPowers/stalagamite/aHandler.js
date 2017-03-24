@@ -59,7 +59,17 @@ export default class BasePowerHandler {
       for (let object of this.spikeRiser.objects) {
         //console.log('updating mesh position');
         // figure out vector from mesh to player
-        this.moveObjectRelativePlayer(object, scale);
+        let vec = this.moveObjectRelativePlayer(object, scale);
+        object.mesh.position.x += vec.x;
+        object.mesh.position.z += vec.y;
+      }
+
+      for (let object of this.spikeThrow.objects) {
+        if (object._currentState == 0) {
+          let vec = this.moveObjectRelativePlayer(object, -scale);
+          object.vectorEnd.x += vec.x;
+          object.vectorEnd.z += vec.y;
+        }
       }
   }
 
@@ -67,14 +77,13 @@ export default class BasePowerHandler {
     let x = this.hero.mask.position.x - object.mesh.position.x;
     let z = this.hero.mask.position.z - object.mesh.position.z;
     let vec = new BABYLON.Vector2(x,z);
-    vec.normalize().scaleInPlace(scale);
-    object.mesh.position.x += vec.x;
-    object.mesh.position.z += vec.y;
+    return vec.normalize().scaleInPlace(scale);
   }
 
   update() {
     // must be called for all powers that remember objects
     this.spikeRiser.deleteObjectsOnDeleteAnimation();
+    this.spikeThrow.deleteObjectsOnDeleteAnimation();
     if (this.powerCloserBool) {
       this.powerMove(.5);
     }

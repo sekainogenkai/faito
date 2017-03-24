@@ -51,21 +51,18 @@ export default class BlockChain extends PowerRemember {
       var distJoint = new BABYLON.DistanceJoint( {maxDistance: chainLength} );
       // Create the joint object that we will use for binding the power to the hero
       //this.powerObjects.push(new JointObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(10), 0, 150, this.hero.mask, joint, mass, collisionDamage));
-      var powerObj = new JointObject(this.game, this.hero,
+      this.addObject(new JointObject(this.game, this.hero,
         // basePowerObject values
         {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(10),
         dropHeight:10, dropRange:150, collisionCallBack:true, damageMult:collisionDamage},
         // projectileObject values
-        {target:this.hero.mask, joint:distJoint, mass:mass} );
+        {target:this.hero.mask, joint:distJoint, mass:mass} ));
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
       if (!fixedRotation) {
         mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
       }
-
-      // Push the power object so we can keep track of it
-      this.addObject(powerObj);
     }
 
     buttonDown(i) {
@@ -76,23 +73,6 @@ export default class BlockChain extends PowerRemember {
       // Create three walls that protect the player
       this.cursor = new PointCursor(this.game, this.hero,
         {direction:directionVec, distance: chainLength, fixed: true} );
-      //
-      //     break;
-      //   case 1: // Remove the joints
-      //     this.powerObjects.forEach(function(block, i) {
-      //       block.removeJoint();
-      //     }, this);
-      //     break;
-      //   case 2: // Freeze the blocks
-      //     this.powerObjects.forEach(function(block, i) {
-      //       block.makeStatic();
-      //       // Make the blocks velocities to zero
-      //       block.mesh.physicsImpostor.physicsBody.velocity.setZero();
-      //       block.mesh.physicsImpostor.physicsBody.angularVelocity.setZero();
-      //     }, this);
-      //     break;
-      // }
-
     }
 
     buttonUp(i) {
@@ -104,11 +84,5 @@ export default class BlockChain extends PowerRemember {
       this.createMesh();
       this.cursor.destroy();
       this.cursor = undefined;
-      //   case 2: // unfreeze objects
-      //     this.powerObjects.forEach(function(block, i) {
-      //       block.makeKinematic(mass);
-      //     }, this);
-      //     break;
-      // }
     }
 }

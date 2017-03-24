@@ -14,12 +14,16 @@ export default class PowerRemember extends BasePower {
 
   deleteObjectsOnDeleteAnimation() {
     for (let i in this.objects) {
-      if (this.objects[i]._currentState == 2) {
-        console.log('deleting');
+      if (this.checkDead(this.objects[i])) {
+        //console.log('deleting');
         this.objects.splice(i, 1);
-          console.log(this.objects.length);
+        console.log(this.objects.length);
       }
     }
+  }
+
+  checkDead(object) {
+    return object._currentState == 2;
   }
 
 }

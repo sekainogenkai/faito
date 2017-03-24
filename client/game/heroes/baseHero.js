@@ -286,6 +286,8 @@ export default class Hero {
   }
 
   update () {
+
+    this.powerHandler.update();
     //console.log(this.mask.physicsImpostor.physicsBody.world.contacts);
     this.checkGround();
 

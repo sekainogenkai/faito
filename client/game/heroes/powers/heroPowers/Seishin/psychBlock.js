@@ -1,6 +1,6 @@
 import BABYLON from 'babylonjs';
 import {getHeightAtCoordinates, secondsToTicks} from '../../powerUtils/mainUtils';
-import BasePower from '../../base/basePower';
+import PowerRemember from '../../powerRememberObjects';
 import JointObject from '../../powerObjects/JointObject';
 import PointCursor from '../../cursors/pointCursor';
 
@@ -18,7 +18,7 @@ const meshSize = 5;
 /*
 * Creates a box that is chained to the character
 */
-export default class BlockChain extends BasePower {
+export default class BlockChain extends PowerRemember {
     constructor(game, hero) {
       super(game, hero);
       this.powerObjects = [];
@@ -64,75 +64,51 @@ export default class BlockChain extends BasePower {
         mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
       }
 
-      // If the power is frozen, consume the mana
-      powerObj.powerUpdate = function () {
-        if (this.mesh.physicsImpostor.physicsBody.type === 0) {
-          if (!this.hero.consumeMana(manaCostFreeze)) {
-            this.makeKinematic(mass);
-          }
-        }
-      }
-
       // Push the power object so we can keep track of it
-      this.powerObjects.push(powerObj);
+      this.addObject(powerObj);
     }
 
     buttonDown(i) {
-      this.updateList();
-      switch (i) {
-        case 0: // Create the power
-          // Consume and check to see if there is enough mana
-          if (!this.hero.consumeMana(manaCostCreate)){
-            return;
-          }
-          // Create three walls that protect the player
-          this.cursor = new PointCursor(this.game, this.hero,
-            {direction:directionVec, distance: chainLength, fixed: true} );
-
-          break;
-        case 1: // Remove the joints
-          this.powerObjects.forEach(function(block, i) {
-            block.removeJoint();
-          }, this);
-          break;
-        case 2: // Freeze the blocks
-          this.powerObjects.forEach(function(block, i) {
-            block.makeStatic();
-            // Make the blocks velocities to zero
-            block.mesh.physicsImpostor.physicsBody.velocity.setZero();
-            block.mesh.physicsImpostor.physicsBody.angularVelocity.setZero();
-          }, this);
-          break;
+      // Consume and check to see if there is enough mana
+      if (!this.hero.consumeMana(manaCostCreate)){
+        return;
       }
+      // Create three walls that protect the player
+      this.cursor = new PointCursor(this.game, this.hero,
+        {direction:directionVec, distance: chainLength, fixed: true} );
+      //
+      //     break;
+      //   case 1: // Remove the joints
+      //     this.powerObjects.forEach(function(block, i) {
+      //       block.removeJoint();
+      //     }, this);
+      //     break;
+      //   case 2: // Freeze the blocks
+      //     this.powerObjects.forEach(function(block, i) {
+      //       block.makeStatic();
+      //       // Make the blocks velocities to zero
+      //       block.mesh.physicsImpostor.physicsBody.velocity.setZero();
+      //       block.mesh.physicsImpostor.physicsBody.angularVelocity.setZero();
+      //     }, this);
+      //     break;
+      // }
 
     }
 
     buttonUp(i) {
       // Make sure a cursor is present
-      switch (i) {
-        case 0: // Create the power mesh
-          if (!this.cursor) {
-            return;
-          }
-
-          this.createMesh();
-          this.cursor.destroy();
-          this.cursor = undefined;
-          break;
-        case 2: // unfreeze objects
-          this.powerObjects.forEach(function(block, i) {
-            block.makeKinematic(mass);
-          }, this);
-          break;
+      if (!this.cursor) {
+        return;
       }
-    }
 
-    // Update the list of power objects we are keeping
-    updateList() {
-      this.powerObjects.forEach(function(block, i) {
-        if (block._currentState === 2) { // if the object is in the destory phase
-          this.powerObjects.splice(i, 1);
-        }
-      }, this);
+      this.createMesh();
+      this.cursor.destroy();
+      this.cursor = undefined;
+      //   case 2: // unfreeze objects
+      //     this.powerObjects.forEach(function(block, i) {
+      //       block.makeKinematic(mass);
+      //     }, this);
+      //     break;
+      // }
     }
 }

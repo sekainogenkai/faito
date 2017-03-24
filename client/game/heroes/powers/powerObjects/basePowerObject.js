@@ -45,6 +45,9 @@ export default class BasePowerObject {
     // setup mesh impostor
     this.collidedWith = [];
 
+    // Save the mass in case the state of an object is changed
+    this.mass = this.mesh.mass;
+
     if (options.collisionCallBack) {
       this.damageMult = options.damageMult;
       this.mesh.physicsImpostor.onCollide = this.onPowerCollide.bind(this);

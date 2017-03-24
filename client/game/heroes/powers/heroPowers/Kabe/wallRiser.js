@@ -12,7 +12,7 @@ const directionVec = new BABYLON.Vector3(0, 0, 1); // direction of the cursor
 const cursorSpeed = 1.9; // speed of the cursor
 const fixedRotation = false;
 
-const timerStart = 7;
+const timerStart = 3;
 const timerStart2 = 2;
 const meshHeight = 20;
 

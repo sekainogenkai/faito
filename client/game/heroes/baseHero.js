@@ -365,7 +365,7 @@ export default class Hero {
 
   setRotation () {
     // Player rotation
-    this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.body.velocity.x, this.body.velocity.z), 0, 0);
+    this.mask.rotationQuaternion = new BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.body.velocity.x, this.body.velocity.z), 0, 0);
     //this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.Input.AXIS_X, this.Input.AXIS_Y), 0, 0);
   }
 

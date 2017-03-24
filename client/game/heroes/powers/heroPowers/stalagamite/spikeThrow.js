@@ -9,7 +9,7 @@ import JoyCursor from '../../cursors/joyCursor';
 const manaCost = 100; // mana cost of the power
 const collisionDamage = 5; // the amount of damage it does when it collides
 const mass = 100;
-const powerImpulseVec = new BABYLON.Vector3(0, 0, 1700); // impulse applied to projectile on spawn
+const powerImpulseVec = new BABYLON.Vector3(0, -200, 1700); // impulse applied to projectile on spawn
 
 const cursorDirectionVec = new BABYLON.Vector3(0, 0, 1); // direction of the ball
 const distance = -10; // cursor offset

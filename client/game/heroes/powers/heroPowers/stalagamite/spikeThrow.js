@@ -1,6 +1,6 @@
 import BABYLON from 'babylonjs';
 import {getHeightAtCoordinates, secondsToTicks} from '../../powerUtils/mainUtils';
-import BasePower from '../../basePower';
+import PowerRememberObjects from '../../powerRememberObjects';
 import ProjectileObject from '../../powerObjects/heroRotationCopy';
 import DirectionCursor from '../../cursors/directionCursor';
 import PointCursor from '../../cursors/pointCursor';
@@ -22,10 +22,9 @@ const meshWidth = 1;
 /**
 Shoots out a projectile at the enemy
 **/
-export default class SpikeThrow extends BasePower {
+export default class SpikeThrow extends PowerRememberObjects {
     constructor(game, hero) {
       super(game, hero);
-      this.objects = [];
     }
 
     createMesh () {
@@ -56,12 +55,12 @@ export default class SpikeThrow extends BasePower {
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.CylinderImpostor,
         {mass: 0, friction:0.0, restitution:0.0}, this.game.scene);
       // run spawn
-      new ProjectileObject(this.game, this.hero,
+      this.addObject(new ProjectileObject(this.game, this.hero,
         // basePowerObject values
         {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:250, lifeSpan:secondsToTicks(2),
         dropHeight:5, dropRange:100, collisionCallBack:true, damageMult:10},
         // projectileObject values
-        {vectorImpulse:powerImpulseVec, mass:mass, usePlayerRot:true} );
+        {vectorImpulse:powerImpulseVec, mass:mass, usePlayerRot:true} ));
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal;

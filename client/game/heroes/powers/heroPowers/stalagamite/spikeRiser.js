@@ -66,9 +66,6 @@ export default class Power5 extends PowerRemember {
     }
 
     buttonDown(i) {
-      // somehow make this happen everywhere
-      this.deleteObjectsOnDeleteAnimation();
-
       // Capture the rotation of the player at the beginning
       this.playerRotation.copyFrom(this.hero.mask.rotationQuaternion);
       this.cursor = new JoyCursor(this.game, this.hero, {speed: 1, direction: new BABYLON.Vector3(0,0,10), distance:10});

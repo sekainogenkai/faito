@@ -35,4 +35,8 @@ export default class BasePowerHandler {
     }
   }
 
+  update() {
+
+  }
+
 }

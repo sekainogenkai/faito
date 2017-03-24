@@ -1,6 +1,7 @@
 import BABYLON from 'babylonjs';
 import BaseCursor from './baseCursor.js'
 
+// TODO make this do something different than joyCursor
 export default class JoyCursor extends BaseCursor {
     constructor(game, hero, options={speed:0}) {
       super(game, hero);
@@ -30,5 +31,4 @@ export default class JoyCursor extends BaseCursor {
       this.mesh.dispose();
       this.hero.setJoyTarget();
     }
-
 }

@@ -4,7 +4,7 @@ import PowerHandler from '../../basePowerHandler';
 
 import WallDefense from './WallDefense';
 import WallRiser from './spikeRiser';
-import BoulderShoot from './BoulderShoot';
+import BoulderShoot from './spikeThrow';
 
 export default class BaseHeroPowerHandler extends PowerHandler {
   constructor(game, hero) {

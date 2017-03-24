@@ -77,3 +77,14 @@ export const getHeightAtCoordinates = function(mesh, x=0, z=0) {
   }
   return 0;
 }
+
+export const rotateFromHero = function(hero, direction, distance=false) {
+  const matrix = new BABYLON.Matrix();
+  let newDirectionVec = new BABYLON.Vector3(0,0,0);
+  hero.mask.rotationQuaternion.toRotationMatrix(matrix);
+  BABYLON.Vector3.TransformCoordinatesToRef(direction, matrix, newDirectionVec);
+  if (distance) {
+    newDirectionVec.normalize().scaleInPlace(distance);
+  }
+  return newDirectionVec;
+}

@@ -85,12 +85,21 @@ export default class BasePowerObject {
     this.objectCollideTimerSubtract();
 
     if (this._currentState == 0) {
+      this.animatingOnMake();
     } else if (this._currentState == 1) {
       // main update loop of power
       this.powerUpdate();
     } else if (this._currentState == 2) {
-
+      this.animatingOnDestroy();
     }
+  }
+
+  animatingOnMake() {
+    // factory method
+  }
+
+  animatingOnDestroy() {
+    // factory method
   }
 
   powerUpdate() {

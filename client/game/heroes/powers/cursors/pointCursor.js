@@ -1,5 +1,6 @@
 import BABYLON from 'babylonjs';
 import BaseCursor from './baseCursor.js'
+import {rotateFromHero} from '../powerUtils/mainUtils';
 
 const initialDirectionVec = new BABYLON.Vector3(0, 0, 1);
 const matrix = new BABYLON.Matrix();
@@ -26,11 +27,8 @@ export default class PointCursor extends BaseCursor {
     }
 
     setPoint () {
-      // Get current rotation of player
-      this.hero.mask.rotationQuaternion.toRotationMatrix(matrix);
-      BABYLON.Vector3.TransformCoordinatesToRef(this._initialDirectionVec, matrix, this._directionVec);
-      this._directionVec.normalize().scaleInPlace(this._distance);
       // add the vector once
-      this.mesh.position.addInPlace(this._directionVec);
+      this.mesh.position.addInPlace(
+        rotateFromHero(this.hero, this._initialDirectionVec, this._distance));
     }
 }

@@ -4,7 +4,8 @@ import BasePower from '../../base/basePower';
 import JointObject from '../../powerObjects/JointObject';
 import PointCursor from '../../cursors/pointCursor';
 
-const manaCost = 2000; // mana cost of the power
+const manaCostCreate = 2000; // mana cost of the power
+const manaCostFreeze = 20;
 const collisionDamage = 8; // the amount of damage it does when it collides
 const chainLength = 20;
 const mass = 1;
@@ -50,18 +51,30 @@ export default class BlockChain extends BasePower {
       var distJoint = new BABYLON.DistanceJoint( {maxDistance: chainLength} );
       // Create the joint object that we will use for binding the power to the hero
       //this.powerObjects.push(new JointObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(10), 0, 150, this.hero.mask, joint, mass, collisionDamage));
-      this.powerObjects.push(new JointObject(this.game, this.hero,
+      var powerObj = new JointObject(this.game, this.hero,
         // basePowerObject values
         {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(10),
         dropHeight:10, dropRange:150, collisionCallBack:true, damageMult:collisionDamage},
         // projectileObject values
-        {target:this.hero.mask, joint:distJoint, mass:mass} ));
+        {target:this.hero.mask, joint:distJoint, mass:mass} );
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
       if (!fixedRotation) {
         mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
       }
+
+      // If the power is frozen, consume the mana
+      powerObj.powerUpdate = function () {
+        if (this.mesh.physicsImpostor.physicsBody.type === 0) {
+          if (!this.hero.consumeMana(manaCostFreeze)) {
+            this.makeKinematic(mass);
+          }
+        }
+      }
+
+      // Push the power object so we can keep track of it
+      this.powerObjects.push(powerObj);
     }
 
     buttonDown(i) {
@@ -69,7 +82,7 @@ export default class BlockChain extends BasePower {
       switch (i) {
         case 0: // Create the power
           // Consume and check to see if there is enough mana
-          if (!this.hero.consumeMana(manaCost)){
+          if (!this.hero.consumeMana(manaCostCreate)){
             return;
           }
           // Create three walls that protect the player

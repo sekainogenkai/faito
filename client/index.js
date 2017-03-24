@@ -6,12 +6,15 @@ import React from 'react';
 import {render} from 'react-dom';
 import BABYLON from 'babylonjs';
 import {BabylonJS} from './react-babylonjs.js';
-import Hero from './game/heroes/Kabe.js';
 import {default as Menu, MenuPage, ButtonMenuItem, LabelMenuItem} from './menu/menu';
 import loadGameScene from './game/gameScene';
 import loadMenuScene from './menu/menuScene';
 import MainMenu from './menu/main-menu';
 import MapLoader from './mapLoader.js';
+
+import Hero1 from './game/heroes/Kabe.js';
+import Hero2 from './game/heroes/Seishin';
+import Hero3 from './game/heroes/stalagamite';
 
 class Game extends EventEmitter {
   constructor() {
@@ -36,7 +39,10 @@ class Game extends EventEmitter {
   }
 
     handleMenuHidden() {
-        this.players.setInputTargetFinder((i, player) => this.heroes[i] || (this.heroes[i] = new Hero(this, player.name, i)));
+        this.players.setInputTargetFinder((i, player) => this.heroes[i] ||
+        (this.heroes[i] =
+          (i==0)?new Hero1(this, player.name, i): (i==1) ? new Hero2(this, player.name, i) : new Hero3(this, player.name, i)
+        ));
     }
 
     handlePlayersChanged() {

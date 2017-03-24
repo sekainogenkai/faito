@@ -7,7 +7,7 @@ import PointCursor from '../../cursors/pointCursor';
 import JoyCursor from '../../cursors/joyCursor';
 import {registerBeforeSceneRender} from '../../../../mesh-util';
 
-const manaCost = 70; // mana cost of the power
+const manaCost = 200; // mana cost of the power
 const collisionDamage = 50; // the amount of damage it does when it collides
 
 const directionVec = new BABYLON.Vector3(0, 0, 1); // direction of the cursor

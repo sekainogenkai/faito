@@ -6,7 +6,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import BABYLON from 'babylonjs';
 import {BabylonJS} from './react-babylonjs.js';
-import Hero from './game/heroes/psych.js';
+import Hero from './game/heroes/Seishin.js';
 import {default as Menu, MenuPage, ButtonMenuItem, LabelMenuItem} from './menu/menu';
 import loadGameScene from './game/gameScene';
 import loadMenuScene from './menu/menuScene';

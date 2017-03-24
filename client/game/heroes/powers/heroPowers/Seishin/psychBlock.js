@@ -2,9 +2,7 @@ import BABYLON from 'babylonjs';
 import {getHeightAtCoordinates, secondsToTicks} from '../../powerUtils/mainUtils';
 import BasePower from '../../base/basePower';
 import JointObject from '../../powerObjects/JointObject';
-import DirectionCursor from '../../cursors/directionCursor';
 import PointCursor from '../../cursors/pointCursor';
-import JoyCursor from '../../cursors/joyCursor';
 
 const manaCost = 2000; // mana cost of the power
 const collisionDamage = 8; // the amount of damage it does when it collides

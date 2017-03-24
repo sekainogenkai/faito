@@ -1,6 +1,6 @@
 import BABYLON from 'babylonjs';
 import {getHeightAtCoordinates, secondsToTicks} from '../../powerUtils/mainUtils';
-import BasePower from '../../basePower';
+import PowerRemember from '../../powerRememberObjects';
 import BasePowerObject from '../../powerObjects/basePowerObject';
 import DirectionCursor from '../../cursors/directionCursor';
 import PointCursor from '../../cursors/pointCursor';
@@ -12,16 +12,16 @@ const collisionDamage = 50; // the amount of damage it does when it collides
 
 const directionVec = new BABYLON.Vector3(0, 0, 1); // direction of the cursor
 const cursorSpeed = 1.9; // speed of the cursor
-const fixedRotation = false;
 
 const timerStart = 1;
 const timerStart2 = 2;
-const meshHeight = 5;
+const meshHeight = 3;
+const meshWidth = 1;
 
 /*
 * Makes a line of things fly out!
 */
-export default class Power5 extends BasePower {
+export default class Power5 extends PowerRemember {
     constructor(game, hero) {
       super(game, hero);
       this.playerRotation = new BABYLON.Quaternion();
@@ -44,7 +44,7 @@ export default class Power5 extends BasePower {
 
       // Create the mesh
       const mesh = BABYLON.MeshBuilder.CreateCylinder('cone', {diameterTop: 0, tessellation: 10}, this.game.scene);//new BABYLON.Mesh.CreateBox('mesh', 1, this.game.scene);
-      mesh.scaling = new BABYLON.Vector3(2, meshHeight, 2);
+      mesh.scaling = new BABYLON.Vector3(meshWidth, meshHeight, meshWidth);
 
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
@@ -52,21 +52,23 @@ export default class Power5 extends BasePower {
 
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.CylinderImpostor, {mass:0, friction:0.01, restitution:0.9}, this.game.scene);
 
+
+
       // run spawn
-      new BasePowerObject(this.game, this.hero,
-      {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(3),
-        dropHeight:10, dropRange:300, collisionCallBack:true, damageMult:collisionDamage, damageTimerMax:120, shadow:false});
+      this.addObject(new BasePowerObject(this.game, this.hero,
+      {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(5),
+        dropHeight:10, dropRange:50, collisionCallBack:true, damageMult:collisionDamage, damageTimerMax:120, shadow:false}));
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
 
 
-      if (!fixedRotation) {
-        mesh.rotationQuaternion.copyFrom(this.playerRotation);
-      }
     }
 
     buttonDown(i) {
+      // somehow make this happen everywhere
+      this.deleteObjectsOnDeleteAnimation();
+
       // Capture the rotation of the player at the beginning
       this.playerRotation.copyFrom(this.hero.mask.rotationQuaternion);
       this.cursor = new JoyCursor(this.game, this.hero, {speed: 1, direction: new BABYLON.Vector3(0,0,10), distance:10});
@@ -85,6 +87,8 @@ export default class Power5 extends BasePower {
           this.timer = timerStart2;
         }
       }
+
+
     }
 
     buttonUp(i) {

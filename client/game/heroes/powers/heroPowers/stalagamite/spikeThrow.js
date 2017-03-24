@@ -58,7 +58,7 @@ export default class SpikeThrow extends BasePower {
       // run spawn
       new ProjectileObject(this.game, this.hero,
         // basePowerObject values
-        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:200, lifeSpan:secondsToTicks(2),
+        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:250, lifeSpan:secondsToTicks(2),
         dropHeight:5, dropRange:100, collisionCallBack:true, damageMult:10},
         // projectileObject values
         {vectorImpulse:powerImpulseVec, mass:mass, usePlayerRot:true} );

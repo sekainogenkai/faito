@@ -1,5 +1,7 @@
 import BABYLON from 'babylonjs';
 
+import {getHeightAtCoordinates} from '../../powerUtils/mainUtils'
+
 import PowerHandler from '../../basePowerHandler';
 
 //import WallDefense from './WallDefense';
@@ -19,6 +21,8 @@ export default class BasePowerHandler {
 
     this.powerCloserBool = false;
     this.powerFartherBool = false;
+
+    this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
   }
 
   buttonDown(button) {
@@ -62,6 +66,7 @@ export default class BasePowerHandler {
         let vec = this.moveObjectRelativePlayer(object, scale);
         object.mesh.position.x += vec.x;
         object.mesh.position.z += vec.y;
+        object.mesh.position.y = getHeightAtCoordinates(this.groundMesh, object.mesh.position.x, object.mesh.position.z) + this.spikeRiser.meshHeight;
       }
 
       for (let object of this.spikeThrow.objects) {

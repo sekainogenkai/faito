@@ -17,7 +17,7 @@ export default class PowerRemember extends BasePower {
       if (this.checkDead(this.objects[i])) {
         //console.log('deleting');
         this.objects.splice(i, 1);
-        console.log(this.objects.length);
+        // console.log(this.objects.length);
       }
     }
   }

@@ -25,6 +25,7 @@ export default class Power5 extends PowerRemember {
     constructor(game, hero) {
       super(game, hero);
       this.playerRotation = new BABYLON.Quaternion();
+      this.meshHeight = meshHeight;
     }
 
     createMesh () {

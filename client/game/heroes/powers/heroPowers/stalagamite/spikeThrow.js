@@ -6,10 +6,10 @@ import DirectionCursor from '../../cursors/directionCursor';
 import PointCursor from '../../cursors/pointCursor';
 import JoyCursor from '../../cursors/joyCursor';
 
-const manaCost = 100; // mana cost of the power
+const manaCost = 400; // mana cost of the power
 const collisionDamage = 5; // the amount of damage it does when it collides
-const mass = 100;
-const powerImpulseVec = new BABYLON.Vector3(0, -200, 1700); // impulse applied to projectile on spawn
+const mass = 10;
+const powerImpulseVec = new BABYLON.Vector3(0, 0, 200); // impulse applied to projectile on spawn
 
 const cursorDirectionVec = new BABYLON.Vector3(0, 0, 1); // direction of the ball
 const distance = -10; // cursor offset
@@ -54,12 +54,12 @@ export default class SpikeThrow extends BasePower {
 
       BABYLON.Tags.EnableFor(mesh);
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.CylinderImpostor,
-        {mass: 0, friction:1, restitution:0.0}, this.game.scene);
+        {mass: 0, friction:0.0, restitution:0.0}, this.game.scene);
       // run spawn
       new ProjectileObject(this.game, this.hero,
         // basePowerObject values
-        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:200, lifeSpan:secondsToTicks(5),
-        dropHeight:10, dropRange:1000, collisionCallBack:true, damageMult:10},
+        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:200, lifeSpan:secondsToTicks(2),
+        dropHeight:5, dropRange:100, collisionCallBack:true, damageMult:10},
         // projectileObject values
         {vectorImpulse:powerImpulseVec, mass:mass, usePlayerRot:true} );
 

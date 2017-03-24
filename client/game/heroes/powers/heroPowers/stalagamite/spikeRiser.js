@@ -16,7 +16,7 @@ const fixedRotation = false;
 
 const timerStart = 1;
 const timerStart2 = 2;
-const meshHeight = 3;
+const meshHeight = 5;
 
 /*
 * Makes a line of things fly out!

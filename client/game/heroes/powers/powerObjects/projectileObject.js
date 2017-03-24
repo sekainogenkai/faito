@@ -20,16 +20,17 @@ export default class ProjectileObject extends BasePowerObject {
     this.directionVec = new BABYLON.Vector3(0, 0, 0);
     // Get current rotation of player
     this.hero.mask.rotationQuaternion.toRotationMatrix(matrix);
+    BABYLON.Vector3.TransformCoordinatesToRef(this.vectorImpulse, matrix, this.directionVec);
+
     this.usePlayerRot = options.usePlayerRot;
   }
 
   onPowerSpawn() {
     this.makeKinematic(this.mass);
-    BABYLON.Vector3.TransformCoordinatesToRef(this.vectorImpulse, matrix, this.directionVec);
 
     if (this.usePlayerRot) {
-      console.log('use direction vec');
-      this.directionVec = rotateFromHero(this.hero, this.directionVec);
+      //console.log('use direction vec');
+      this.directionVec = rotateFromHero(this.hero, this.vectorImpulse);
     }
     this.mesh.applyImpulse(this.directionVec, this.mesh.position);
   }

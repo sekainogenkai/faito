@@ -6,7 +6,7 @@ import DirectionCursor from '../../cursors/directionCursor';
 import PointCursor from '../../cursors/pointCursor';
 import JoyCursor from '../../cursors/joyCursor';
 
-const manaCost = 800; // mana cost of the power
+const manaCost = 100; // mana cost of the power
 const collisionDamage = 5; // the amount of damage it does when it collides
 const mass = 100;
 const powerImpulseVec = new BABYLON.Vector3(0, 0, 1700); // impulse applied to projectile on spawn
@@ -14,7 +14,7 @@ const powerImpulseVec = new BABYLON.Vector3(0, 0, 1700); // impulse applied to p
 const cursorDirectionVec = new BABYLON.Vector3(0, 0, 1); // direction of the ball
 const distance = -10; // cursor offset
 
-const fixedRotation = true;
+const fixedRotation = false;
 const meshHeight = 3;
 const meshWidth = 1;
 
@@ -50,16 +50,15 @@ export default class SpikeThrow extends BasePower {
       // Create the mesh
       const mesh = BABYLON.MeshBuilder.CreateCylinder('cone', {diameterTop: 0, tessellation: 10}, this.game.scene);
       mesh.scaling = new BABYLON.Vector3(meshWidth, meshHeight, meshWidth);
-      mesh.rotation.x = Math.PI/2;
       //mesh.
 
       BABYLON.Tags.EnableFor(mesh);
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.CylinderImpostor,
-        {mass: 0, friction:0.1, restitution:0.9}, this.game.scene);
+        {mass: 0, friction:1, restitution:0.0}, this.game.scene);
       // run spawn
       new ProjectileObject(this.game, this.hero,
         // basePowerObject values
-        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:100, lifeSpan:secondsToTicks(5),
+        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:200, lifeSpan:secondsToTicks(5),
         dropHeight:10, dropRange:1000, collisionCallBack:true, damageMult:10},
         // projectileObject values
         {vectorImpulse:powerImpulseVec, mass:mass, usePlayerRot:true} );
@@ -87,9 +86,6 @@ export default class SpikeThrow extends BasePower {
       }
       this.createMesh();
       // this.game.scene.registerBeforeRender(() => this.update()); // TODO this does something or nothing?
-      if (!fixedRotation) {
-        this.mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
-      }
       this.cursor.destroy();
       this.cursor = undefined;
     }

@@ -17,9 +17,11 @@ export default class heroRotationCopy extends ProjectileObject {
   }
 
   animatingOnMake() {
-    console.log('rotation of hero', this.hero.mask.rotation.z);
     //const matrix = new BABYLON.Matrix();
     //this.hero.mask.rotationQuaternion.toRotationMatrix(matrix);
-    this.mesh.rotation.z = this.hero.mask.rotation.z;
+    //console.log('rotationMatrix', this.hero.mask.rotationQuaternion.toEulerAngles().y);
+
+    this.mesh.rotationQuaternion =
+    new BABYLON.Quaternion.RotationYawPitchRoll(this.hero.mask.rotationQuaternion.toEulerAngles().y, Math.PI/2, 0);
   }
 }

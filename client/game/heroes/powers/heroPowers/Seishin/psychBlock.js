@@ -10,7 +10,7 @@ const collisionDamage = 8; // the amount of damage it does when it collides
 const chainLength = 20;
 const mass = 1;
 
-const directionVec = new BABYLON.Vector3(0, 0, -chainLength);  // point spawn for the cursor
+const directionVec = new BABYLON.Vector3(0, 0, -1);  // point spawn for the cursor
 
 const fixedRotation = false;
 const meshSize = 5;
@@ -87,7 +87,7 @@ export default class BlockChain extends BasePower {
           }
           // Create three walls that protect the player
           this.cursor = new PointCursor(this.game, this.hero,
-            {direction:directionVec, distance: 1, fixed: true} );
+            {direction:directionVec, distance: chainLength, fixed: true} );
 
           break;
         case 1: // Remove the joints

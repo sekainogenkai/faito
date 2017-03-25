@@ -3,14 +3,16 @@ import {getHeightAtCoordinates, secondsToTicks, rotateFromHero} from '../../powe
 import BasePower from '../../base/basePower';
 import BasePowerObject from '../../powerObjects/basePowerObject';
 import DirectionCursor from '../../cursors/directionCursor';
+import PointCursor from '../../cursors/pointCursor';
 
 const manaCost = 700; // mana cost of the power
-const collisionDamage = 200; // the amount of damage it does when it collides
+const collisionDamage = 10; // the amount of damage it does when it collides
 
 const directionVec = new BABYLON.Vector3(0, 0, 1); // direction of the cursor
+const distance = 5;
 const cursorSpeed = 2; // speed of the cursor
 const fixedRotation = false;
-
+const speed = 2;
 const meshSize = 7;
 
 /*
@@ -24,9 +26,9 @@ export default class WallPush extends BasePower {
     createMesh () {
       // Set the spawn vector
       const vectorStart = new BABYLON.Vector3(
-        this.hero.mask.position.x,
-        (getHeightAtCoordinates(this.groundMesh, this.hero.mask.position.x, this.hero.mask.position.z)) - (meshSize/2),
-        this.hero.mask.position.z
+        this.cursor.mesh.position.x,
+        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - (meshSize/2),
+        this.cursor.mesh.position.z
       );
 
       // Set the target vector
@@ -45,9 +47,9 @@ export default class WallPush extends BasePower {
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:0.9}, this.game.scene);
       // run spawn
       // run spawn
-      new BasePowerObject(this.game, this.hero,
+      var powerObj = new BasePowerObject(this.game, this.hero,
         // basePowerObject values
-        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:20, lifeSpan:secondsToTicks(1),
+        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(1),
         dropHeight:20, dropRange:100, collisionCallBack:true, damageMult:collisionDamage});
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
@@ -55,6 +57,20 @@ export default class WallPush extends BasePower {
       if (!fixedRotation) {
         mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
       }
+
+
+      // Move the powerObj towards the direction cursor
+      // Get the direction Vector for the powerObj to follow
+      powerObj.directionVec = this.cursor.mesh.position.subtract(this.cursor2.mesh.position).normalize().scaleInPlace(-speed);
+      powerObj.targetVec = this.cursor2.mesh.position.clone();
+      // Redefine the power update function
+      powerObj.powerUpdate = function () {
+        // move the power Obj towards its target
+        if (BABYLON.Vector3.Distance(this.targetVec, this.mesh.position) > 5){
+          this.mesh.position.addInPlace(this.directionVec);
+        }
+      }
+
     }
 
     buttonDown(i) {
@@ -63,7 +79,8 @@ export default class WallPush extends BasePower {
         return;
       }
 
-      this.cursor = new DirectionCursor(this.game, this.hero, {direction: directionVec, speed: cursorSpeed});
+      this.cursor = new PointCursor(this.game, this.hero, {direction: directionVec, distance: distance, fixed:true});
+      this.cursor2 = new DirectionCursor(this.game, this.hero, {direction: directionVec, speed: cursorSpeed});
     }
 
     buttonUp(i) {
@@ -74,6 +91,8 @@ export default class WallPush extends BasePower {
 
       this.createMesh();
       this.cursor.destroy();
+      this.cursor2.destroy();
       this.cursor = undefined;
+      this.cursor2 = undefined;
     }
 }

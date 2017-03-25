@@ -8,7 +8,7 @@ const manaCost = 1300; // mana cost of the power
 const collisionDamage = 5; // the amount of damage it does when it collides
 const mass = 1000;
 const powerImpulseVec = new BABYLON.Vector3(0, 0, 0); // impulse applied to projectile on spawn
-const distance = 12; // cursor scalar
+const distance = 15; // cursor scalar
 const fixedRotation = false;
 const meshSize = 8;
 

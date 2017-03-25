@@ -9,10 +9,10 @@ const manaCost = 700; // mana cost of the power
 const collisionDamage = 10; // the amount of damage it does when it collides
 
 const directionVec = new BABYLON.Vector3(0, 0, 1); // direction of the cursor
-const distance = 5;
+const distance = 6;
 const cursorSpeed = 2; // speed of the cursor
 const fixedRotation = false;
-const speed = 2;
+const speed = 1.5;
 const meshSize = 7;
 
 /*
@@ -21,6 +21,7 @@ const meshSize = 7;
 export default class WallPush extends BasePower {
     constructor(game, hero) {
       super(game, hero);
+      this.heroRotation = new BABYLON.Quaternion();
     }
 
     createMesh () {
@@ -55,7 +56,7 @@ export default class WallPush extends BasePower {
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
       if (!fixedRotation) {
-        mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
+        mesh.rotationQuaternion.copyFrom(this.heroRotation);
       }
 
 
@@ -78,8 +79,11 @@ export default class WallPush extends BasePower {
       if (!this.hero.consumeMana(manaCost)){
         return;
       }
+      this.hero.slowDown = 100;
+      // Get the hero rotation when he spawns the cursors
+      this.heroRotation.copyFrom(this.hero.mask.rotationQuaternion);
 
-      this.cursor = new PointCursor(this.game, this.hero, {direction: directionVec, distance: distance, fixed:true});
+      this.cursor = new PointCursor(this.game, this.hero, {direction: directionVec, distance: distance, fixed:false});
       this.cursor2 = new DirectionCursor(this.game, this.hero, {direction: directionVec, speed: cursorSpeed});
     }
 
@@ -88,6 +92,8 @@ export default class WallPush extends BasePower {
       if (!this.cursor){
         return;
       }
+
+      this.hero.slowDown = 1;
 
       this.createMesh();
       this.cursor.destroy();

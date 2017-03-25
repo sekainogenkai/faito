@@ -12,6 +12,7 @@ import loadMenuScene from './menu/menuScene';
 import MainMenu from './menu/main-menu';
 import MapLoader from './mapLoader.js';
 
+<<<<<<< HEAD
 import Hero1 from './game/heroes/skater.js';
 import Hero2 from './game/heroes/skater.js';
 import Hero3 from './game/heroes/stalagamite';

@@ -91,6 +91,12 @@ export default class BasePowerObject {
       this.animatingOnMake();
     } else if (this._currentState == 1) {
       // main update loop of power
+      if (this.lifeSpan) {
+        this.lifeSpan--;
+      } else {
+        this._currentState = 2;
+        this.destroy();
+      }
       this.powerUpdate();
     } else if (this._currentState == 2) {
       this.animatingOnDestroy();
@@ -106,12 +112,7 @@ export default class BasePowerObject {
   }
 
   powerUpdate() {
-    if (this.lifeSpan) {
-      this.lifeSpan--;
-    } else {
-      this._currentState = 2;
-      this.destroy();
-    }
+    // factory method
   }
 
   spawn() {

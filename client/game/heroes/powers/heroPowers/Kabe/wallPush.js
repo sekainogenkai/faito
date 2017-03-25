@@ -21,6 +21,7 @@ const meshSize = 7;
 export default class WallPush extends BasePower {
     constructor(game, hero) {
       super(game, hero);
+      this.heroRotation = new BABYLON.Quaternion();
     }
 
     createMesh () {
@@ -55,7 +56,7 @@ export default class WallPush extends BasePower {
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
       if (!fixedRotation) {
-        mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
+        mesh.rotationQuaternion.copyFrom(this.heroRotation);
       }
 
 
@@ -79,6 +80,8 @@ export default class WallPush extends BasePower {
         return;
       }
       this.hero.slowDown = 100;
+      // Get the hero rotation when he spawns the cursors
+      this.heroRotation.copyFrom(this.hero.mask.rotationQuaternion);
 
       this.cursor = new PointCursor(this.game, this.hero, {direction: directionVec, distance: distance, fixed:false});
       this.cursor2 = new DirectionCursor(this.game, this.hero, {direction: directionVec, speed: cursorSpeed});

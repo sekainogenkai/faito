@@ -17,6 +17,10 @@ export default class PointCursor extends BaseCursor {
       this.setPoint();
     }
 
+    changeDirectionVec(directionVec) {
+      this._initialDirectionVec = directionVec;
+    }
+
     update () {
       if (this._fixed) {
         this.mesh.position.copyFrom(this.hero.mask.position);

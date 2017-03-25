@@ -9,10 +9,10 @@ const manaCost = 700; // mana cost of the power
 const collisionDamage = 10; // the amount of damage it does when it collides
 
 const directionVec = new BABYLON.Vector3(0, 0, 1); // direction of the cursor
-const distance = 5;
+const distance = 6;
 const cursorSpeed = 2; // speed of the cursor
 const fixedRotation = false;
-const speed = 2;
+const speed = 1.5;
 const meshSize = 7;
 
 /*
@@ -78,8 +78,9 @@ export default class WallPush extends BasePower {
       if (!this.hero.consumeMana(manaCost)){
         return;
       }
+      this.hero.slowDown = 100;
 
-      this.cursor = new PointCursor(this.game, this.hero, {direction: directionVec, distance: distance, fixed:true});
+      this.cursor = new PointCursor(this.game, this.hero, {direction: directionVec, distance: distance, fixed:false});
       this.cursor2 = new DirectionCursor(this.game, this.hero, {direction: directionVec, speed: cursorSpeed});
     }
 
@@ -88,6 +89,8 @@ export default class WallPush extends BasePower {
       if (!this.cursor){
         return;
       }
+
+      this.hero.slowDown = 1;
 
       this.createMesh();
       this.cursor.destroy();

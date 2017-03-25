@@ -16,7 +16,7 @@ const meshSize = 7;
 /*
 * Makes a block using joy cursor
 */
-export default class Power1 extends BasePower {
+export default class WallPush extends BasePower {
     constructor(game, hero) {
       super(game, hero);
     }

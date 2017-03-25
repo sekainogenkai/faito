@@ -96,6 +96,9 @@ export default class Hero {
     this.manaGainIdle = 20;
     this.manaGainMoving = 10;
 
+    // Slow down variables. slows down all movement
+    this.slowDown = 1;
+
     // Input
     this.Input = {
       AXIS_X : 0,
@@ -331,9 +334,9 @@ export default class Hero {
 
     // Movement on ground
     if (this.onGround) {
-        movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.movOpts.rollGroundSpeed:this.movOpts.speed));
+        movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, (this.rollTimer? this.movOpts.rollGroundSpeed:this.movOpts.speed) / this.slowDown));
     } else { // Movement in air
-        movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, this.rollTimer? this.movOpts.rollAirSpeed:this.movOpts.airSpeed));
+        movementVector = normalizedMovementVector.scale(this.getScaleSpeed(movementVector, (this.rollTimer? this.movOpts.rollAirSpeed:this.movOpts.airSpeed) / this.slowDown));
         if (this.body.velocity.y < 0) {
             movementVector = movementVector.add(new BABYLON.Vector3(0,-5,0));
         }

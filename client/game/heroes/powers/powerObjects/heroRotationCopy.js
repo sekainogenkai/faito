@@ -5,6 +5,7 @@ import {getHeightAtCoordinates, rotateFromHero} from '../powerUtils/mainUtils';
 
 const matrix = new BABYLON.Matrix();
 
+// Currently this is only made for the stalagamite/spikeThrow.
 export default class heroRotationCopy extends ProjectileObject {
   constructor(game, hero,
     // Base options

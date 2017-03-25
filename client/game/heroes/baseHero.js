@@ -99,6 +99,9 @@ export default class Hero {
     // Slow down variables. slows down all movement
     this.slowDown = 1;
 
+    // Starting rotation
+    this.pastRotationQuaternion = new BABYLON.Vector2(1, 0);
+
     // Input
     this.Input = {
       AXIS_X : 0,
@@ -229,7 +232,7 @@ export default class Hero {
     this.updatePhysicsImpostor();
     this.updateMassProperties();
 
-    const visible = false;
+    const visible = true;
 
     this.mask.isVisible = visible;
     this.mask1.isVisible = visible;
@@ -302,6 +305,8 @@ export default class Hero {
 
     this._manageMana();
     this._manageHealth();
+
+    this.setRotation();
   }
 
   // use this to make xbox controller movement is smoove and doesn't go over the speed limit
@@ -363,15 +368,19 @@ export default class Hero {
     //console.log('ONGROUND:', this.mask.physicsImpostor.onGround);
     this.mask.applyImpulse(movementVector, this.mask.position);
 
-    if (this.Input.AXIS_X || this.Input.AXIS_Y) {
-        this.setRotation();
-    }
   }
 
   setRotation () {
-    // Player rotation
-    this.mask.rotationQuaternion = new BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.body.velocity.x, this.body.velocity.z), 0, 0);
-    //this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.Input.AXIS_X, this.Input.AXIS_Y), 0, 0);
+    if (this.Input.AXIS_X || this.Input.AXIS_Y) {
+      // Player rotation
+      this.pastRotationQuaternion = new BABYLON.Vector2(this.body.velocity.x, this.body.velocity.z);
+      this.mask.rotationQuaternion =
+      new BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.body.velocity.x, this.body.velocity.z), 0, 0);
+      //this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.Input.AXIS_X, this.Input.AXIS_Y), 0, 0);
+    } else {
+      this.mask.rotationQuaternion =
+      new BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.pastRotationQuaternion.x, this.pastRotationQuaternion.y), 0, 0);
+    }
   }
 
     joyChanged(joyVector) {

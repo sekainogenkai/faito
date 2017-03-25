@@ -17,6 +17,7 @@ const timerStart = 1;
 const timerStart2 = 2;
 const meshHeight = 3;
 const meshWidth = 1;
+const meshScaling = new BABYLON.Vector3(meshWidth, meshHeight, meshWidth);
 
 /*
 * Makes a line of things fly out!
@@ -45,7 +46,7 @@ export default class Power5 extends PowerRemember {
 
       // Create the mesh
       const mesh = BABYLON.MeshBuilder.CreateCylinder('cone', {diameterTop: 0, tessellation: 10}, this.game.scene);//new BABYLON.Mesh.CreateBox('mesh', 1, this.game.scene);
-      mesh.scaling = new BABYLON.Vector3(meshWidth, meshHeight, meshWidth);
+      mesh.scaling = meshScaling;
 
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);

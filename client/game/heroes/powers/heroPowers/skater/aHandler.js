@@ -6,7 +6,7 @@ import PowerHandler from '../../basePowerHandler';
 
 //import WallDefense from './WallDefense';
 import BallThrow from './ballThrow';
-// import RampMake from './rampMake';
+import SkateBoard from './skateBoard';
 // import RailMake from './railMake';
 
 import {Buttons} from '../../../../input';
@@ -18,6 +18,7 @@ export default class BasePowerHandler {
     this.hero = hero;
 
     this.powerBallThrow = new BallThrow(game, hero);
+    this.powerSkateBoard = new SkateBoard(game, hero);
 
     this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
   }
@@ -25,7 +26,7 @@ export default class BasePowerHandler {
   buttonDown(button) {
     switch (button) {
         case Buttons.A: this.powerBallThrow.buttonDown(0); this.hero.animatePower=true; break;
-        case Buttons.B:  this.hero.animatePower=true; break;
+        case Buttons.B: this.powerSkateBoard.buttonDown(0); this.hero.animatePower=true; break;
         case Buttons.X:
           this.powerCloserBool = true;
           this.hero.animatePower = true;
@@ -41,7 +42,7 @@ export default class BasePowerHandler {
   buttonUp(button) {
     switch (button) {
         case Buttons.A: this.powerBallThrow.buttonUp(0); this.hero.animatePower=false; break;
-        case Buttons.B:  this.hero.animatePower=false; break;
+        case Buttons.B: this.powerSkateBoard.buttonUp(0); this.hero.animatePower=false; break;
 
         case Buttons.X:
           this.powerCloserBool = false;
@@ -56,6 +57,7 @@ export default class BasePowerHandler {
 
   update() {
     this.powerBallThrow.update();
+    this.powerSkateBoard.update();
     // must be called for all powers that remember objects
     //this.spikeRiser.deleteObjectsOnDeleteAnimation();
   }

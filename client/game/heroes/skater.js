@@ -15,4 +15,16 @@ export default class Skater extends BaseHero {
       super.animations();
     }
   }
+
+  update() {
+    super.update();
+  }
+
+  setRotation () {
+    if (this.body.fixedRotation) {
+      // console.log('fixed rotation', this.body.fixedRotation);
+      super.setRotation();
+    }
+  }
+
 }

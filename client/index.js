@@ -12,8 +12,8 @@ import loadMenuScene from './menu/menuScene';
 import MainMenu from './menu/main-menu';
 import MapLoader from './mapLoader.js';
 
-import Hero1 from './game/heroes/Kabe.js';
-import Hero2 from './game/heroes/skater.js';
+import Hero1 from './game/heroes/skater.js';
+import Hero2 from './game/heroes/Kabe.js';
 import Hero3 from './game/heroes/stalagamite';
 
 class Game extends EventEmitter {

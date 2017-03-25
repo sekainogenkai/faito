@@ -15,7 +15,7 @@ const distance = -10; // cursor offset
 const meshSize = 1.5;
 const powerImpulseVec = new BABYLON.Vector3(0, 400, 1200); // impulse applied to projectile on spawn
 
-const throwBetweenTimerMax = 20;
+const throwBetweenTimerMax = 9;
 
 /**
 Shoots out a projectile at the enemy
@@ -25,7 +25,7 @@ export default class BallThrow extends BasePower {
       super(game, hero);
       this.attacking = false;
       this.throwBetweenTimer = throwBetweenTimerMax;
-      this.throwSidewaysDistance = 2;
+      this.throwSidewaysDistance = 2.2;
     }
 
     createMesh (cursor) {
@@ -53,8 +53,8 @@ export default class BallThrow extends BasePower {
       // run spawn
       new ProjectileObject(this.game, this.hero,
         // basePowerObject values
-        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:8, lifeSpan:secondsToTicks(2),
-        dropHeight:10, dropRange:100, collisionCallBack:true, damageMult:10},
+        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:8, lifeSpan:secondsToTicks(1.5),
+        dropHeight:10, dropRange:100, collisionCallBack:true, damageMult:1},
         // projectileObject values
         {vectorImpulse:powerImpulseVec, mass:50} );
 

@@ -100,7 +100,7 @@ export default class Hero {
     this.slowDown = 1;
 
     // Starting rotation
-    this.pastRotationQuaternion = new BABYLON.Vector2(1, 0);
+    this.pastVelocity = new BABYLON.Vector2(1, 0);
 
     // Input
     this.Input = {
@@ -249,6 +249,7 @@ export default class Hero {
   }
 
   updateMassProperties () {
+    console.log('updating mass properties');
     this.body.linearDamping = .8;
     this.body.fixedRotation = true;
     this.body.sleepSpeedLimit = .1;
@@ -373,13 +374,13 @@ export default class Hero {
   setRotation () {
     if (this.Input.AXIS_X || this.Input.AXIS_Y) {
       // Player rotation
-      this.pastRotationQuaternion = new BABYLON.Vector2(this.body.velocity.x, this.body.velocity.z);
+      this.pastVelocity = new BABYLON.Vector2(this.body.velocity.x, this.body.velocity.z);
       this.mask.rotationQuaternion =
       new BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.body.velocity.x, this.body.velocity.z), 0, 0);
       //this.mask.rotationQuaternion = BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.Input.AXIS_X, this.Input.AXIS_Y), 0, 0);
     } else {
       this.mask.rotationQuaternion =
-      new BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.pastRotationQuaternion.x, this.pastRotationQuaternion.y), 0, 0);
+      new BABYLON.Quaternion.RotationYawPitchRoll(Math.atan2(this.pastVelocity.x, this.pastVelocity.y), 0, 0);
     }
   }
 
@@ -535,5 +536,11 @@ export default class Hero {
         this.dead = true;
         // effects
         this.game.scene.sound.hurt3.play();
+    }
+
+    freezeHero() {
+      // Zero out all movement
+      this.body.velocity.setZero();
+      this.body.angularVelocity.setZero();
     }
 }

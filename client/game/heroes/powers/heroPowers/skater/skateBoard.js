@@ -7,7 +7,6 @@ import PointCursor from '../../cursors/pointCursor';
 import JoyCursor from '../../cursors/joyCursor';
 
 const manaCost = 500; // mana cost of the power
-const collisionDamage = 10; // the amount of damage it does when it collides
 
 const directionVec = new BABYLON.Vector3(0, 0, 1); // position of the cursor
 const distance = 10; // cursor scalar
@@ -63,7 +62,7 @@ export default class SkateBoard extends BasePower {
       this.object = new JointObject(this.game, this.hero,
         // basePowerObject values
         {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(10),
-        dropHeight:10, dropRange:1000, collisionCallBack:true, damageMult:collisionDamage},
+        dropHeight:10, dropRange:1000, collisionCallBack:true, damageMult:10, damageTimerMax:50},
         // projectileObject values
         {target:this.hero.mask, joint:distJoint, mass:1} );
 

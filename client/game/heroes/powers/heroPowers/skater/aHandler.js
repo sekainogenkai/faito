@@ -64,7 +64,11 @@ export default class BasePowerHandler {
           break;
 
         case Buttons.Y:
-          this.powerSkateBallThrow.buttonDown(0);
+          if (!this.powerSkateBoard.object) { // if not on skateboard
+
+          } else { // on skateboard
+            this.powerSkateBallThrow.buttonDown(this.getUpPersonVector());
+          }
           this.hero.animatePower = true;
           break;
     }
@@ -117,7 +121,7 @@ export default class BasePowerHandler {
         this.boardPush(boardPushStrength* 1);
       }
       if (this.boardDOWN) {
-        this.boardPush(boardPushStrength* -1.1);
+        this.boardPush(boardPushStrength* -1.2);
       }
     }
   }
@@ -126,10 +130,15 @@ export default class BasePowerHandler {
     if (!this.powerSkateBoard.object) {
       return;
     }
+    const personUpVector = this.getUpPersonVector();
+
+    this.hero.mask.applyImpulse(personUpVector.normalize().scale(push), this.hero.mask.position);
+  }
+
+  getUpPersonVector () {
     const boardRotationMatrix = new BABYLON.Matrix();
     this.hero.mask.rotationQuaternion.toRotationMatrix(boardRotationMatrix);
-    const boardUpVector = BABYLON.Vector3.TransformCoordinates(new BABYLON.Vector3(0, 1, 0), boardRotationMatrix);
-
-    this.hero.mask.applyImpulse(boardUpVector.normalize().scale(push), this.hero.mask.position);
+    const personUpVector = BABYLON.Vector3.TransformCoordinates(new BABYLON.Vector3(0, 1, 0), boardRotationMatrix);
+    return personUpVector;
   }
 }

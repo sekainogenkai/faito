@@ -12,7 +12,7 @@ const directionVec = new BABYLON.Vector3(0, 0, 1); // position of the cursor
 const distance = 10; // cursor scalar
 
 const meshSize = 1;
-const meshScaling = new BABYLON.Vector3(2, 1, 5);
+const meshScaling = new BABYLON.Vector3(2.4, 1, 5);
 const jumpUpVector = new BABYLON.Vector3(0, -40, 0);
 const lifeSpan = secondsToTicks(60);
 /*

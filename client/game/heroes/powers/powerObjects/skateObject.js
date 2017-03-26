@@ -23,6 +23,7 @@ export default class JointObject extends BasePowerObject {
     this.hero.setRotation(true);
     this.hero.freezeHero();
     this.hero.slowDown = 1;
+    this.hero.jumpSlowDown = 1;
     this.game.scene.getPhysicsEngine().removeJoint(this.target.physicsImpostor, this.mesh.physicsImpostor, this.joint);
   }
 }

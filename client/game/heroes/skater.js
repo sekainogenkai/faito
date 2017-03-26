@@ -1,4 +1,7 @@
-import BaseHero from './baseHero'
+import BABYLON from 'babylonjs';
+
+import BaseHero from './baseHero';
+
 
 import SkaterPowerHandler from './powers/heroPowers/skater/aHandler';
 
@@ -26,6 +29,7 @@ export default class Skater extends BaseHero {
   update() {
     //console.log(this.body.velcoti);
     super.update();
+    this.airRotation();
   }
 
   checkGround() {
@@ -44,7 +48,7 @@ export default class Skater extends BaseHero {
           this.contactNormal.copy(contact.ni);
           collision = true;
         }
-        if(collision && this.contactNormal.dot(upAxis) > 0.8){ // 0.5 is the threshold
+        if(collision && this.contactNormal.dot(upAxis) > 0.2){ // 0.5 is the threshold
           this.onGround = onGroundPadding;
         }
       }, this);
@@ -57,5 +61,20 @@ export default class Skater extends BaseHero {
       super.setRotation();
     }
   }
+
+  airRotation () {
+    if (this.body.fixedRotation || this.onGround) {
+      return;
+    }
+    this.body.angularVelocity.set(this.Input.AXIS_Y* 2, 0, -this.Input.AXIS_X* 2);
+  }
+
+  move () {
+    if (this.body.fixedRotation || this.onGround) {
+      super.move();
+    }
+  }
+
+
 
 }

@@ -98,6 +98,7 @@ export default class Hero {
 
     // Slow down variables. slows down all movement
     this.slowDown = 1;
+    this.jumpSlowDown = 1;
 
     // Starting rotation
     this.pastVelocity = new BABYLON.Vector2(1, 0);
@@ -232,7 +233,7 @@ export default class Hero {
     this.updatePhysicsImpostor();
     this.updateMassProperties();
 
-    const visible = true;
+    const visible = false;
 
     this.mask.isVisible = visible;
     this.mask1.isVisible = visible;
@@ -249,7 +250,6 @@ export default class Hero {
   }
 
   updateMassProperties () {
-    console.log('updating mass properties');
     this.body.linearDamping = .8;
     this.body.fixedRotation = true;
     this.body.sleepSpeedLimit = .1;
@@ -355,7 +355,7 @@ export default class Hero {
     if (this.onGround && this.Input.JUMP && this.jumpTimer == 0) {
         //console.log("jump!");
         this.onGround = false;
-        movementVector = movementVector.add(new BABYLON.Vector3(0,this.movOpts.jumpStrength,0));
+        movementVector = movementVector.add(new BABYLON.Vector3(0,this.movOpts.jumpStrength/this.jumpSlowDown,0));
         this.jumpTimer = this.jumpTimerStart;
         this.game.scene.sound.jump[Math.floor((Math.random()*this.game.scene.sound.jump.length))].play();
         // Emit

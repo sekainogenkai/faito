@@ -11,10 +11,10 @@ const manaCost = 500; // mana cost of the power
 const directionVec = new BABYLON.Vector3(0, 0, 1); // position of the cursor
 const distance = 10; // cursor scalar
 
-const fixedRotation = false;
 const meshSize = 1;
 const meshScaling = new BABYLON.Vector3(2, 1, 5);
-
+const jumpUpVector = new BABYLON.Vector3(0, -40, 0);
+const lifeSpan = secondsToTicks(20);
 /*
 * Makes a block using joy cursor
 */
@@ -22,7 +22,7 @@ export default class SkateBoard extends BasePower {
     constructor(game, hero) {
       super(game, hero);
       this.object = null;
-      this.objectLastFrame = false;
+      this.pressed = false;
     }
 
     createMesh () {
@@ -48,12 +48,12 @@ export default class SkateBoard extends BasePower {
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
-      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:1000, friction:0.01, restitution:0.9}, this.game.scene);
+      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:1000, friction:0.1, restitution:0.0}, this.game.scene);
 
       // Create a new joint, needs to be a new joint
       var hingeJoint = new BABYLON.HingeJoint( {
         mainPivot:  new BABYLON.Vector3(0, 0, 0),
-        connectedPivot: new BABYLON.Vector3(0, 1.5, 0),
+        connectedPivot: new BABYLON.Vector3(0, 1.1, 0),
         mainAxis: new BABYLON.Vector3(0, 1, 0),
         connectedAxis: new BABYLON.Vector3(0, 1, 0)}
       );
@@ -61,7 +61,7 @@ export default class SkateBoard extends BasePower {
       // run spawn
       this.object = new JointObject(this.game, this.hero,
         // basePowerObject values
-        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:1, lifeSpan:secondsToTicks(10),
+        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:1, lifeSpan:lifeSpan,
         dropHeight:10, dropRange:10, collisionCallBack:true, damageMult:10, damageTimerMax:50},
         // projectileObject values
         {target:this.hero.mask, joint:hingeJoint, mass:1} );
@@ -69,34 +69,38 @@ export default class SkateBoard extends BasePower {
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
-      if (!fixedRotation) {
-        mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
-      }
     }
 
     buttonDown(i) {
+      this.pressed = true;
       // Consume and check to see if there is enough mana
       if (this.object || !this.hero.consumeMana(manaCost)){
         return;
       }
       this.createMesh();
       //console.log('fixedRotation is now false');
+      this.hero.onGround = -1;
+      this.hero.body.linearDamping = .5;
       this.hero.body.fixedRotation = false;
       this.hero.body.updateMassProperties();
-      this.hero.slowDown = 1.4;
+      this.hero.slowDown = .7;
+      this.hero.jumpSlowDown = .8;
     }
 
     update() {
+      if (this.object && this.object.lifeSpan == (lifeSpan-3)) {
+        console.log('push');
+        this.hero.mask.applyImpulse(jumpUpVector, this.hero.mask.position);
+      }
       // check if skate board exists
       if (this.object && this.object._currentState == 2) {
         this.object = null;
       }
 
-      this.objectLastFrame = !!this.object;
     }
 
     buttonUp(i) {
-
+      this.pressed = false;
     }
 
 

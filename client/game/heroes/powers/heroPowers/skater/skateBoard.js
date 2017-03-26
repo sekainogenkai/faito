@@ -52,8 +52,8 @@ export default class SkateBoard extends BasePower {
 
       // Create a new joint, needs to be a new joint
       var hingeJoint = new BABYLON.HingeJoint( {
-        mainPivot:  new BABYLON.Vector3(0, 0, 0),
-        connectedPivot: new BABYLON.Vector3(0, 1.1, 0),
+        mainPivot:  new BABYLON.Vector3(0, -1.4, 0),
+        connectedPivot: new BABYLON.Vector3(0, 0, 0),
         mainAxis: new BABYLON.Vector3(0, 1, 0),
         connectedAxis: new BABYLON.Vector3(0, 1, 0)}
       );

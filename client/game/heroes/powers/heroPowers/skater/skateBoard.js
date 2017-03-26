@@ -14,7 +14,7 @@ const distance = 10; // cursor scalar
 const meshSize = 1;
 const meshScaling = new BABYLON.Vector3(2, 1, 5);
 const jumpUpVector = new BABYLON.Vector3(0, -40, 0);
-const lifeSpan = secondsToTicks(20);
+const lifeSpan = secondsToTicks(60);
 /*
 * Makes a block using joy cursor
 */

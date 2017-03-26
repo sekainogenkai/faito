@@ -23,7 +23,9 @@ export default class BasePowerHandler {
     this.powerSkateBoard = new SkateBoard(game, hero);
 
     this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
-    this.boardPushNum = 0;
+
+    this.boardUP = false;
+    this.boardDOWN = false;
 
   }
 
@@ -36,7 +38,7 @@ export default class BasePowerHandler {
             this.hero.animatePower=true;
           }
           // on skateBoard
-          this.boardPushNum = -1;
+          this.boardDOWN = true;
           break;
         case Buttons.B:
           if (!this.powerSkateBoard.object) {
@@ -44,11 +46,11 @@ export default class BasePowerHandler {
             this.hero.animatePower=true;
           }
           // on skateBoard
-          this.boardPushNum = 1;
+          this.boardUP = true;
           break;
 
         case Buttons.LB:
-          this.boardPushNum = -1;
+          this.boardDOWN = true;
           break;
 
         case Buttons.X:
@@ -72,7 +74,7 @@ export default class BasePowerHandler {
             this.powerBallThrow.buttonUp(0);
             this.hero.animatePower=false;
           } else { // on skateBoard
-            this.boardPushNum = 0;
+            this.boardDOWN = false;
           }
         break;
 
@@ -81,12 +83,12 @@ export default class BasePowerHandler {
             this.powerSkateBoard.buttonUp(0);
             this.hero.animatePower=false;
           } else { // on skateBoard
-            this.boardPushNum = 0;
+            this.boardUP = false;
           }
           break;
 
         case Buttons.LB:
-          this.boardPushNum = 0;
+          this.boardDOWN = false;
           break;
         case Buttons.X:
           this.hero.animatePower=false;
@@ -102,8 +104,13 @@ export default class BasePowerHandler {
     this.powerSkateBoard.update();
     // must be called for all powers that remember objects
     //this.spikeRiser.deleteObjectsOnDeleteAnimation();
-    if (this.powerSkateBoard.object && this.boardPushNum != 0) {
-      this.boardPush(boardPushStrength* this.boardPushNum)
+    if (this.powerSkateBoard.object) {
+      if (this.boardUP) {
+        this.boardPush(boardPushStrength* 1);
+      }
+      if (this.boardDOWN) {
+        this.boardPush(boardPushStrength* -1.1);
+      }
     }
   }
 

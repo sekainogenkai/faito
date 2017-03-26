@@ -52,12 +52,13 @@ export default class BasePowerHandler {
           break;
 
         case Buttons.X:
-          this.powerCloserBool = true;
+          if (this.powerSkateBoard.object) {
+            this.powerSkateBoard.object.lifeSpan -= this.powerSkateBoard.object.lifeSpan;
+          }
           this.hero.animatePower = true;
           break;
 
         case Buttons.Y:
-          this.powerFartherBool = true;
           this.hero.animatePower = true;
           break;
     }
@@ -88,11 +89,9 @@ export default class BasePowerHandler {
           this.boardPushNum = 0;
           break;
         case Buttons.X:
-          this.powerCloserBool = false;
           this.hero.animatePower=false;
           break;
         case Buttons.Y:
-          this.powerFartherBool = false;
           this.hero.animatePower = false;
           break;
     }
@@ -113,7 +112,7 @@ export default class BasePowerHandler {
       return;
     }
     const boardRotationMatrix = new BABYLON.Matrix();
-    this.powerSkateBoard.object.mesh.rotationQuaternion.toRotationMatrix(boardRotationMatrix);
+    this.hero.mask.rotationQuaternion.toRotationMatrix(boardRotationMatrix);
     const boardUpVector = BABYLON.Vector3.TransformCoordinates(new BABYLON.Vector3(0, 1, 0), boardRotationMatrix);
 
     this.hero.mask.applyImpulse(boardUpVector.normalize().scale(push), this.hero.mask.position);

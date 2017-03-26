@@ -58,7 +58,7 @@ export default class Skater extends BaseHero {
           const contactNormalVector = BABYLON.Vector3.FromArray(this.contactNormal.toArray());
           const projection = BABYLON.Vector3.Dot(contactNormalVector, boardUpVector);
           // allow 45 degrees tollerance, number is: sin(90-45)
-          if (projection < .5) {
+          if (projection < .35) {
             this.powerHandler.powerSkateBoard.object.lifeSpan -= this.powerHandler.powerSkateBoard.object.lifeSpan;
           } else {
             // First, calculate the current distance between the current rotation

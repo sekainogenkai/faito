@@ -7,6 +7,7 @@ import PowerHandler from '../../basePowerHandler';
 //import WallDefense from './WallDefense';
 import BallThrow from './ballThrow';
 import SkateBoard from './skateBoard';
+import SkateBallThrow from './skateBallThrow';
 // import RailMake from './railMake';
 
 import {Buttons} from '../../../../input';
@@ -21,6 +22,7 @@ export default class BasePowerHandler {
 
     this.powerBallThrow = new BallThrow(game, hero);
     this.powerSkateBoard = new SkateBoard(game, hero);
+    this.powerSkateBallThrow = new SkateBallThrow(game, hero);
 
     this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
 
@@ -32,8 +34,7 @@ export default class BasePowerHandler {
   buttonDown(button) {
     switch (button) {
         case Buttons.A:
-          // if not on skateBoard
-          if (!this.powerSkateBoard.object) {
+          if (!this.powerSkateBoard.object) { // if not on skateBoard
             this.powerBallThrow.buttonDown(0);
             this.hero.animatePower=true;
           }
@@ -41,7 +42,7 @@ export default class BasePowerHandler {
           this.boardDOWN = true;
           break;
         case Buttons.B:
-          if (!this.powerSkateBoard.object) {
+          if (!this.powerSkateBoard.object) { // if not on skateboard
             this.powerSkateBoard.buttonDown(0);
             this.hero.animatePower=true;
           }
@@ -54,13 +55,16 @@ export default class BasePowerHandler {
           break;
 
         case Buttons.X:
-          if (this.powerSkateBoard.object) {
+          if (!this.powerSkateBoard.object) { // if not on skateboard
+
+          } else { // on skateboard
             this.powerSkateBoard.object.lifeSpan -= this.powerSkateBoard.object.lifeSpan;
           }
           this.hero.animatePower = true;
           break;
 
         case Buttons.Y:
+          this.powerSkateBallThrow.buttonDown(0);
           this.hero.animatePower = true;
           break;
     }
@@ -69,8 +73,7 @@ export default class BasePowerHandler {
   buttonUp(button) {
     switch (button) {
         case Buttons.A:
-          // if not on skateBoard
-          if (!this.powerSkateBoard.object) {
+          if (!this.powerSkateBoard.object) { // if not on skateboard
             this.powerBallThrow.buttonUp(0);
             this.hero.animatePower=false;
           } else { // on skateBoard
@@ -79,7 +82,7 @@ export default class BasePowerHandler {
         break;
 
         case Buttons.B:
-          if (!this.powerSkateBoard.object) {
+          if (!this.powerSkateBoard.object) { // if not on skateboard
             this.powerSkateBoard.buttonUp(0);
             this.hero.animatePower=false;
           } else { // on skateBoard
@@ -94,6 +97,11 @@ export default class BasePowerHandler {
           this.hero.animatePower=false;
           break;
         case Buttons.Y:
+          if (!this.powerSkateBoard.object) { // if not on skateboard
+
+          } else { // on skateboard
+            this.powerSkateBallThrow.buttonDown(0);
+          }
           this.hero.animatePower = false;
           break;
     }

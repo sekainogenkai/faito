@@ -79,9 +79,9 @@ export default class SkateBoard extends BasePower {
       }
       this.createMesh();
       //console.log('fixedRotation is now false');
-      this.hero.onGround = -1;
       this.hero.body.linearDamping = .5;
       this.hero.body.fixedRotation = false;
+      this.hero.body.angularDamping= .9;
       this.hero.body.updateMassProperties();
       this.hero.slowDown = .7;
       this.hero.jumpSlowDown = .8;
@@ -90,6 +90,7 @@ export default class SkateBoard extends BasePower {
     update() {
       if (this.object && this.object.lifeSpan == (lifeSpan-3)) {
         console.log('push');
+        this.hero.onGround = -1;
         this.hero.mask.applyImpulse(jumpUpVector, this.hero.mask.position);
       }
       // check if skate board exists

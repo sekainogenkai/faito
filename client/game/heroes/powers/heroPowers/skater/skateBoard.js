@@ -48,7 +48,7 @@ export default class SkateBoard extends BasePower {
       mesh.position.copyFrom(vectorStart);
 
 
-      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:1000, friction:0.1, restitution:0.0}, this.game.scene);
+      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:1000, friction:0.01, restitution:0.0}, this.game.scene);
 
       // Create a new joint, needs to be a new joint
       var hingeJoint = new BABYLON.HingeJoint( {
@@ -88,11 +88,6 @@ export default class SkateBoard extends BasePower {
     }
 
     update() {
-      if (this.object && this.object.lifeSpan == (lifeSpan-3)) {
-        console.log('push');
-        this.hero.onGround = -1;
-        this.hero.mask.applyImpulse(jumpUpVector, this.hero.mask.position);
-      }
       // check if skate board exists
       if (this.object && this.object._currentState == 2) {
         this.object = null;

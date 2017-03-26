@@ -34,18 +34,23 @@ export default class BasePowerHandler {
           if (!this.powerSkateBoard.object) {
             this.powerBallThrow.buttonDown(0);
             this.hero.animatePower=true;
-          } else { // on skateBoard
-            this.boardPushNum = -1;
           }
+          // on skateBoard
+          this.boardPushNum = -1;
           break;
         case Buttons.B:
           if (!this.powerSkateBoard.object) {
             this.powerSkateBoard.buttonDown(0);
             this.hero.animatePower=true;
-          } else { // on skateBoard
-            this.boardPushNum = 1;
           }
+          // on skateBoard
+          this.boardPushNum = 1;
           break;
+
+        case Buttons.LB:
+          this.boardPushNum = -1;
+          break;
+
         case Buttons.X:
           this.powerCloserBool = true;
           this.hero.animatePower = true;
@@ -79,6 +84,9 @@ export default class BasePowerHandler {
           }
           break;
 
+        case Buttons.LB:
+          this.boardPushNum = 0;
+          break;
         case Buttons.X:
           this.powerCloserBool = false;
           this.hero.animatePower=false;
@@ -95,7 +103,7 @@ export default class BasePowerHandler {
     this.powerSkateBoard.update();
     // must be called for all powers that remember objects
     //this.spikeRiser.deleteObjectsOnDeleteAnimation();
-    if (this.boardPushNum != 0) {
+    if (this.powerSkateBoard.object && this.boardPushNum != 0) {
       this.boardPush(boardPushStrength* this.boardPushNum)
     }
   }

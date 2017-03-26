@@ -7,10 +7,11 @@ import PowerHandler from '../../basePowerHandler';
 //import WallDefense from './WallDefense';
 import BallThrow from './ballThrow';
 import SkateBoard from './skateBoard';
-import SkateBoardBallThrow from './SkateBoardBallThrow';
 // import RailMake from './railMake';
 
 import {Buttons} from '../../../../input';
+
+const boardPushStrength = 5;
 
 
 export default class BasePowerHandler {
@@ -20,9 +21,10 @@ export default class BasePowerHandler {
 
     this.powerBallThrow = new BallThrow(game, hero);
     this.powerSkateBoard = new SkateBoard(game, hero);
-    this.powerBallSkateBoardThrow = new SkateBoardBallThrow(game, hero);
 
     this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
+    this.boardPushNum = 0;
+
   }
 
   buttonDown(button) {
@@ -32,13 +34,17 @@ export default class BasePowerHandler {
           if (!this.powerSkateBoard.object) {
             this.powerBallThrow.buttonDown(0);
             this.hero.animatePower=true;
-          } else {
-            this.powerBallSkateBoardThrow.buttonDown(0);
+          } else { // on skateBoard
+            this.boardPushNum = -1;
           }
           break;
         case Buttons.B:
-          this.powerSkateBoard.buttonDown(0);
-          this.hero.animatePower=true;
+          if (!this.powerSkateBoard.object) {
+            this.powerSkateBoard.buttonDown(0);
+            this.hero.animatePower=true;
+          } else { // on skateBoard
+            this.boardPushNum = 1;
+          }
           break;
         case Buttons.X:
           this.powerCloserBool = true;
@@ -60,13 +66,17 @@ export default class BasePowerHandler {
             this.powerBallThrow.buttonUp(0);
             this.hero.animatePower=false;
           } else { // on skateBoard
-            this.powerBallSkateBoardThrow.buttonUp(0);
+            this.boardPushNum = 0;
           }
         break;
 
         case Buttons.B:
-          this.powerSkateBoard.buttonUp(0);
-          this.hero.animatePower=false;
+          if (!this.powerSkateBoard.object) {
+            this.powerSkateBoard.buttonUp(0);
+            this.hero.animatePower=false;
+          } else { // on skateBoard
+            this.boardPushNum = 0;
+          }
           break;
 
         case Buttons.X:
@@ -81,9 +91,23 @@ export default class BasePowerHandler {
   }
 
   update() {
-    this.powerBallThrow.update();
+    this.powerBallThrow.update(!!this.powerSkateBoard.object);
     this.powerSkateBoard.update();
     // must be called for all powers that remember objects
     //this.spikeRiser.deleteObjectsOnDeleteAnimation();
+    if (this.boardPushNum != 0) {
+      this.boardPush(boardPushStrength* this.boardPushNum)
+    }
+  }
+
+  boardPush(push) {
+    if (!this.powerSkateBoard.object) {
+      return;
+    }
+    const boardRotationMatrix = new BABYLON.Matrix();
+    this.powerSkateBoard.object.mesh.rotationQuaternion.toRotationMatrix(boardRotationMatrix);
+    const boardUpVector = BABYLON.Vector3.TransformCoordinates(new BABYLON.Vector3(0, 1, 0), boardRotationMatrix);
+
+    this.hero.mask.applyImpulse(boardUpVector.normalize().scale(push), this.hero.mask.position);
   }
 }

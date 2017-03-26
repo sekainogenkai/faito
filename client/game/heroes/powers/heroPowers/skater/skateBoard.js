@@ -46,8 +46,8 @@ export default class SkateBoard extends BasePower {
 
       console.log(mesh.material);
       mesh.position.copyFrom(vectorStart);
-      BABYLON.Tags.EnableFor(mesh);
-      BABYLON.Tags.AddTagsTo(mesh, "checkJump");
+
+
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:1000, friction:0.1, restitution:0.0}, this.game.scene);
 
       // Create a new joint, needs to be a new joint

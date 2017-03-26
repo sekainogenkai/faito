@@ -76,7 +76,11 @@ export default class BallThrow extends BasePower {
         {direction: new BABYLON.Vector3(-this.throwSidewaysDistance,0, -4), distance: 5, fixed: true});
     }
 
-    update() {
+    update(skateBoard) {
+      // stop using this power if the skateboard is up
+      if (skateBoard) {
+        this.buttonUp();
+      }
       // Check timer
       if (this.throwBetweenTimer > 0) {
         this.throwBetweenTimer--;
@@ -97,6 +101,8 @@ export default class BallThrow extends BasePower {
       this.hero.slowDown = 1;
       // Check for cursor presence
       // console.log(this.cursors);
-      this.cursor.destroy();
+      if (this.cursor) {
+        this.cursor.destroy();
+      }
     }
 }

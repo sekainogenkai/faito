@@ -4,7 +4,7 @@ import {Buttons} from '../input';
 import {registerBeforeSceneRender} from '../mesh-util';
 import ParticleEmitter from '../particle';
 
-import BasePowerHandler from './powers/heroPowers/baseHero/aHandler';
+// import BasePowerHandler from './powers/heroPowers/baseHero/aHandler';
 
 const upAxis = new CANNON.Vec3(0, 1, 0);
 const zeroVector2 = new BABYLON.Vector2(0, 0);
@@ -16,7 +16,7 @@ export default class Hero {
   constructor(
   game, name, id, meshFileName='omi',
   movOpts={speed:10, airSpeed:5, jumpStrength:150, rollGroundSpeed:15, rollAirSpeed:9},
-  powerHandler=BasePowerHandler) {
+  powerHandler) {
 
     this.game = game;
     this.name = name;

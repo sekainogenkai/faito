@@ -8,11 +8,14 @@ import PowerHandler from '../../basePowerHandler';
 import BallThrow from './ballThrow';
 import SkateBoard from './skateBoard';
 import SkateBallThrow from './skateBallThrow';
+import Ramp from './ramp';
+
 // import RailMake from './railMake';
 
 import {Buttons} from '../../../../input';
 
-const boardPushStrength = 5;
+const boardPushStrength = 7;
+const manaCostBoard = 56;
 
 
 export default class BasePowerHandler {
@@ -23,6 +26,7 @@ export default class BasePowerHandler {
     this.powerBallThrow = new BallThrow(game, hero);
     this.powerSkateBoard = new SkateBoard(game, hero);
     this.powerSkateBallThrow = new SkateBallThrow(game, hero);
+    this.powerRamp = new Ramp(game, hero);
 
     this.groundMesh = this.game.scene.getMeshesByTags('heightFieldImpostor')[0];
 
@@ -56,7 +60,7 @@ export default class BasePowerHandler {
 
         case Buttons.X:
           if (!this.powerSkateBoard.object) { // if not on skateboard
-
+            this.powerRamp.buttonDown(0);
           } else { // on skateboard
             this.powerSkateBoard.object.lifeSpan -= this.powerSkateBoard.object.lifeSpan;
           }
@@ -80,24 +84,24 @@ export default class BasePowerHandler {
           if (!this.powerSkateBoard.object) { // if not on skateboard
             this.powerBallThrow.buttonUp(0);
             this.hero.animatePower=false;
-          } else { // on skateBoard
-            this.boardDOWN = false;
           }
+          // always make this happen so it doesn't bug out
+          this.boardDOWN = false;
         break;
 
         case Buttons.B:
           if (!this.powerSkateBoard.object) { // if not on skateboard
             this.powerSkateBoard.buttonUp(0);
             this.hero.animatePower=false;
-          } else { // on skateBoard
-            this.boardUP = false;
           }
+          this.boardUP = false;
           break;
 
         case Buttons.LB:
           this.boardDOWN = false;
           break;
         case Buttons.X:
+          this.powerRamp.buttonUp(0);
           this.hero.animatePower=false;
           break;
         case Buttons.Y:
@@ -127,7 +131,7 @@ export default class BasePowerHandler {
   }
 
   boardPush(push) {
-    if (!this.powerSkateBoard.object) {
+    if (!this.powerSkateBoard.object || !this.hero.consumeMana(manaCostBoard)) {
       return;
     }
     const personUpVector = this.getUpPersonVector();

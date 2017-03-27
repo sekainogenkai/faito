@@ -6,7 +6,7 @@ import PointCursor from '../../cursors/pointCursor';
 
 const manaCostCreate = 2000; // mana cost of the power
 const manaCostFreeze = 20;
-const collisionDamage = 8; // the amount of damage it does when it collides
+const collisionDamage = 3; // the amount of damage it does when it collides
 const chainLength = 20;
 const mass = 1;
 

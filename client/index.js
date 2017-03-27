@@ -12,9 +12,9 @@ import loadMenuScene from './menu/menuScene';
 import MainMenu from './menu/main-menu';
 import MapLoader from './mapLoader.js';
 
-import Hero1 from './game/heroes/skater.js';
-import Hero2 from './game/heroes/skater.js';
-import Hero3 from './game/heroes/stalagamite';
+import Hero1 from './game/heroes/stalagamite';
+import Hero2 from './game/heroes/skater';
+import Hero3 from './game/heroes/skater';
 
 class Game extends EventEmitter {
   constructor() {

@@ -27,7 +27,11 @@ export default class BasePowerHandler {
 
   buttonDown(button) {
     switch (button) {
-        case Buttons.A: this.spikeThrow.buttonDown(0); this.hero.animatePower=true; break;
+        case Buttons.A:
+          this.hero.slowDown = 2.5;
+          this.spikeThrow.buttonDown(0);
+          this.hero.animatePower=true;
+          break;
         case Buttons.B: this.spikeRiser.buttonDown(0); this.hero.animatePower=true; break;
         case Buttons.X:
           this.powerCloserBool = true;
@@ -44,7 +48,11 @@ export default class BasePowerHandler {
 
   buttonUp(button) {
     switch (button) {
-        case Buttons.A: this.spikeThrow.buttonUp(0); this.hero.animatePower=false; break;
+        case Buttons.A:
+          this.hero.slowDown = 1;
+          this.spikeThrow.buttonUp(0);
+          this.hero.animatePower=false;
+          break;
         case Buttons.B: this.spikeRiser.buttonUp(0); this.hero.animatePower=false; break;
 
         case Buttons.X:

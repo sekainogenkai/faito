@@ -62,7 +62,7 @@ export default class SkateBoard extends BasePower {
       this.object = new JointObject(this.game, this.hero,
         // basePowerObject values
         {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:1, lifeSpan:lifeSpan,
-        dropHeight:10, dropRange:10, collisionCallBack:true, damageMult:10, damageTimerMax:50},
+        dropHeight:10, dropRange:10, collisionCallBack:true, damageMult:7, damageTimerMax:50},
         // projectileObject values
         {target:this.hero.mask, joint:hingeJoint, mass:1} );
 
@@ -79,12 +79,12 @@ export default class SkateBoard extends BasePower {
       }
       this.createMesh();
       //console.log('fixedRotation is now false');
-      this.hero.body.linearDamping = .5;
+      this.hero.body.linearDamping = .3;
       this.hero.body.fixedRotation = false;
       this.hero.body.angularDamping= .9;
       this.hero.body.updateMassProperties();
-      this.hero.slowDown = .8;
-      this.hero.jumpSlowDown = .8;
+      this.hero.slowDown = 1.2;
+      this.hero.jumpSlowDown = 1.2;
     }
 
     update() {

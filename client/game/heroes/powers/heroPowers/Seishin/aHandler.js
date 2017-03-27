@@ -24,7 +24,7 @@ export default class PowerHandler {
         case Buttons.X: this.psychBlock.buttonDown(0); this.hero.animatePower=true; break;
         case Buttons.B:
           this.powerFreezeBool = true;
-          this.freezeObjects();
+          this.toggleFreeze();
           this.hero.animatePower = true;
           break;
 
@@ -42,7 +42,7 @@ export default class PowerHandler {
         case Buttons.X: this.psychBlock.buttonUp(0); this.hero.animatePower=false; break;
         case Buttons.B:
           this.powerFreezeBool = false;
-          this.freezeObjects();
+          this.toggleFreeze();
           this.hero.animatePower = false;
           break;
         case Buttons.Y:
@@ -51,7 +51,13 @@ export default class PowerHandler {
     }
   }
 
-  freezeObjects() {
+  toggleFreeze() {
+    // TODO: make code nicer
+    if (this.powerFreezeBool && this.psychBlock.objects.length) {
+      this.hero.slowDown = 0.5;
+    } else {
+      this.hero.slowDown = 1;
+    }
     for (let object of this.psychBlock.objects) {
       if (this.powerFreezeBool) {
         // Freeze the object
@@ -76,13 +82,13 @@ export default class PowerHandler {
   update() {
     // must be called for all powers that remember objects
     this.psychBlock.deleteObjectsOnDeleteAnimation();
-      if (this.powerFreezeBool) {
-        // Constantly consume mana until there is none left
-        if (!this.hero.consumeMana(manaCostFreeze)){
-          this.powerFreezeBool = false;
-          this.freezeObjects();
-          this.hero.animatePower = false;
-        }
+    if (this.powerFreezeBool) {
+      // Constantly consume mana until there is none left
+      if (!this.hero.consumeMana(manaCostFreeze)){
+        this.powerFreezeBool = false;
+        this.toggleFreeze();
+        this.hero.animatePower = false;
       }
+    }
   }
 }

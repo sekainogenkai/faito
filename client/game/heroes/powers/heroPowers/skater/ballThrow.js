@@ -6,7 +6,7 @@ import DirectionCursor from '../../cursors/directionCursor';
 import PointCursor from '../../cursors/pointCursor';
 import JoyCursor from '../../cursors/joyCursor';
 
-const manaCost = 100; // mana cost of the power
+const manaCost = 300; // mana cost of the power
 const collisionDamage = 5; // the amount of damage it does when it collides
 
 //const cursorDirectionVec = new BABYLON.Vector3(0, 0, 1); // direction of the ball

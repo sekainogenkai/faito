@@ -10,7 +10,7 @@ const collisionDamage = 5; // the amount of damage it does when it collides
 const distance = -10; // cursor offset
 
 const meshSize = 3;
-const powerImpulseVec = new BABYLON.Vector3(0, 2000, 0); // impulse applied to projectile on spawn
+const powerImpulseVec = new BABYLON.Vector3(0, -2000, 0); // impulse applied to projectile on spawn
 
 /**
 Shoots out a projectile at the enemy
@@ -25,7 +25,7 @@ export default class Power2 extends BasePower {
         return;
       }
       console.log(personUpVector);
-      const vecC = personUpVector.scale(8);
+      const vecC = personUpVector.scale(-3);
       // Set the target vector
       const vectorStart = new BABYLON.Vector3(
         this.hero.mask.position.x + vecC.x,

@@ -8,7 +8,7 @@ import BasePowerHandler from './powers/heroPowers/baseHero/aHandler';
 
 const upAxis = new CANNON.Vec3(0, 1, 0);
 const zeroVector2 = new BABYLON.Vector2(0, 0);
-const maxMana = 5000;
+const maxMana = 5000 * 2;
 const maxHealth = 500;
 const onGroundPadding = 10;
 

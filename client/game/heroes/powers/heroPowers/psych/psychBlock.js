@@ -1,7 +1,7 @@
 import BABYLON from 'babylonjs';
 import {getHeightAtCoordinates, secondsToTicks} from '../../powerUtils/mainUtils';
 import PowerRemember from '../../powerRememberObjects';
-import JointObject from '../../powerObjects/JointObject';
+import JointObject from '../../powerObjects/jointObject';
 import PointCursor from '../../cursors/pointCursor';
 
 const manaCostCreate = 2000; // mana cost of the power

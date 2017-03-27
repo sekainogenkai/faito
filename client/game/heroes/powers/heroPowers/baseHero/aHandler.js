@@ -2,9 +2,9 @@ import BABYLON from 'babylonjs';
 
 import PowerHandler from '../../basePowerHandler';
 
-import WallDefense from './WallDefense';
+import WallDefense from './wallDefense';
 import WallRiser from './wallRiser';
-import ManySmallRocks from './ManySmallRocks';
+import ManySmallRocks from './manySmallRocks';
 import JumpBall from './jumpBall';
 
 export default class BaseHeroPowerHandler extends PowerHandler {

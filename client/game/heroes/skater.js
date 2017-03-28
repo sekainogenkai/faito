@@ -70,13 +70,14 @@ export default class Skater extends BaseHero {
             //const contactNormalDeviationFromUp = contactNormalVector.toQuaternion().multiply(new BABYLON.Vector3(0, 1, 0).toQuaternion().conjugateInPlace());
             //const theta = 2 * Math.acos(skaterObject.mesh.rotationQuaternion.multiply(contactNormalDeviationFromUp.conjugateInPlace()).x);
             // console.log('copying rotation matrix');
-            //this.body.angularVelocity.set(1,1,0);
+
+            this.body.angularVelocity.set(1,1,0);
             this.mask.rotationQuaternion =
             new BABYLON.Quaternion.RotationYawPitchRoll(
                                                            Math.atan2(contactNormalVector.x, contactNormalVector.z),
                                                            Math.asin(-contactNormalVector.y) + Math.PI/2,
                                                           0);
-            this.powerHandler.boardPush(-2);
+            this.powerHandler.boardPush(-.8);
 
             // make the character slower on the ground
             this.body.linearDamping = this.skateGroundLinearDampening;

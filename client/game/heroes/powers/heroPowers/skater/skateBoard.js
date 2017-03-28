@@ -84,7 +84,7 @@ export default class SkateBoard extends BasePower {
       this.hero.body.angularDamping= .9;
       this.hero.body.updateMassProperties();
       this.hero.slowDown = 1.2;
-      this.hero.jumpSlowDown = 1.2;
+      this.hero.jumpSlowDown = .9;
     }
 
 

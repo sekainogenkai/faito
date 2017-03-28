@@ -51,6 +51,16 @@ export default function loadGameScene (game) {
   shader.backFaceCulling = false;
   skybox.material = shader;
   */
+  // post processor
+  var sepiaKernelMatrix =
+                    [0, -1, -1,
+                       -1, 5.7, -1,
+                        -1, -1, 0];
+var postProcess = new BABYLON.ConvolutionPostProcess("Sepia", sepiaKernelMatrix, 1.0, camera.camera, null, game.engine, true);
+camera.camera.attachPostProcess(postProcess, 1);
+
+    //var postProcess = new BABYLON.ConvolutionPostProcess("convolution", BABYLON.ConvolutionPostProcess.EmbossKernel, 1.0, camera.camera);
+
 
   // Add shadow generator
   game.scene.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,10), dirLight);

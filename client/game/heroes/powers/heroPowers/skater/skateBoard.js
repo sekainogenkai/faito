@@ -48,7 +48,7 @@ export default class SkateBoard extends BasePower {
       mesh.position.copyFrom(vectorStart);
 
 
-      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:1000, friction:0.01, restitution:0.0}, this.game.scene);
+      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:1000, friction:0.00, restitution:0.0}, this.game.scene);
 
       // Create a new joint, needs to be a new joint
       var hingeJoint = new BABYLON.HingeJoint( {
@@ -79,13 +79,14 @@ export default class SkateBoard extends BasePower {
       }
       this.createMesh();
       //console.log('fixedRotation is now false');
-      this.hero.body.linearDamping = .3;
+      //this.hero.body.linearDamping = .3;
       this.hero.body.fixedRotation = false;
       this.hero.body.angularDamping= .9;
       this.hero.body.updateMassProperties();
       this.hero.slowDown = 1.2;
       this.hero.jumpSlowDown = 1.2;
     }
+
 
     update() {
       // check if skate board exists

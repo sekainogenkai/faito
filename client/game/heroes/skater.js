@@ -8,12 +8,15 @@ import SkaterPowerHandler from './powers/heroPowers/skater/aHandler';
 
 const upAxis = new CANNON.Vec3(0, 1, 0);
 const onGroundPadding = 10;
+const rotationMultiplier = 2.5;
 
 export default class Skater extends BaseHero {
   constructor(game, name, id) {
     super(game, name, id, 'omi',
     {speed:9, airSpeed:9, jumpStrength:170, rollGroundSpeed:18, rollAirSpeed:10},
     SkaterPowerHandler);
+    this.skateGroundLinearDampening = .7;
+    this.skateAirLinearDampening = .3;
   }
 
   // change animation for if the skater is a skating
@@ -67,17 +70,25 @@ export default class Skater extends BaseHero {
             //const contactNormalDeviationFromUp = contactNormalVector.toQuaternion().multiply(new BABYLON.Vector3(0, 1, 0).toQuaternion().conjugateInPlace());
             //const theta = 2 * Math.acos(skaterObject.mesh.rotationQuaternion.multiply(contactNormalDeviationFromUp.conjugateInPlace()).x);
             // console.log('copying rotation matrix');
-            this.body.angularVelocity.set(0,0,0);
+            //this.body.angularVelocity.set(1,1,0);
             this.mask.rotationQuaternion =
             new BABYLON.Quaternion.RotationYawPitchRoll(
                                                            Math.atan2(contactNormalVector.x, contactNormalVector.z),
                                                            Math.asin(-contactNormalVector.y) + Math.PI/2,
                                                           0);
+            this.powerHandler.boardPush(-2);
+
+            // make the character slower on the ground
+            this.body.linearDamping = this.skateGroundLinearDampening;
+            this.body.updateMassProperties();
             // rotate board to direction
             //this.powerHandler.powerSkateBoard.object.mesh.
 
 
           }
+        } else { // leave the ground
+          this.body.linearDamping = this.skateAirLinearDampening;
+          this.body.updateMassProperties();
         }
       }, this);
     }
@@ -91,11 +102,11 @@ export default class Skater extends BaseHero {
   }
 
   airRotation () {
-    if (this.body.fixedRotation || (this.onGround && this.powerHandler.boardPushNum == 0)) {
+    if (this.body.fixedRotation || this.onGround) {
       return;
     }
 
-    this.body.angularVelocity.set(this.Input.AXIS_Y* 2.2, 0, -this.Input.AXIS_X* 2.2);
+    this.body.angularVelocity.set(this.Input.AXIS_Y* rotationMultiplier, 0, -this.Input.AXIS_X* rotationMultiplier);
   }
 
   move () {

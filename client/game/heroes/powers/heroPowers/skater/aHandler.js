@@ -122,20 +122,26 @@ export default class BasePowerHandler {
     //this.spikeRiser.deleteObjectsOnDeleteAnimation();
     if (this.powerSkateBoard.object) {
       if (this.boardUP) {
-        this.boardPush(boardPushStrength* 1);
+        this.boardPushMana(boardPushStrength* 1);
       }
       if (this.boardDOWN) {
-        this.boardPush(boardPushStrength* -1.2);
+        this.boardPushMana(boardPushStrength* -1.2);
       }
     }
   }
 
-  boardPush(push) {
+  boardPushMana(push) {
     if (!this.powerSkateBoard.object || !this.hero.consumeMana(manaCostBoard)) {
       return;
     }
-    const personUpVector = this.getUpPersonVector();
+    this.boardPush(push);
+  }
 
+  boardPush(push) {
+    if (!this.powerSkateBoard.object) {
+      return;
+    }
+    const personUpVector = this.getUpPersonVector();
     this.hero.mask.applyImpulse(personUpVector.normalize().scale(push), this.hero.mask.position);
   }
 

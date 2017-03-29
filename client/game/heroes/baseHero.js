@@ -294,7 +294,6 @@ export default class Hero {
 
   update () {
 
-    this.powerHandler.update();
     //console.log(this.mask.physicsImpostor.physicsBody.world.contacts);
     this.checkGround();
 
@@ -308,6 +307,9 @@ export default class Hero {
     this._manageHealth();
 
     this.setRotation();
+
+
+    this.powerHandler.update();
   }
 
   // use this to make xbox controller movement is smoove and doesn't go over the speed limit

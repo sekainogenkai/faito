@@ -29,7 +29,7 @@ export default function loadGameScene (game) {
 
 
   // Make lighting look better for the shadows at different angles.
-  var dirLight2 = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(.2, -1, .5), game.scene);
+  var dirLight2 = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(.5, -1, 1), game.scene);
   dirLightStrength = .25;
   dirLight2.diffuse = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
   dirLight2.specular = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
@@ -52,12 +52,14 @@ export default function loadGameScene (game) {
   skybox.material = shader;
   */
   // post processor
+  /*
   var sepiaKernelMatrix =
                     [0, -1, -1,
                        -1, 5.7, -1,
                         -1, -1, 0];
-var postProcess = new BABYLON.ConvolutionPostProcess("Sepia", sepiaKernelMatrix, 1.0, camera.camera, null, game.engine, true);
-camera.camera.attachPostProcess(postProcess, 1);
+  var postProcess = new BABYLON.ConvolutionPostProcess("Sepia", sepiaKernelMatrix, 1.0, camera.camera, null, game.engine, true);
+  camera.camera.attachPostProcess(postProcess, 1);*/
+  //var ssao = new BABYLON.SSAORenderingPipeline('ssaopipeline', game.scene, 0.5, camera.camera);
 
     //var postProcess = new BABYLON.ConvolutionPostProcess("convolution", BABYLON.ConvolutionPostProcess.EmbossKernel, 1.0, camera.camera);
 

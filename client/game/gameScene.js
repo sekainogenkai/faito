@@ -27,12 +27,13 @@ export default function loadGameScene (game) {
   dirLight.diffuse = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
   dirLight.specular = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
 
-
   // Make lighting look better for the shadows at different angles.
   var dirLight2 = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(.5, -1, 1), game.scene);
   dirLightStrength = .25;
   dirLight2.diffuse = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
   dirLight2.specular = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
+
+
 
 /*
   var hemLight = new BABYLON.HemisphericLight("dir02", new BABYLON.Vector3(1,1,0), game.scene);
@@ -65,9 +66,9 @@ export default function loadGameScene (game) {
 
 
   // Add shadow generator
-  game.scene.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,10), dirLight);
-  game.scene.shadowGenerator.setDarkness(0);
-  //this.shadowGenerator.bias = 0.01;
+  game.scene.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,11), dirLight);
+  game.scene.shadowGenerator.setDarkness(.3);
+  game.scene.shadowGenerator.usePoissonSampling = true;
 
   game.scene.enablePhysics(
     new BABYLON.Vector3(0, -10, 0),

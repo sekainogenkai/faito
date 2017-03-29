@@ -16,7 +16,7 @@ export default class Skater extends BaseHero {
     {speed:9, airSpeed:9, jumpStrength:170, rollGroundSpeed:18, rollAirSpeed:10},
     SkaterPowerHandler);
     this.skateGroundLinearDampening = .7;
-    this.skateAirLinearDampening = .01;
+    this.skateAirLinearDampening = .3;
   }
 
   // change animation for if the skater is a skating

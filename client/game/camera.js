@@ -26,22 +26,26 @@ export default class Camera {
   }
 
   setTarget () {
-    var cx, cz, mx, mz;
-    cx = cz = mx = mz = 0;
+    var cx, cy, cz, mx, my, mz;
+    cx = cy = cz = mx = my = mz = 0;
     var numHeroes = this.game.heroes.length || 1;
     for (let hero of this.game.heroes) {
       cx += hero.mask.position.x;
+      cy += hero.mask.position.y;
       cz += hero.mask.position.z;
       // Set max x and z distances
-      var dx = hero.mask.position.x - this.cameraTarget.x
-      var dz = hero.mask.position.z - this.cameraTarget.z
-      mx = ((dx > mx) ? dx : mx);
-      mz = ((dz > mz) ? dz : mz);
+      //var dx = hero.mask.position.x - this.cameraTarget.x;
+      //var dy = hero.mask.position.y - this.cameraTarget.y;
+    //  var dz = hero.mask.position.z - this.cameraTarget.z;
+    //  mx = Math.max(mx, dx);
+    //  my = Math.max(my, dy);
+    //  mz = Math.max(mz, dz);
     };
 
     // Update center point
     this.cameraTarget.x = cx/numHeroes;
     this.cameraTarget.z = cz/numHeroes;
+    this.cameraTarget.y = cy/numHeroes;
   }
 
   setZoom () {
@@ -49,16 +53,16 @@ export default class Camera {
       return;
     }
     let maxDistance = 0;
-    let maxHeight = this.game.heroes[0].mask.position.y;
+    //let maxHeight = this.game.heroes[0].mask.position.y;
     for (let hero of this.game.heroes) {
-        maxDistance = Math.max(maxDistance, BABYLON.Vector3.Distance(new BABYLON.Vector3(hero.mask.position.x, 0, hero.mask.position.z), new BABYLON.Vector3(this.cameraTarget.x, 0, this.cameraTarget.z)));
-        maxHeight = Math.max(maxHeight, hero.mask.position.y);
+        maxDistance = Math.max(maxDistance, BABYLON.Vector3.Distance(new BABYLON.Vector3(hero.mask.position.x, hero.mask.position.y, hero.mask.position.z), new BABYLON.Vector3(this.cameraTarget.x, 0, this.cameraTarget.z)));
+        //maxHeight = Math.max(maxHeight, hero.mask.position.y);
     };
         //console.log('maxDistance', maxDistance);
 
-    this.cameraTarget.z = this.cameraTarget.z + maxHeight;
+    //this.cameraTarget.z = this.cameraTarget.z + maxHeight;
     //console.log(maxHeight);
     //console.log('maxDistance', maxDistance);
-    this.camera.radius = Math.max(this.radius.min, 50 + maxDistance * 1.4) + maxHeight * 1.5 + 50;
+    this.camera.radius = Math.max(this.radius.min, 50 + maxDistance * 1.3);// + maxHeight * 1.5;
   }
 }

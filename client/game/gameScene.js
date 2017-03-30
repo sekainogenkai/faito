@@ -79,5 +79,5 @@ export default function loadGameScene (game) {
   game.scene.collisionGroupFall = 4;
 
   //load map
-  game.mapLoader = new MapLoader('test3', game);
+  game.mapLoader = new MapLoader('test1', game);
 }

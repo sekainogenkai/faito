@@ -22,7 +22,6 @@ export default class JointObject extends BasePowerObject {
     this.makeKinematic(this.mass);
     // Attach the joint
     console.log(this.target.physicsImpostor);
-    console.log(this.target.physicsImpostor.addJoint);
     this.target.physicsImpostor.addJoint(this.mesh.physicsImpostor, this.joint);
   }
 
@@ -36,5 +35,13 @@ export default class JointObject extends BasePowerObject {
     this.hero.setRotation();
     console.log('removing joint');
     this.game.scene.getPhysicsEngine().removeJoint(this.target.physicsImpostor, this.mesh.physicsImpostor, this.joint);
+
+    // Remove the joint from the targets list of joints
+    this.target.physicsImpostor._joints.forEach(function(joint, i) {
+      // Remove the joint if ids are similar
+      if (joint.joint.physicsJoint.id = this.joint.physicsJoint.id) {
+        this.target.physicsImpostor._joints.splice(i, 1);
+      }
+    }, this)
   }
 }

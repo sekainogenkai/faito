@@ -56,8 +56,9 @@ export default class Camera {
     };
         //console.log('maxDistance', maxDistance);
 
-    console.log(maxHeight);
+    this.cameraTarget.z = this.cameraTarget.z + maxHeight;
+    //console.log(maxHeight);
     //console.log('maxDistance', maxDistance);
-    this.camera.radius = Math.max(this.radius.min, 50 + maxDistance * 1.8) + maxHeight * 1.5 + 100;
+    this.camera.radius = Math.max(this.radius.min, 50 + maxDistance * 1.4) + maxHeight * 1.5 + 50;
   }
 }

@@ -29,7 +29,7 @@ export default class Camera {
     var cx, cz, mx, mz;
     cx = cz = mx = mz = 0;
     var numHeroes = this.game.heroes.length || 1;
-    this.game.heroes.forEach(function (hero) {
+    for (let hero of this.game.heroes) {
       cx += hero.mask.position.x;
       cz += hero.mask.position.z;
       // Set max x and z distances
@@ -37,7 +37,7 @@ export default class Camera {
       var dz = hero.mask.position.z - this.cameraTarget.z
       mx = ((dx > mx) ? dx : mx);
       mz = ((dz > mz) ? dz : mz);
-    }, this);
+    };
 
     // Update center point
     this.cameraTarget.x = cx/numHeroes;
@@ -45,17 +45,19 @@ export default class Camera {
   }
 
   setZoom () {
-    var maxDistance = 0;
-    if (this.game.heroes) {
-        this.game.heroes.forEach(function (hero) {
-            maxDistance = Math.max(maxDistance, BABYLON.Vector3.Distance(new BABYLON.Vector3(hero.mask.position.x, 0, hero.mask.position.z), new BABYLON.Vector3(this.cameraTarget.x, 0, this.cameraTarget.z)));
-        }, this);
-        //console.log('maxDistance', maxDistance);
+    if (!this.game.heroes) {
+      return;
     }
+    let maxDistance = 0;
+    let maxHeight = this.game.heroes[0].mask.position.y;
+    for (let hero of this.game.heroes) {
+        maxDistance = Math.max(maxDistance, BABYLON.Vector3.Distance(new BABYLON.Vector3(hero.mask.position.x, 0, hero.mask.position.z), new BABYLON.Vector3(this.cameraTarget.x, 0, this.cameraTarget.z)));
+        maxHeight = Math.max(maxHeight, hero.mask.position.y);
+    };
+        //console.log('maxDistance', maxDistance);
 
-    
-
+    console.log(maxHeight);
     //console.log('maxDistance', maxDistance);
-    this.camera.radius = Math.max(this.radius.min, 50 + maxDistance * 1.5);
+    this.camera.radius = Math.max(this.radius.min, 50 + maxDistance * 1.8) + maxHeight * 1.5 + 100;
   }
 }

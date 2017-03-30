@@ -33,6 +33,14 @@ export default class Skater extends BaseHero {
     //console.log(this.body.velcoti);
     super.update();
     this.airRotation();
+    this.setAirLinearVelocity();
+  }
+
+  setAirLinearVelocity() {
+     if (!this.onGround && this.powerHandler.powerSkateBoard.object) {
+       this.body.linearDamping = this.skateAirLinearDampening;
+       this.body.updateMassProperties();
+    }
   }
 
   checkGround() {
@@ -41,7 +49,9 @@ export default class Skater extends BaseHero {
       super.checkGround();
     } else if (skaterObject) {
       // check if hero hits the ground. Destroy the board if he does.
-
+      if (this.onGround > 0) {
+        this.onGround -= 1;
+      }
       this.mask.physicsImpostor.physicsBody.world.contacts.forEach(function(contact) {
         //http://schteppe.github.io/cannon.js/examples/threejs_voxel_fps.html
         var collision = false;
@@ -87,9 +97,6 @@ export default class Skater extends BaseHero {
 
 
           }
-        } else { // leave the ground
-          this.body.linearDamping = this.skateAirLinearDampening;
-          this.body.updateMassProperties();
         }
       }, this);
     }

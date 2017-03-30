@@ -63,6 +63,6 @@ export default class Camera {
     //this.cameraTarget.z = this.cameraTarget.z + maxHeight;
     //console.log(maxHeight);
     //console.log('maxDistance', maxDistance);
-    this.camera.radius = Math.max(this.radius.min, 50 + maxDistance * 1.3);// + maxHeight * 1.5;
+    this.camera.radius = Math.max(this.radius.min, 60 + maxDistance * 1.1);// + maxHeight * 1.5;
   }
 }

@@ -15,7 +15,7 @@ export default class Skater extends BaseHero {
     super(game, name, id, 'omi',
     {speed:9, airSpeed:9, jumpStrength:170, rollGroundSpeed:18, rollAirSpeed:10},
     SkaterPowerHandler);
-    this.skateGroundLinearDampening = .7;
+    this.skateGroundLinearDampening = .5;
     this.skateAirLinearDampening = .3;
   }
 
@@ -71,9 +71,12 @@ export default class Skater extends BaseHero {
           const contactNormalVector = BABYLON.Vector3.FromArray(this.contactNormal.toArray());
           const projection = BABYLON.Vector3.Dot(contactNormalVector, boardUpVector);
           // allow 45 degrees tollerance, number is: sin(90-45)
-          if (projection < .3) {
-            this.powerHandler.powerSkateBoard.object.dropRange = 100;
-            this.powerHandler.powerSkateBoard.object.lifeSpan -= this.powerHandler.powerSkateBoard.object.lifeSpan;
+          if (projection < .7) {
+            //this.powerHandler.powerSkateBoard.object.dropRange = 100;
+            //this.powerHandler.powerSkateBoard.object.lifeSpan -= this.powerHandler.powerSkateBoard.object.lifeSpan;
+            this.onGround = 0;
+            this.body.linearDamping = .99;
+            this.body.updateMassProperties();
           } else {
             // First, calculate the current distance between the current rotation
             // and the next. http://math.stackexchange.com/a/167828

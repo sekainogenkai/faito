@@ -81,10 +81,10 @@ export default class SkateBoard extends BasePower {
       //console.log('fixedRotation is now false');
       //this.hero.body.linearDamping = .3;
       this.hero.body.fixedRotation = false;
-      this.hero.body.angularDamping= .9;
+      this.hero.body.angularDamping= .2;
       this.hero.body.updateMassProperties();
-      this.hero.slowDown = 1.2;
-      this.hero.jumpSlowDown = .9;
+      this.hero.slowDown = .7;
+      this.hero.jumpSlowDown = 1.2;
     }
 
 

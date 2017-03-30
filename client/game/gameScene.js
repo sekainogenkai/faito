@@ -52,12 +52,12 @@ export default function loadGameScene (game) {
   skybox.material = shader;
   */
   // post processor
-  var sepiaKernelMatrix =
-                    [0, -1, -1,
-                       -1, 5.7, -1,
-                        -1, -1, 0];
-var postProcess = new BABYLON.ConvolutionPostProcess("Sepia", sepiaKernelMatrix, 1.0, camera.camera, null, game.engine, true);
-camera.camera.attachPostProcess(postProcess, 1);
+//   var sepiaKernelMatrix =
+//                     [0, -1, -1,
+//                        -1, 5.7, -1,
+//                         -1, -1, 0];
+// var postProcess = new BABYLON.ConvolutionPostProcess("Sepia", sepiaKernelMatrix, 1.0, camera.camera, null, game.engine, true);
+// camera.camera.attachPostProcess(postProcess, 1);
 
     //var postProcess = new BABYLON.ConvolutionPostProcess("convolution", BABYLON.ConvolutionPostProcess.EmbossKernel, 1.0, camera.camera);
 

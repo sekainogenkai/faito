@@ -43,6 +43,7 @@ export default class PowerHandler {
         case Buttons.B:
           this.powerFreezeBool = false;
           this.toggleFreeze();
+          this.hero.slowDown = 1; // The update wont catch this case
           this.hero.animatePower = false;
           break;
         case Buttons.Y:
@@ -52,12 +53,6 @@ export default class PowerHandler {
   }
 
   toggleFreeze() {
-    // TODO: make code nicer
-    if (this.powerFreezeBool && this.psychBlock.objects.length) {
-      this.hero.slowDown = 0.5;
-    } else {
-      this.hero.slowDown = 1;
-    }
     for (let object of this.psychBlock.objects) {
       if (this.powerFreezeBool) {
         // Freeze the object
@@ -88,6 +83,12 @@ export default class PowerHandler {
         this.powerFreezeBool = false;
         this.toggleFreeze();
         this.hero.animatePower = false;
+      }
+      // Update player movement so that hero moves fast when attached to frozen object
+      if (this.hero.mask.physicsImpostor._joints.length) {
+        this.hero.slowDown = 0.5;
+      } else {
+        this.hero.slowDown = 1;
       }
     }
   }

@@ -21,6 +21,9 @@ export default class Camera {
   }
 
   update () {
+    if (!this.game.heroes) {
+      return;
+    }
     this.setTarget();
     this.setZoom();
   }
@@ -49,9 +52,6 @@ export default class Camera {
   }
 
   setZoom () {
-    if (!this.game.heroes) {
-      return;
-    }
     let maxDistance = 0;
     //let maxHeight = this.game.heroes[0].mask.position.y;
     for (let hero of this.game.heroes) {
@@ -63,6 +63,6 @@ export default class Camera {
     //this.cameraTarget.z = this.cameraTarget.z + maxHeight;
     //console.log(maxHeight);
     //console.log('maxDistance', maxDistance);
-    this.camera.radius = Math.max(this.radius.min, maxDistance);// + maxHeight * 1.5;
+    this.camera.radius = Math.max(this.radius.min, maxDistance * .9);// + maxHeight * 1.5;
   }
 }

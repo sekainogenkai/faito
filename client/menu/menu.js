@@ -19,8 +19,7 @@ const styles = {
         justifyContent: 'center',
     },
     mainMenuItem: {
-        padding: 10,
-        backgroundColor: "lightblue",
+        padding: '10px 40px 10px 40px',
     },
 };
 
@@ -182,8 +181,8 @@ export class MenuItem extends React.Component {
 
     render() {
         return <div className="menu-item" style={{
-            backgroundColor: this.props.active ? 'red' : 'white',
-        }}>
+          ...{backgroundColor: this.props.active ? 'red' : 'white', },
+          ...styles.mainMenuItem  }}>
             {this.props.children}
             </div>;
     }

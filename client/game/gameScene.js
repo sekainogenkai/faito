@@ -1,12 +1,12 @@
 import BABYLON from 'babylonjs';
 import MapLoader from '../mapLoader.js';
-import Camera from './camera';
+import GameCamera from './gameCamera';
 
 export default function loadGameScene (game) {
   // clear current scene
   game.scene.dispose();
   // Initialize camera
-  var camera = new Camera(game);
+  var camera = new GameCamera(game);
 
   // Load sound effects
   game.scene.sound = {

@@ -1,6 +1,6 @@
 import BABYLON from 'babylonjs';
 
-export default class Camera {
+export default class GameCamera {
   constructor (game) {
     this.game = game;
     // Set the target vector which will get updated

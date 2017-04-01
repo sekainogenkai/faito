@@ -8,7 +8,7 @@ import BABYLON from 'babylonjs';
 import {BabylonJS} from './react-babylonjs.js';
 import {default as Menu, MenuPage, ButtonMenuItem, LabelMenuItem} from './menu/menu';
 import loadGameScene from './game/gameScene';
-import loadMenuScene from './menu/menuScene';
+import loadMenuScene from './game/menuScene';
 import MainMenu from './menu/main-menu';
 import MapLoader from './mapLoader.js';
 

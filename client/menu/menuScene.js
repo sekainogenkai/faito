@@ -1,37 +1,30 @@
 import BABYLON from 'babylonjs';
 import MapLoader from '../mapLoader.js';
+import MenuCamera from './MenuCamera';
 
 export default function loadMenuScene (game) {
   // clear current scene
   game.scene.dispose();
-  // Initialize camera
-  var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 10, new BABYLON.Vector3.Zero(), game.scene);
-  camera.setPosition(new BABYLON.Vector3(0, 40, -40));
-  camera.attachControl(game.engine.getRenderingCanvas(), false);
 
+  // Initialize camera
+  var camera = new MenuCamera(game);
+
+  // Set lights
   var dirLight = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(0, -1, 0), game.scene);
   let dirLightStrength = 1;
   dirLight.diffuse = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
   dirLight.specular = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
-  var hemLight = new BABYLON.HemisphericLight("dir02", new BABYLON.Vector3(0,1,0), game.scene);
-  let hemLightStrength = .7;
-  hemLight.diffuse = new BABYLON.Color3(hemLightStrength,hemLightStrength,hemLightStrength);
-  hemLight.specular = new BABYLON.Color3(hemLightStrength,hemLightStrength,hemLightStrength);
-  // Skybox
-  var skybox = BABYLON.Mesh.CreateSphere("skyBox", 10, 2500, game.scene);
 
-  var shader = new BABYLON.ShaderMaterial("gradient", game.scene, "gradient", {});
-  shader.setFloat("offset", 0);
-  shader.setFloat("exponent", 0.6);
-  shader.setColor3("topColor", BABYLON.Color3.FromInts(0,119,255));
-  shader.setColor3("bottomColor", BABYLON.Color3.FromInts(240,240, 255));
-  shader.backFaceCulling = false;
-  skybox.material = shader;
+  // Make lighting look better for the shadows at different angles.
+  var dirLight2 = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(.5, -1, 1), game.scene);
+  dirLightStrength = .25;
+  dirLight2.diffuse = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
+  dirLight2.specular = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
 
   // Add shadow generator
-  game.scene.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,10), dirLight);
-  game.scene.shadowGenerator.setDarkness(0);
-  //this.shadowGenerator.bias = 0.01;
+  game.scene.shadowGenerator = new BABYLON.ShadowGenerator(Math.pow(2,11), dirLight);
+  game.scene.shadowGenerator.setDarkness(.3);
+  game.scene.shadowGenerator.usePoissonSampling = true;
 
   game.scene.enablePhysics(
     new BABYLON.Vector3(0, -10, 0),

@@ -71,7 +71,7 @@ class Game extends EventEmitter {
 
 
     // Load the game
-    this.loadGame();
+    this.loadMenu();
 
     new InputManager(this);
   }

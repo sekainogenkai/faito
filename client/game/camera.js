@@ -7,7 +7,7 @@ export default class Camera {
     this.initRadius = 100; // Used in setZoom
     this.radiusSpeed = 5;
     this.cameraTarget = new BABYLON.Vector3.Zero()
-    this.camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, this.initRadius, this.cameraTarget, this.game.scene);
+    this.camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.01, this.initRadius, this.cameraTarget, this.game.scene);
     this.camera.setPosition(new BABYLON.Vector3(0, 40, -40));
     // Set radius values
     this.radius = {
@@ -43,7 +43,7 @@ export default class Camera {
     };
 
     // Update center point
-    this.cameraTarget.x = cx/numHeroes;
+    this.cameraTarget.x = cx/numHeroes + 10;
     this.cameraTarget.z = cz/numHeroes;
     this.cameraTarget.y = cy/numHeroes;
   }
@@ -55,7 +55,7 @@ export default class Camera {
     let maxDistance = 0;
     //let maxHeight = this.game.heroes[0].mask.position.y;
     for (let hero of this.game.heroes) {
-        maxDistance = Math.max(maxDistance, BABYLON.Vector3.Distance(new BABYLON.Vector3(hero.mask.position.x, hero.mask.position.y, hero.mask.position.z), new BABYLON.Vector3(this.cameraTarget.x, 0, this.cameraTarget.z)));
+        maxDistance = Math.max(maxDistance, BABYLON.Vector3.Distance(new BABYLON.Vector3(hero.mask.position.x, hero.mask.position.y, hero.mask.position.z), new BABYLON.Vector3(this.camera.position.x, 0, this.camera.position.z)));
         //maxHeight = Math.max(maxHeight, hero.mask.position.y);
     };
         //console.log('maxDistance', maxDistance);
@@ -63,6 +63,6 @@ export default class Camera {
     //this.cameraTarget.z = this.cameraTarget.z + maxHeight;
     //console.log(maxHeight);
     //console.log('maxDistance', maxDistance);
-    this.camera.radius = Math.max(this.radius.min, 60 + maxDistance * 1.1);// + maxHeight * 1.5;
+    this.camera.radius = Math.max(this.radius.min, maxDistance);// + maxHeight * 1.5;
   }
 }

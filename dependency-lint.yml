@@ -4,6 +4,7 @@ ignoreErrors:
     - babel-preset-es2016
     - babel-preset-es2017
     - babel-preset-react
+    - babel-plugin-transform-object-rest-spread
 requiredModules:
   files:
     root: '**/*.{js,cgi}'

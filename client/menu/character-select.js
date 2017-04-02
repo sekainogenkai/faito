@@ -51,7 +51,7 @@ class StageMenuPlayer extends React.Component {
 }
 
 
-export default class StageMenuPage extends React.Component {
+export default class CharacterSelectMenuPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -75,38 +75,7 @@ export default class StageMenuPage extends React.Component {
   render() {
     return <div className="menu-page" style={{backgroundColor: 'white'}}>
     <div className="menu-item">Press [Attack] to join.</div>
-    {this.state.players}
+    {this.state.players.filter(player => player)}
     </div>;
   }
-}
-
-export function CharacterSelectMenuPage(props) {
-  props = Object.assign({
-    playerIndex: 0,
-  }, props);
-  if (!props.players) throw new Error('Must pass players.');
-  // Base case: no players left to choose for.
-  if (props.playerIndex >= props.players.players.length) {
-    return <StageSelectMenuPage {...props} players={props.players}/>;
-  }
-  // Is the current player defined? Otherwise recurse.
-  const player = props.players.players[props.playerIndex];
-  if (!player) {
-    return <CharacterSelectMenuPage {...props} players={players} playerIndex={props.playerIndex + 1}/>;
-  }
-  // We have an actual current player to make a decision about! Yay~!
-  return (
-    <MenuPage {...props}>
-      <LabelMenuItem>
-        {player.name} Character Selection
-      </LabelMenuItem>
-      <ButtonMenuItem action={menu => menu.pushMenuPage(
-        <CharacterSelectMenuPage players={props.players} playerIndex={props.playerIndex + 1}/>
-      )}>Hero 1</ButtonMenuItem>
-      <ButtonMenuItem action={menu => menu.pushMenuPage(
-        <CharacterSelectMenuPage players={props.players} playerIndex={props.playerIndex + 1}/>
-      )}>Hero 2</ButtonMenuItem>
-      <ButtonMenuItem action={menu => menu.popMenuPage()}>Back</ButtonMenuItem>
-    </MenuPage>
-  );
 }

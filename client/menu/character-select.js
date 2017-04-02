@@ -63,10 +63,17 @@ export default class CharacterSelectMenuPage extends React.Component {
   componentDidMount() {
     this.props.players.setInputTargetFinder((i, player) => {
       const proxy = new ProxyInputTarget(new DummyInputTarget());
-      const newPlayers = this.state.players.slice();
-      newPlayers[i] = <StageMenuPlayer key={i} player={player} input={proxy} />;
-      this.setState({
-        players: newPlayers,
+      // setState is not synchronous. To mutate an array in it multiple
+      // times before it applies the state update to this.state, must
+      // use the callback pattern: http://stackoverflow.com/a/41445812
+      this.setState(state => {
+        console.log(JSON.stringify(state.newPlayers));
+        const newPlayers = state.players.slice();
+        newPlayers[i] = <StageMenuPlayer key={i} player={player} input={proxy} />;
+        console.log(newPlayers);
+        return {
+          players: newPlayers,
+        };
       });
       return proxy;
     });

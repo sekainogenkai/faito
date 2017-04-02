@@ -1,6 +1,6 @@
 import BABYLON from 'babylonjs';
 import MapLoader from '../mapLoader.js';
-import MenuCamera from './MenuCamera';
+import MenuCamera from './menuCamera';
 
 export default function loadMenuScene (game) {
   // clear current scene

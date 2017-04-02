@@ -75,6 +75,31 @@ export class DummyInputTarget {
 const dummyInputTarget = new DummyInputTarget();
 
 /**
+ * An input target which points to another, replacable target.
+ */
+export class ProxyInputTarget {
+  constructor(initialTarget) {
+    this.setTarget(initialTarget);
+  }
+
+  setTarget(target) {
+    this._target = target;
+  }
+
+  joyChanged(joy) {
+    this._target.joyChanged(joy);
+  }
+
+  buttonDown(button) {
+    this._target.buttonDown(button);
+  }
+
+  buttonUp(button) {
+    this._target.buttonUp(button);
+  }
+}
+
+/**
  * A local player.
  */
 export class LocalPlayer {

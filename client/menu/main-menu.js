@@ -7,7 +7,7 @@ export default function (props) {
     <MenuPage {...props}>
 
       <ButtonMenuItem action={menu => menu.pushMenuPage(
-        <CharacterSelectMenuPage players={props.players}/>
+        <CharacterSelectMenuPage/>
       )}>Play Game</ButtonMenuItem>
 
       <ButtonMenuItem action={menu => menu.pushMenuPage(

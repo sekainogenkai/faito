@@ -46,6 +46,7 @@
     "webpack-manifest-plugin": "^1.1.0"
   },
   "devDependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "dependency-lint": "^4.3.1",
     "mocha": "^3.2.0"
   }

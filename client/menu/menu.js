@@ -19,8 +19,7 @@ const styles = {
         justifyContent: 'center',
     },
     mainMenuItem: {
-        padding: 10,
-        backgroundColor: "lightblue",
+        padding: '10px 40px 10px 40px',
     },
 };
 
@@ -63,14 +62,24 @@ export default class Menu extends React.Component {
         this._inputTarget = new MenuInputTarget();
         // In the future could make per-player cursors in the
         // menu. For now, just traditional shared menu.
-        props.players.setInputTargetFinder((i, player) => this._inputTarget);
+        this.setSharedInputTargetFinder();
+    }
+
+    /**
+     * Set the target to the shared one so that when switching to
+     * normal menus they get input at all.
+     */
+    setSharedInputTargetFinder() {
+      this.props.players.setInputTargetFinder((i, player) => this._inputTarget);
     }
 
     /**
      * MenuPages call this get input focused on them.
      */
     setMenuInputTarget(target) {
-        this._inputTarget.setTarget(target);
+      // In case the menu page overrode input handling, switch back to normal.
+      this.setSharedInputTargetFinder();
+      this._inputTarget.setTarget(target);
     }
 
     /**
@@ -100,6 +109,8 @@ export default class Menu extends React.Component {
         return <div className="menu" style={styles.menu}>
             {React.Children.map(children, (child, i) => React.cloneElement(child, {
                 menu: this,
+                // In case the MenuPage wants to override input handling.
+                players: this.props.players,
                 // If we don’t have a different key, React applies the
                 // state from from MenuPage to sub menu, etc., because
                 // it thinks we’re rerendering the same instance.
@@ -109,6 +120,11 @@ export default class Menu extends React.Component {
     }
 }
 
+/**
+ * To create a custom MenuPage, you must define componentDidMount
+ * and connect inputs. Do not extend this class. Just accept
+ * and use the passed in menu and players objects.
+ */
 export class MenuPage extends React.Component {
     constructor(props) {
         super(props);
@@ -182,8 +198,8 @@ export class MenuItem extends React.Component {
 
     render() {
         return <div className="menu-item" style={{
-            backgroundColor: this.props.active ? 'red' : 'white',
-        }}>
+          ...{backgroundColor: this.props.active ? 'red' : 'white', },
+          ...styles.mainMenuItem  }}>
             {this.props.children}
             </div>;
     }

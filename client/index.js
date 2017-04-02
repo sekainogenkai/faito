@@ -95,7 +95,7 @@ class Ui extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      menu: false,
+      menu: true,
     };
   }
 

@@ -15,7 +15,7 @@ import Ramp from './ramp';
 import {Buttons} from '../../../../input';
 
 const boardPushStrength = 7;
-const manaCostBoard = 0;
+const manaCostBoard = 50;
 
 
 export default class BasePowerHandler {

@@ -9,3 +9,5 @@ export default class Waller extends BaseHero {
     WallerPowerHandler);
   }
 }
+
+export const name = 'waller';

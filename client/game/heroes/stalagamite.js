@@ -9,3 +9,5 @@ export default class Stalagamite extends BaseHero {
     StalagamitePowerHandler);
   }
 }
+
+export const name = 'Stalagamite';

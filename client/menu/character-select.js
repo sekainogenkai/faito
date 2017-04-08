@@ -4,6 +4,9 @@ import {DummyInputTarget, ProxyInputTarget} from '../player';
 import StageSelectMenuPage from './stage-selection';
 import React from 'react';
 
+const heroesContext = require.context('../game/heroes', false, /\.js$/);
+const heroKeys = heroesContext.keys().filter(key => key !== './baseHero.js');
+
 class StageMenuPlayer extends React.Component {
   constructor(props) {
     super(props);
@@ -18,13 +21,13 @@ class StageMenuPlayer extends React.Component {
         if (this.state.active) {
           this.setState({
             active: button != Buttons.B,
-            characterIndex: this.state.characterIndex + (function () {
+            characterIndex: (this.state.characterIndex + (function () {
               switch (button) {
                 case Buttons.JoyLeft: return -1;
                 case Buttons.JoyRight: return 1;
               }
               return 0;
-            })(),
+            })() + heroKeys.length) % heroKeys.length,
           });
         } else {
           if (button == Buttons.A) {
@@ -41,7 +44,7 @@ class StageMenuPlayer extends React.Component {
   render() {
     if (this.state.active) {
       return <div>
-      <p>{this.props.player.name} has chosen character {this.state.characterIndex}. Press [attack2] to abort.</p>
+      <p>{this.props.player.name} has chosen character {heroesContext(heroKeys[this.state.characterIndex]).name}. Press [attack2] to abort.</p>
       </div>;
     }
     return <div>

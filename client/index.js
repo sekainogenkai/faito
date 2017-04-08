@@ -12,9 +12,9 @@ import loadMenuScene from './game/menuScene';
 import MainMenu from './menu/main-menu';
 import MapLoader from './mapLoader.js';
 
-import Hero1 from './game/heroes/skater';
-import Hero2 from './game/heroes/psych';
-import Hero3 from './game/heroes/skater';
+import Hero1 from './game/heroes/psych';
+import Hero2 from './game/heroes/skater';
+import Hero3 from './game/heroes/waller';
 
 class Game extends EventEmitter {
   constructor() {
@@ -71,7 +71,7 @@ class Game extends EventEmitter {
 
 
     // Load the game
-    this.loadMenu();
+    this.loadGame();
 
     new InputManager(this);
   }
@@ -95,7 +95,7 @@ class Ui extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      menu: true,
+      menu: false,
     };
   }
 

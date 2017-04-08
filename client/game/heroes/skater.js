@@ -129,3 +129,5 @@ export default class Skater extends BaseHero {
 
 
 }
+
+export const name = 'Skater';

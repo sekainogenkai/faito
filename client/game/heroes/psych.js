@@ -9,3 +9,5 @@ export default class Psych extends BaseHero {
     PsychPowerHandler);
   }
 }
+
+export const name = 'Psych';

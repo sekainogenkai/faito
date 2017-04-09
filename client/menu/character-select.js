@@ -30,15 +30,24 @@ class StageMenuPlayer extends React.Component {
             })() + heroKeys.length) % heroKeys.length,
           });
         } else {
-          if (button == Buttons.A) {
+          switch (button) {
+            case Buttons.A:
             console.log('pressed button a');
             this.setState({
               active: true,
             });
+            break;
+            case Buttons.B:
+            this.props.wantsBack();
+            break;
           }
         }
       },
     }));
+  }
+
+  get active() {
+    return this.state.active;
   }
 
   render() {
@@ -61,6 +70,16 @@ export default class CharacterSelectMenuPage extends React.Component {
     this.state = {
       players: [],
     };
+    this.playerRefs = [];
+  }
+
+  playerAskedForBack() {
+    // Only go back out of this menu if all players are inactive.
+    console.log(this);
+    if (this.playerRefs.find(p => p.active)) {
+      return;
+    }
+    this.props.menu.popMenuPage();
   }
 
   componentDidMount() {
@@ -72,7 +91,7 @@ export default class CharacterSelectMenuPage extends React.Component {
       this.setState(state => {
         console.log(JSON.stringify(state.newPlayers));
         const newPlayers = state.players.slice();
-        newPlayers[i] = <StageMenuPlayer key={i} player={player} input={proxy} />;
+        newPlayers[i] = <StageMenuPlayer key={i} player={player} input={proxy} ref={playerRef => this.playerRefs[i] = playerRef} wantsBack={() => this.playerAskedForBack()} />;
         console.log(newPlayers);
         return {
           players: newPlayers,

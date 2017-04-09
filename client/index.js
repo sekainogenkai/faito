@@ -14,7 +14,7 @@ import MapLoader from './mapLoader.js';
 
 import Hero1 from './game/heroes/psych';
 import Hero2 from './game/heroes/skater';
-import Hero3 from './game/heroes/waller';
+import Hero3 from './game/heroes/skater';
 
 class Game extends EventEmitter {
   constructor() {
@@ -95,7 +95,7 @@ class Ui extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      menu: false,
+      menu: true,
     };
   }
 

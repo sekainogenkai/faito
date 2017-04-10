@@ -18,7 +18,7 @@ export default class BaseCursor {
     }
 
     update () {
-      this.mesh.position.y = getHeightAtCoordinates(this.groundMesh, this.mesh.position.x, this.mesh.position.z)
+      this.mesh.position.y = getHeightAtCoordinates(this.game.scene, this.mesh.position.x, this.mesh.position.z)
     }
 
     destroy() {

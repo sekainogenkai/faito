@@ -1,6 +1,6 @@
 import BABYLON from 'babylonjs';
 import {registerBeforeSceneRender} from '../../../mesh-util'
-import {getHeightAtCoordinates} from '../powerUtils/mainUtils';
+import {getHeightAtCoordinates, getHeightOfMeshAtCoordinates} from '../powerUtils/mainUtils';
 //import ParticleEmitter from '../../../particle';
 
 const zeroVector = new BABYLON.Vector3.Zero();
@@ -147,7 +147,7 @@ export default class BasePowerObject {
     //console.log (destroyEndEvent)
     this.vectorStart = this.mesh.position;
     this.vectorEnd = this.mesh.position.clone();
-    this.vectorEnd.y = getHeightAtCoordinates(this.groundMesh, this.vectorEnd.x, this.vectorEnd.z) - (this.dropHeight?this.dropHeight:this.mesh.getBoundingInfo().boundingBox.extendSize.y);
+    this.vectorEnd.y = getHeightOfMeshAtCoordinates(this.groundMesh, this.vectorEnd.x, this.vectorEnd.z) - (this.dropHeight?this.dropHeight:this.mesh.getBoundingInfo().boundingBox.extendSize.y);
 
     this.moveAnimation('destroy', [destroyStartEvent, destroyEndEvent]);
   }

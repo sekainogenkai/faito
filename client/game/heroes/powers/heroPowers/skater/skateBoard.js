@@ -29,14 +29,14 @@ export default class SkateBoard extends BasePower {
       // Set the spawn vector
       const vectorStart = new BABYLON.Vector3(
         this.hero.mask.position.x,
-        (getHeightAtCoordinates(this.groundMesh, this.hero.mask.position.x, this.hero.mask.position.z)) - meshSize,
+        (getHeightAtCoordinates(this.game.scene, this.hero.mask.position.x, this.hero.mask.position.z)) - meshSize,
         this.hero.mask.position.z
       );
 
       // Set the target vector
       const vectorEnd = new BABYLON.Vector3(
         this.hero.mask.position.x,
-        (getHeightAtCoordinates(this.groundMesh, this.hero.mask.position.x, this.hero.mask.position.z)) - meshSize,
+        (getHeightAtCoordinates(this.game.scene, this.hero.mask.position.x, this.hero.mask.position.z)) - meshSize,
         this.hero.mask.position.z
       );
 

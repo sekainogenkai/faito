@@ -46,3 +46,16 @@ void main(void) {
 
 	gl_FragColor = vec4(color, 1.);
 }
+
+float computeShadow(vec4 vPositionFromLight, sampler2D shadowSampler, float darkness) {
+	vec3 depth = vPositionFromLight.xyz / vPositionFromLight.w;
+	vec2 uv = 0.5 * depth.xy + vec2(0.5, 0.5);
+	if (uv.x < 0. || uv.x > 1.0 || uv.y < 0. || uv.y > 1.0)	{
+		return 1.0;
+	}	
+	float shadow = unpack(texture2D(shadowSampler, uv));
+	if (depth.z > shadow)	{
+		return darkness;
+	}
+	return 1.;
+}

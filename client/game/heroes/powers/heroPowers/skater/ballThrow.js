@@ -32,14 +32,14 @@ export default class BallThrow extends BasePower {
       // Set the spawn vector
       const vectorStart = new BABYLON.Vector3(
         cursor.mesh.position.x,
-        (getHeightAtCoordinates(this.groundMesh, cursor.mesh.position.x, cursor.mesh.position.z)) - (meshSize) - 2,
+        (getHeightAtCoordinates(this.game.scene, cursor.mesh.position.x, cursor.mesh.position.z)) - (meshSize) - 2,
         cursor.mesh.position.z
       );
 
       // Set the target vector
       const vectorEnd = new BABYLON.Vector3(
         cursor.mesh.position.x,
-        Math.max((getHeightAtCoordinates(this.groundMesh, cursor.mesh.position.x, cursor.mesh.position.z)) + 1,
+        Math.max((getHeightAtCoordinates(this.game.scene, cursor.mesh.position.x, cursor.mesh.position.z)) + 1,
         this.hero.mask.position.y + 1),
         cursor.mesh.position.z
       );

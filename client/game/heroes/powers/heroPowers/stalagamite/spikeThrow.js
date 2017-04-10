@@ -31,7 +31,7 @@ export default class SpikeThrow extends PowerRememberObjects {
       // Set the spawn vector
       const vectorStart = new BABYLON.Vector3(
         this.cursor.mesh.position.x,
-        (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - (meshHeight) - 5,
+        (getHeightAtCoordinates(this.game.scene, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - (meshHeight) - 5,
         this.cursor.mesh.position.z
       );
 
@@ -40,7 +40,7 @@ export default class SpikeThrow extends PowerRememberObjects {
         (this.hero.mask.position.x*2 + this.cursor.mesh.position.x)/3,
         Math.max(
           this.hero.mask.position.y + 15,
-          (getHeightAtCoordinates(this.groundMesh, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + (meshHeight)
+          (getHeightAtCoordinates(this.game.scene, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + (meshHeight)
         ),
         (this.hero.mask.position.z*2 + this.cursor.mesh.position.z)/3
       );

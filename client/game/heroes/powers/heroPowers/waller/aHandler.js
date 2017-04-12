@@ -2,7 +2,7 @@ import BABYLON from 'babylonjs';
 
 import BasePowerHandler from '../../basePowerHandler';
 
-import WallDefense from './WallDefense';
+import WallDefense from './wallDefense';
 import WallRiser from './wallRiser';
 import HeavyBall from './heavyBall';
 import WallPush from './wallPush';

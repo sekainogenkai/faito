@@ -5,7 +5,8 @@ import WallerPowerHandler from './powers/heroPowers/waller/aHandler';
 export default class Waller extends BaseHero {
   constructor(game, name, id) {
     super(game, name, id, 'omi',
-    {speed:9, airSpeed:9, jumpStrength:130, rollGroundSpeed:18, rollAirSpeed:10},
+    {speed:8, airSpeed:8, jumpStrength:150, rollGroundSpeed:18, rollAirSpeed:10},
+    {maxHealth:1000, maxMana:7500, manaGain:30},
     WallerPowerHandler);
   }
 }

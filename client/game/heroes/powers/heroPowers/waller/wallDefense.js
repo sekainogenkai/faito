@@ -4,7 +4,7 @@ import BasePower from '../../basePower';
 import ProjectileObject from '../../powerObjects/projectileObject';
 import PointCursor from '../../cursors/pointCursor';
 
-const manaCost = 1300; // mana cost of the power
+const manaCost = 3000; // mana cost of the power
 const collisionDamage = 5; // the amount of damage it does when it collides
 const mass = 1000;
 const powerImpulseVec = new BABYLON.Vector3(0, 0, 0); // impulse applied to projectile on spawn

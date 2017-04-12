@@ -8,20 +8,21 @@ import BasePowerHandler from './powers/heroPowers/baseHero/aHandler';
 
 const upAxis = new CANNON.Vec3(0, 1, 0);
 const zeroVector2 = new BABYLON.Vector2(0, 0);
-const maxMana = 5000 * 2;
-const maxHealth = 500;
 const onGroundPadding = 10;
 
 export default class Hero {
   constructor(
   game, name, id, meshFileName='omi',
   movOpts={speed:10, airSpeed:5, jumpStrength:150, rollGroundSpeed:15, rollAirSpeed:9},
+  charOpts={maxHealth:500, maxMana:10000, manaGain:20},
   powerHandler=BasePowerHandler) {
 
     this.game = game;
     this.name = name;
-    this._mana = maxMana;
-    this._health = maxHealth;
+    this._mana = charOpts.maxMana;
+    this._health = charOpts.maxHealth;
+    this.maxMana = charOpts.maxMana;
+    this.maxHealth = charOpts.maxHealth;
       /**
        * For sort of treating the hero to act as a joy target. When
        * this gets called, that means that the hero itself should
@@ -93,8 +94,8 @@ export default class Hero {
     this.useAbilityTimer = 0;
     this.useAbilityTimerStart = 20;
     // Mana variables
-    this.manaGainIdle = 20;
-    this.manaGainMoving = 10;
+    this.manaGainIdle = charOpts.manaGain * 1.5;
+    this.manaGainMoving = charOpts.manaGain;
 
     // Slow down variables. slows down all movement
     this.slowDown = 1;
@@ -456,14 +457,14 @@ export default class Hero {
     }
 
     _manageMana() {
-        if (this._mana < maxMana) {
-            this._mana = Math.min(maxMana, this._mana + ((this.mask.physicsImpostor.getLinearVelocity().length() < 1)?this.manaGainIdle:this.manaGainMoving));
+        if (this._mana < this.maxMana) {
+            this._mana = Math.min(this.maxMana, this._mana + ((this.mask.physicsImpostor.getLinearVelocity().length() < 1)?this.manaGainIdle:this.manaGainMoving));
         }
-        this._udpateDisplayBar(this.manaBar, (this._mana/maxMana));
+        this._udpateDisplayBar(this.manaBar, (this._mana/this.maxMana));
     }
 
     _manageHealth() {
-        this._udpateDisplayBar(this.healthBar, (this._health/maxHealth));
+        this._udpateDisplayBar(this.healthBar, (this._health/this.maxHealth));
     }
 
     _initNameTag(name) {

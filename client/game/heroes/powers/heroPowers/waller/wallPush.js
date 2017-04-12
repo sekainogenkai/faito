@@ -5,11 +5,11 @@ import BasePowerObject from '../../powerObjects/basePowerObject';
 import DirectionCursor from '../../cursors/directionCursor';
 import PointCursor from '../../cursors/pointCursor';
 
-const manaCost = 700; // mana cost of the power
+const manaCost = 1000; // mana cost of the power
 const collisionDamage = 10; // the amount of damage it does when it collides
 
 const directionVec = new BABYLON.Vector3(0, 0, 1); // direction of the cursor
-const distance = 6;
+const distance = 8;
 const cursorSpeed = 2; // speed of the cursor
 const fixedRotation = false;
 const speed = 1.5;

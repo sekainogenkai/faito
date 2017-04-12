@@ -14,6 +14,7 @@ export default class Skater extends BaseHero {
   constructor(game, name, id) {
     super(game, name, id, 'omi',
     {speed:9, airSpeed:9, jumpStrength:170, rollGroundSpeed:18, rollAirSpeed:10},
+    {maxHealth:500, maxMana:10000, manaGain:20},
     SkaterPowerHandler);
     this.skateGroundLinearDampening = .5;
     this.skateAirLinearDampening = .3;

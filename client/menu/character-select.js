@@ -59,8 +59,16 @@ class StageMenuPlayer extends React.Component {
     }));
   }
 
+  componentDidUpdate() {
+    this.props.stateChanged();
+  }
+
   get active() {
     return this.state.active;
+  }
+
+  get lockedIn() {
+    return this.state.lockedIn;
   }
 
   render() {
@@ -98,6 +106,15 @@ export default class CharacterSelectMenuPage extends React.Component {
     this.props.menu.popMenuPage();
   }
 
+  playerStateChanged() {
+    console.log('Player state changed');
+    if (!this.playerRefs.find(p => p.active && !p.lockedIn)
+     && this.playerRefs.find(p => p.active && p.lockedIn)) {
+      console.log('Start Game');
+
+    }
+  }
+
   componentDidMount() {
     this.props.players.setInputTargetFinder((i, player) => {
       const proxy = new ProxyInputTarget(new DummyInputTarget());
@@ -107,7 +124,13 @@ export default class CharacterSelectMenuPage extends React.Component {
       this.setState(state => {
         console.log(JSON.stringify(state.newPlayers));
         const newPlayers = state.players.slice();
-        newPlayers[i] = <StageMenuPlayer key={i} player={player} input={proxy} ref={playerRef => this.playerRefs[i] = playerRef} wantsBack={() => this.playerAskedForBack()} />;
+        newPlayers[i] = <StageMenuPlayer
+          key={i}
+          player={player}
+          input={proxy}
+          ref={playerRef => this.playerRefs[i] = playerRef}
+          wantsBack={() => this.playerAskedForBack()}
+          stateChanged={() => this.playerStateChanged()} />;
         console.log(newPlayers);
         return {
           players: newPlayers,

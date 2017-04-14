@@ -13,22 +13,35 @@ class StageMenuPlayer extends React.Component {
 
     this.state = {
       active: false,
+      lockedIn: false,
       characterIndex: 0,
     };
 
     this.props.input.setTarget(Object.assign(new DummyInputTarget(), {
       buttonDown: button => {
         if (this.state.active) {
-          this.setState({
-            active: button != Buttons.B,
-            characterIndex: (this.state.characterIndex + (function () {
-              switch (button) {
-                case Buttons.JoyLeft: return -1;
-                case Buttons.JoyRight: return 1;
-              }
-              return 0;
-            })() + heroKeys.length) % heroKeys.length,
-          });
+          switch (button) {
+            case Buttons.A:
+              this.setState({
+                lockedIn: true,
+              });
+              break;
+            case Buttons.B:
+              this.setState({
+                lockedIn: false,
+              });
+          }
+          if (!this.state.lockedIn) {
+            this.setState({
+              characterIndex: (this.state.characterIndex + (function () {
+                switch (button) {
+                  case Buttons.JoyLeft: return -1;
+                  case Buttons.JoyRight: return 1;
+                }
+                return 0;
+              })() + heroKeys.length) % heroKeys.length,
+            });
+          }
         } else {
           switch (button) {
             case Buttons.A:
@@ -38,8 +51,8 @@ class StageMenuPlayer extends React.Component {
             });
             break;
             case Buttons.B:
-            this.props.wantsBack();
-            break;
+              this.props.wantsBack();
+              break;
           }
         }
       },
@@ -54,6 +67,9 @@ class StageMenuPlayer extends React.Component {
     if (this.state.active) {
       return <div>
       <p>{this.props.player.name} has chosen character {heroesContext(heroKeys[this.state.characterIndex]).name}. Press [attack2] to abort.</p>
+      {this.state.lockedIn &&
+        <p> LOCKED IN </p>
+      }
       </div>;
     }
     return <div>

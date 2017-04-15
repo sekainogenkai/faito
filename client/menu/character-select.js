@@ -4,8 +4,8 @@ import {DummyInputTarget, ProxyInputTarget} from '../player';
 import StageSelectMenuPage from './stage-selection';
 import React from 'react';
 
-const heroesContext = require.context('../game/heroes', false, /\.js$/);
-const heroKeys = heroesContext.keys().filter(key => key !== './baseHero.js');
+export const heroesContext = require.context('../game/heroes', false, /\.js$/);
+export const heroKeys = heroesContext.keys().filter(key => key !== './baseHero.js');
 
 class StageMenuPlayer extends React.Component {
   constructor(props) {
@@ -73,6 +73,10 @@ class StageMenuPlayer extends React.Component {
     return this.state.active;
   }
 
+  get characterIndex() {
+    return this.state.characterIndex;
+  }
+
   get lockedIn() {
     return this.state.lockedIn;
   }
@@ -117,7 +121,16 @@ export default class CharacterSelectMenuPage extends React.Component {
      && this.playerRefs.find(p => p.active && p.lockedIn)) {
       console.log('Start Game');
       console.log(this.playerRefs);
-      this.props.menu.pushMenuPage(<StageSelectMenuPage game={this.props.game} playerRefs={this.playerRefs.slice()}/>);
+      const playerInfo = this.playerRefs.reduce((acc, val, i) => {
+        if (val.active) {
+          acc[i] = {
+            characterIndex: val.characterIndex,
+          };
+        }
+        return acc;
+      }, {});
+      console.log('playerInfo', playerInfo);
+      this.props.menu.pushMenuPage(<StageSelectMenuPage game={this.props.game} playerInfo={playerInfo}/>);
     }
   }
 

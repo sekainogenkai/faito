@@ -12,14 +12,11 @@ import loadMenuScene from './game/menuScene';
 import MainMenu from './menu/main-menu';
 import MapLoader from './mapLoader';
 import mapList from './menu/mapList';
+import {heroKeys, heroesContext} from './menu/character-select';
+import {DummyInputTarget} from './player';
 
 console.log('mapList', mapList);
 
-
-
-import Hero1 from './game/heroes/psych';
-import Hero2 from './game/heroes/skater';
-import Hero3 from './game/heroes/skater';
 
 class Game extends EventEmitter {
   constructor() {
@@ -27,12 +24,17 @@ class Game extends EventEmitter {
       this.inputAddedSignal = new MiniSignal();
       this.players = new PlayerManager(this);
       this.players.changedSignal.add(() => this.handlePlayersChanged());
-      this.heroes = [];
+      this.heroesByPlayer = [];
       this.menuSignal = new MiniSignal();
       this.players.menuSignal.add(() => this.menuSignal.dispatch());
       // Initial state is for menu to be hidden. This preinitializes
       // the input targets.
+      this.playerInfos = {};
       this.handleMenuHidden();
+  }
+
+  get heroes() {
+    return this.heroesByPlayer.filter(hero => hero);
   }
 
     addInput(input) {
@@ -44,10 +46,14 @@ class Game extends EventEmitter {
     }
 
     handleMenuHidden() {
-        this.players.setInputTargetFinder((i, player) => this.heroes[i] ||
-        (this.heroes[i] =
-          (i==0)?new Hero1(this, player.name, i): (i==1) ? new Hero2(this, player.name, i) : new Hero3(this, player.name, i)
-        ));
+        this.players.setInputTargetFinder((i, player) => {
+          const playerInfo = this.playerInfos[i];
+          if (playerInfo) {
+             return this.heroesByPlayer[i] ||
+             (this.heroesByPlayer[i] = new (heroesContext(heroKeys[playerInfo.characterIndex]).default)(this, player.name, i));
+          }
+          return new DummyInputTarget();
+        });
     }
 
     handlePlayersChanged() {
@@ -91,7 +97,10 @@ class Game extends EventEmitter {
     loadMenuScene(this, mapList[i]);
   }
 
-  loadGameScene (i) {
+  loadGameScene (i, playerInfo) {
+    this.heroesByPlayer = [];
+    this.playerInfos = playerInfo;
+
     loadGameScene(this, this.players, mapList[i]);
   }
 

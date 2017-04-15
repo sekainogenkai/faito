@@ -56,12 +56,8 @@ export default class StageSelectMenuPage extends React.Component {
   }
 
   selectMap() {
-    console.log("I want to start the game");
-    this.props.game.loadGameScene(this.state.selectedMap);
+    this.props.game.loadGameScene(this.state.selectedMap, this.props.playerInfo);
 
-    console.log('playerRefs', this.props.playerRefs[0].state.active);
-
-    console.log("game menu", this.props.game.menu);
     this.props.menu.clearMenu();
   }
 

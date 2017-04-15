@@ -39,9 +39,9 @@ class Game extends EventEmitter {
         this.inputAddedSignal.dispatch(input);
     }
 
-  doRenderLoop() {
-    this.scene.render();
-  }
+    doRenderLoop() {
+      this.scene.render();
+    }
 
     handleMenuHidden() {
         this.players.setInputTargetFinder((i, player) => this.heroes[i] ||
@@ -60,7 +60,7 @@ class Game extends EventEmitter {
                 // Clean up hero.
                 const hero = this.heroes[i];
                 if (hero) {
-                    hero.destory();
+                    hero.destroy();
                     this.heroes[i] = undefined;
                 }
             }
@@ -76,19 +76,23 @@ class Game extends EventEmitter {
 
 
     // Load the game
-    this.loadMenu();
+    this.loadRandomMenuScene();
 
     new InputManager(this);
   }
 
-  loadMenu () {
+  loadRandomMenuScene() {
     // choose random map.
     const randMapIn = Math.floor(Math.random()*mapList.length);
-    loadMenuScene(this, mapList[randMapIn]);
+    this.loadMenuScene(randMapIn);
   }
 
-  loadGame () {
-    loadGameScene(this);
+  loadMenuScene (i) {
+    loadMenuScene(this, mapList[i]);
+  }
+
+  loadGameScene (i) {
+    loadGameScene(this, this.players, mapList[i]);
   }
 
   abandonEngine(engine) {
@@ -106,17 +110,17 @@ class Ui extends React.Component {
     };
   }
 
-    handleEngineCreated(engine) {
-        this.props.game.setEngine(engine);
-        this.props.game.menuSignal.add(() => {
-            this.setState({
-                menu: !this.state.menu,
-            });
-            if (!this.state.menu) {
-                this.handleMenuHidden();
-            }
-        });
-    }
+  handleEngineCreated(engine) {
+      this.props.game.setEngine(engine);
+      this.props.game.menuSignal.add(() => {
+          this.setState({
+              menu: !this.state.menu,
+          });
+          if (!this.state.menu) {
+              this.handleMenuHidden();
+          }
+      });
+  }
 
   handleEngineAbandoned(engine) {
     this.props.game.abandonEngine(engine);
@@ -131,7 +135,7 @@ class Ui extends React.Component {
     return <div style={{width: '100%', height: '100%',}}>
         <BabylonJS onEngineCreated={engine => this.handleEngineCreated(engine)} onEngineAbandoned={engine => this.handleEngineAbandoned(engine)}/>
           {this.state.menu ? <Menu players={this.props.game.players} onHide={() => this.handleMenuHidden()}>
-             <MainMenu players={this.props.game.players}/>
+             <MainMenu players={this.props.game.players}  game={this.props.game}/>
            </Menu>: []}
       </div>;
   }

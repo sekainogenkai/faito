@@ -116,7 +116,8 @@ export default class CharacterSelectMenuPage extends React.Component {
     if (!this.playerRefs.find(p => p.active && !p.lockedIn)
      && this.playerRefs.find(p => p.active && p.lockedIn)) {
       console.log('Start Game');
-      this.props.menu.pushMenuPage(<StageSelectMenuPage/>);
+      console.log(this.playerRefs);
+      this.props.menu.pushMenuPage(<StageSelectMenuPage game={this.props.game} playerRefs={this.playerRefs.slice()}/>);
     }
   }
 

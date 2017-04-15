@@ -50,10 +50,19 @@ export default class StageSelectMenuPage extends React.Component {
 
   loadMenuScene() {
     console.log('kristofer pay attention to this');
+    console.log('da game2', this.props.game.loadMenuScene);
+    console.log('new map', mapList[this.state.selectedMap]);
+    this.props.game.loadMenuScene(this.state.selectedMap);
   }
 
   selectMap() {
     console.log("I want to start the game");
+    this.props.game.loadGameScene(this.state.selectedMap);
+
+    console.log('playerRefs', this.props.playerRefs[0].state.active);
+
+    console.log("game menu", this.props.game.menu);
+    this.props.menu.clearMenu();
   }
 
   back() {
@@ -70,5 +79,4 @@ export default class StageSelectMenuPage extends React.Component {
     <p>{mapList[this.state.selectedMap]}</p>
     </div>;
   }
-
 }

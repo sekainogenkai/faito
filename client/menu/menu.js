@@ -104,6 +104,13 @@ export default class Menu extends React.Component {
         }
     }
 
+    clearMenu() {
+      this.setState({
+        menuPages: [],
+      });
+      this.props.onHide();
+    }
+
     render() {
         const children = this.state.menuPages[this.state.menuPages.length - 1] || [];
         return <div className="menu" style={styles.menu}>

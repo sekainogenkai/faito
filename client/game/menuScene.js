@@ -5,11 +5,15 @@ import MenuCamera from './menuCamera';
 export default function loadMenuScene (game, map='test1') {
   // clear current scene
   game.scene.dispose();
+  //game.scene.disposeSounds();
 
   // Initialize camera
   var camera = new MenuCamera(game);
 
+  console.log('loading sounds', game.scene.sound);
+
   // Load sound effects
+  /*
   game.scene.sound = {
     jump1 : new BABYLON.Sound('jump1', './audio/hero/jump01.ogg', game.scene, null, {loop: false, autoplay: false}),
     jump2 : new BABYLON.Sound('jump2', './audio/hero/jump02.ogg', game.scene, null, {loop: false, autoplay: false}),
@@ -19,10 +23,11 @@ export default function loadMenuScene (game, map='test1') {
     music : new BABYLON.Sound('music', './audio/FaitoBackground.ogg', game.scene, null, {loop: true, autoplay: true, volume: 0.2}),
     jump : [],
     hurt : []
-  }
+  };
+
   game.scene.sound.jump = [game.scene.sound.jump1, game.scene.sound.jump2];
   game.scene.sound.hurt = [game.scene.sound.hurt1, game.scene.sound.hurt2, game.scene.sound.hurt3];
-
+ */
   // Set lights
   var dirLight = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(0, -1, 0), game.scene);
   let dirLightStrength = 1;

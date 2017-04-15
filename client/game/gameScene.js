@@ -2,7 +2,7 @@ import BABYLON from 'babylonjs';
 import MapLoader from '../mapLoader.js';
 import GameCamera from './gameCamera';
 
-export default function loadGameScene (game) {
+export default function loadGameScene (game, players, map='test1') {
   // clear current scene
   game.scene.dispose();
   // Initialize camera
@@ -79,5 +79,5 @@ export default function loadGameScene (game) {
   game.scene.collisionGroupFall = 4;
 
   //load map
-  game.mapLoader = new MapLoader('test1', game);
+  game.mapLoader = new MapLoader(map, game);
 }

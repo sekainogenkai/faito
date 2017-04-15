@@ -27,9 +27,15 @@ class StageMenuPlayer extends React.Component {
               });
               break;
             case Buttons.B:
-              this.setState({
-                lockedIn: false,
-              });
+              if (this.state.lockedIn) {
+                this.setState({
+                  lockedIn: false,
+                });
+              } else {
+                this.setState({
+                  active: false,
+                });
+              }
           }
           if (!this.state.lockedIn) {
             this.setState({
@@ -86,7 +92,6 @@ class StageMenuPlayer extends React.Component {
   }
 }
 
-
 export default class CharacterSelectMenuPage extends React.Component {
   constructor(props) {
     super(props);
@@ -111,7 +116,7 @@ export default class CharacterSelectMenuPage extends React.Component {
     if (!this.playerRefs.find(p => p.active && !p.lockedIn)
      && this.playerRefs.find(p => p.active && p.lockedIn)) {
       console.log('Start Game');
-
+      this.props.menu.pushMenuPage(<StageSelectMenuPage/>);
     }
   }
 

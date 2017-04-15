@@ -10,7 +10,12 @@ import {default as Menu, MenuPage, ButtonMenuItem, LabelMenuItem} from './menu/m
 import loadGameScene from './game/gameScene';
 import loadMenuScene from './game/menuScene';
 import MainMenu from './menu/main-menu';
-import MapLoader from './mapLoader.js';
+import MapLoader from './mapLoader';
+import mapList from './menu/mapList';
+
+console.log('mapList', mapList);
+
+
 
 import Hero1 from './game/heroes/psych';
 import Hero2 from './game/heroes/skater';
@@ -71,13 +76,15 @@ class Game extends EventEmitter {
 
 
     // Load the game
-    this.loadGame();
+    this.loadMenu();
 
     new InputManager(this);
   }
 
   loadMenu () {
-    loadMenuScene(this);
+    // choose random map.
+    const randMapIn = Math.floor(Math.random()*mapList.length);
+    loadMenuScene(this, mapList[randMapIn]);
   }
 
   loadGame () {
@@ -115,10 +122,10 @@ class Ui extends React.Component {
     this.props.game.abandonEngine(engine);
   }
 
-    handleMenuHidden() {
-        this.setState({menu: false,});
-        this.props.game.handleMenuHidden();
-    }
+  handleMenuHidden() {
+      this.setState({menu: false,});
+      this.props.game.handleMenuHidden();
+  }
 
   render() {
     return <div style={{width: '100%', height: '100%',}}>

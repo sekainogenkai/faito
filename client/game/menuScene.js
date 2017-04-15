@@ -2,7 +2,7 @@ import BABYLON from 'babylonjs';
 import MapLoader from '../mapLoader.js';
 import MenuCamera from './menuCamera';
 
-export default function loadMenuScene (game) {
+export default function loadMenuScene (game, map='test1') {
   // clear current scene
   game.scene.dispose();
 
@@ -48,5 +48,5 @@ export default function loadMenuScene (game) {
   game.scene.collisionGroupGround = 1;
   game.scene.collisionGroupFall = 4;
 
-  game.mapLoader = new MapLoader('test1', game);
+  game.mapLoader = new MapLoader(map, game);
 }

@@ -45,16 +45,24 @@ class StageMenuPlayer extends React.Component {
               let changeHeroNumber = 0;
               switch (button) {
                 case Buttons.JoyLeft:
+                console.log('missfits');
                   changeHeroNumber = -1;
+                  break;
                 case Buttons.JoyRight:
                   changeHeroNumber = 1;
+                  break;
               }
               if (changeHeroNumber != 0) {
-                this.loadDiffScene();
+                let newCharacterindex = (this.state.characterIndex + changeHeroNumber) % heroKeys.length;
+                if (newCharacterindex < 0) {
+                  newCharacterindex = heroKeys.length - 1;
+                }
                 this.setState({
-                  characterindex: (this.state.characterIndex + changeHeroNumber),
-              });
-            }
+                  characterIndex: newCharacterindex,
+                });
+                //console.log(this.state.character)
+                this.loadDiffScene();
+              }
           }
         } else { // If not active
           switch (button) {
@@ -95,9 +103,17 @@ class StageMenuPlayer extends React.Component {
 
   loadDiffScene() {
     console.log('loadDiffScene');
-    this.scene.dispose();
-    let camera = new MenuCamera(this);
+    if (this.mesh) {
+      this.mesh.dispose();
+    }
     //loadMenuScene(this, 1);
+    require(`../../models/heroes/${heroesContext(heroKeys[this.state.characterIndex]).heroName}.blend`).ImportMesh(BABYLON.SceneLoader, null, this.scene, loadedMeshes => {
+      this.mesh = loadedMeshes[0];//.clone(this.name);
+      this.mesh.position.y -= 3;
+      console.log('loadedMeshes', loadedMeshes);
+      let idleAnimation = this.mesh.skeleton.getAnimationRange('idle');
+      this.scene.beginAnimation(this.mesh.skeleton, idleAnimation.from+1, idleAnimation.to, true, 1);
+    });
   }
 
   onEngineCreated(engine) {
@@ -105,6 +121,11 @@ class StageMenuPlayer extends React.Component {
     engine.runRenderLoop(this.handleRenderLoop = () => this.doRenderLoop());
     this.scene = new BABYLON.Scene(this.engine);
     console.log("the new scene-------------------------------", this.scene);
+    let camera = new MenuCamera(this, {min:8, max:11});
+    let dirLight = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(.5, -1, 0), this.scene);
+    let dirLightStrength = 1;
+    dirLight.diffuse = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
+    dirLight.specular = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
 
     this.loadDiffScene();
   }
@@ -121,7 +142,7 @@ class StageMenuPlayer extends React.Component {
       <BabylonJS
       onEngineCreated={engine => this.onEngineCreated(engine)}
       onEngineAbandoned={engine => this.onEngineAbandoned(engine)}/>
-      <p>{this.props.player.name} has chosen character {heroesContext(heroKeys[this.state.characterIndex]).heroName}. Press [attack2] to abort.</p>
+      <p>{this.props.player.name} : {heroesContext(heroKeys[this.state.characterIndex]).heroName}.</p>
       {this.state.lockedIn &&
         <p> LOCKED IN </p>
       }

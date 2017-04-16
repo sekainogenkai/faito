@@ -1,11 +1,11 @@
 import BABYLON from 'babylonjs';
 
 export default class MenuCamera {
-  constructor (game) {
+  constructor (game, radius=null) {
     this.game = game;
     // Set the target vector which will get updated
     // Set radius values
-    this.radius = {
+    this.radius = radius?radius :{
         max: 100,
         min: 50
     };

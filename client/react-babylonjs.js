@@ -12,7 +12,7 @@ export class BabylonJS extends React.Component {
     }
 
     componentDidMount() {
-        this.engine = new BABYLON.Engine(this.canvas, this.props.antialias, this.props.options);
+    this.engine = new BABYLON.Engine(this.canvas, this.props.antialias, this.props.options);
     this.props.onEngineCreated(this.engine);
     this.handleWindowResize = () => this.engine.resize();
     window.addEventListener('resize', this.handleWindowResize);

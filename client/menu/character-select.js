@@ -3,6 +3,10 @@ import {Menu, MenuPage, ButtonMenuItem, LabelMenuItem} from './menu';
 import {DummyInputTarget, ProxyInputTarget} from '../player';
 import StageSelectMenuPage from './stage-selection';
 import React from 'react';
+import {BabylonJS} from '../react-babylonjs';
+import BABYLON from 'babylonjs';
+import {render} from 'react-dom';
+import MenuCamera from '../game/menuCamera';
 
 export const heroesContext = require.context('../game/heroes', false, /\.js$/);
 export const heroKeys = heroesContext.keys().filter(key => key !== './baseHero.js');
@@ -37,18 +41,22 @@ class StageMenuPlayer extends React.Component {
                 });
               }
           }
-          if (!this.state.lockedIn) {
-            this.setState({
-              characterIndex: (this.state.characterIndex + (function () {
-                switch (button) {
-                  case Buttons.JoyLeft: return -1;
-                  case Buttons.JoyRight: return 1;
-                }
-                return 0;
-              })() + heroKeys.length) % heroKeys.length,
-            });
+            if (!this.state.lockedIn) {
+              let changeHeroNumber = 0;
+              switch (button) {
+                case Buttons.JoyLeft:
+                  changeHeroNumber = -1;
+                case Buttons.JoyRight:
+                  changeHeroNumber = 1;
+              }
+              if (changeHeroNumber != 0) {
+                this.loadDiffScene();
+                this.setState({
+                  characterindex: (this.state.characterIndex + changeHeroNumber),
+              });
+            }
           }
-        } else {
+        } else { // If not active
           switch (button) {
             case Buttons.A:
             console.log('pressed button a');
@@ -81,9 +89,38 @@ class StageMenuPlayer extends React.Component {
     return this.state.lockedIn;
   }
 
+  doRenderLoop() {
+    this.scene.render();
+  }
+
+  loadDiffScene() {
+    console.log('loadDiffScene');
+    this.scene.dispose();
+    let camera = new MenuCamera(this);
+    //loadMenuScene(this, 1);
+  }
+
+  onEngineCreated(engine) {
+    this.engine = engine;
+    engine.runRenderLoop(this.handleRenderLoop = () => this.doRenderLoop());
+    this.scene = new BABYLON.Scene(this.engine);
+    console.log("the new scene-------------------------------", this.scene);
+
+    this.loadDiffScene();
+  }
+
+  onEngineAbandoned() {
+    this.engine.stopRenderLoop(this.handleRenderLoop);
+    this.handleRenderLoop = null;
+    this.engine = null;
+  }
+
   render() {
     if (this.state.active) {
       return <div>
+      <BabylonJS
+      onEngineCreated={engine => this.onEngineCreated(engine)}
+      onEngineAbandoned={engine => this.onEngineAbandoned(engine)}/>
       <p>{this.props.player.name} has chosen character {heroesContext(heroKeys[this.state.characterIndex]).heroName}. Press [attack2] to abort.</p>
       {this.state.lockedIn &&
         <p> LOCKED IN </p>

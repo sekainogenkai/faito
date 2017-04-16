@@ -17,7 +17,6 @@ import {DummyInputTarget} from './player';
 
 console.log('mapList', mapList);
 
-
 class Game extends EventEmitter {
   constructor() {
       super();
@@ -33,9 +32,9 @@ class Game extends EventEmitter {
       this.handleMenuHidden();
   }
 
-  get heroes() {
-    return this.heroesByPlayer.filter(hero => hero);
-  }
+    get heroes() {
+      return this.heroesByPlayer.filter(hero => hero);
+    }
 
     addInput(input) {
         this.inputAddedSignal.dispatch(input);

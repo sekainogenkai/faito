@@ -10,9 +10,10 @@ const upAxis = new CANNON.Vec3(0, 1, 0);
 const onGroundPadding = 10;
 const rotationMultiplier = 2.5;
 
+export const heroName = 'Skater';
 export default class Skater extends BaseHero {
   constructor(game, name, id) {
-    super(game, name, id, 'Skater',
+    super(game, name, id, heroName,
     {speed:9, airSpeed:9, jumpStrength:170, rollGroundSpeed:18, rollAirSpeed:10},
     {maxHealth:500, maxMana:10000, manaGain:20},
     SkaterPowerHandler);
@@ -126,9 +127,4 @@ export default class Skater extends BaseHero {
       super.move();
     }
   }
-
-
-
 }
-
-export const name = 'Skater';

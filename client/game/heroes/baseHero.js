@@ -10,9 +10,10 @@ const upAxis = new CANNON.Vec3(0, 1, 0);
 const zeroVector2 = new BABYLON.Vector2(0, 0);
 const onGroundPadding = 10;
 
+export const heroName = 'omi';
 export default class Hero {
   constructor(
-  game, name, id, meshFileName='omi',
+  game, name, id, meshFileName=heroName,
   movOpts={speed:10, airSpeed:5, jumpStrength:150, rollGroundSpeed:15, rollAirSpeed:9},
   charOpts={maxHealth:500, maxMana:10000, manaGain:20},
   powerHandler=BasePowerHandler) {

@@ -18,6 +18,7 @@ const meshSize = 8;
 export default class WallDefense extends BasePower {
     constructor(game, hero) {
       super(game, hero);
+      this.cursors = [];
     }
 
     createMesh (cursor, index) {

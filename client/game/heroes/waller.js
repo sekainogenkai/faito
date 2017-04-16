@@ -2,6 +2,7 @@ import BaseHero from './baseHero'
 
 import WallerPowerHandler from './powers/heroPowers/waller/aHandler';
 
+export const heroName = 'Waller';
 export default class Waller extends BaseHero {
   constructor(game, name, id) {
     super(game, name, id, 'Waller',
@@ -10,5 +11,3 @@ export default class Waller extends BaseHero {
     WallerPowerHandler);
   }
 }
-
-export const name = 'Waller';

@@ -84,7 +84,7 @@ class StageMenuPlayer extends React.Component {
   render() {
     if (this.state.active) {
       return <div>
-      <p>{this.props.player.name} has chosen character {heroesContext(heroKeys[this.state.characterIndex]).name}. Press [attack2] to abort.</p>
+      <p>{this.props.player.name} has chosen character {heroesContext(heroKeys[this.state.characterIndex]).heroName}. Press [attack2] to abort.</p>
       {this.state.lockedIn &&
         <p> LOCKED IN </p>
       }

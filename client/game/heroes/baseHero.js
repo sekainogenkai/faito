@@ -516,8 +516,10 @@ export default class Hero {
         return true;
     }
 
-    takeDynamicDamage(damage, contact) {
-        this.takeDamage(damage * contact);
+    takeDynamicDamage(damageMult, contact, min, max) {
+        var damage = damageMult * contact;
+        // If there is damage, take it if its under the max, else take min damage
+        this.takeDamage((damage) ? Math.min(damage, max) : min);
     }
 
     /**

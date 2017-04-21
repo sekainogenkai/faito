@@ -33,7 +33,7 @@ export default class BasePowerObject {
     // options
     options={mesh:null, vectorStart:null, vectorEnd:null, range:null, lifeSpan:null,
       dropHeight:0, dropRange:0, collisionCallBack:true,
-      damageMult:10, damageTimerMax:10, shadow:true} ) {
+      damageMult:10, minDamage:10, maxDamage:1000, damageTimerMax:10, shadow:true} ) {
 
     let mesh = options.mesh;
     this.game = game;
@@ -50,6 +50,8 @@ export default class BasePowerObject {
 
     if (options.collisionCallBack) {
       this.damageMult = options.damageMult;
+      this.minDamage = options.minDamage;
+      this.maxDamage = options.maxDamage;
       this.mesh.physicsImpostor.onCollide = this.onPowerCollide.bind(this);
       mesh.physicsImpostor.forceUpdate();
     }
@@ -225,7 +227,7 @@ export default class BasePowerObject {
 
         let cannonContactVelocity = this.babylonToCannonVector(contactVelocity);
         // apply the damage
-        e.body.parent.takeDynamicDamage(this.damageMult, Math.abs(cannonContactVelocity.dot(e.contact.ni)));
+        e.body.parent.takeDynamicDamage(this.damageMult, Math.abs(cannonContactVelocity.dot(e.contact.ni)), this.minDamage, this.maxDamage);
 
         if (this.checkHeroAlreadyCollidedWith(e.body.parent.name) == 'newHero') {
           //console.log('newHero collided with');

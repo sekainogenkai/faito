@@ -8,7 +8,7 @@ import JoyCursor from '../../cursors/joyCursor';
 import {registerBeforeSceneRender} from '../../../../mesh-util';
 
 const manaCost = 200; // mana cost of the power
-const collisionDamage = 50; // the amount of damage it does when it collides
+const collisionDamage = 10; // the amount of damage it does when it collides
 
 const directionVec = new BABYLON.Vector3(0, 0, 1); // direction of the cursor
 const cursorSpeed = 1.9; // speed of the cursor
@@ -59,7 +59,7 @@ export default class Power5 extends PowerRemember {
       // run spawn
       this.addObject(new BasePowerObject(this.game, this.hero,
       {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(5),
-        dropHeight:10, dropRange:50, collisionCallBack:true, damageMult:collisionDamage, damageTimerMax:120, shadow:false}));
+        dropHeight:10, dropRange:50, collisionCallBack:true, minDamage:collisionDamage, damageTimerMax:200, shadow:false}));
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;

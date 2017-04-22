@@ -2,14 +2,14 @@ import BABYLON from 'babylonjs';
 import {getHeightAtCoordinates, secondsToTicks} from '../../powerUtils/mainUtils';
 import BasePower from '../../basePower';
 import BasePowerObject from '../../powerObjects/basePowerObject';
-import DirectionCursor from '../../cursors/directionCursor';
+import PointCursor from '../../cursors/pointCursor';
 import {registerBeforeSceneRender} from '../../../../mesh-util';
 
 const manaCost = 70; // mana cost of the power
-const collisionDamage = 50; // the amount of damage it does when it collides
+const collisionDamage = 100; // the amount of damage it does when it collides
 
-const directionVec = new BABYLON.Vector3(0, 0, 1); // direction of the cursor
-const cursorSpeed = 1.9; // speed of the cursor
+const directionVec = new BABYLON.Vector3(0, 0, -1); // direction of the cursor
+const distance = 4; // speed of the cursor
 const fixedRotation = false;
 
 const timerStart = 10;
@@ -23,7 +23,6 @@ const meshHeight = 20;
 export default class WallRiser extends BasePower {
     constructor(game, hero) {
       super(game, hero);
-      this.playerRotation = new BABYLON.Quaternion();
     }
 
     createMesh () {
@@ -52,19 +51,18 @@ export default class WallRiser extends BasePower {
       new BasePowerObject(this.game, this.hero,
         // basePowerObject values
         {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(3),
-        dropHeight:50, dropRange:100, collisionCallBack:false});
+        dropHeight:50, dropRange:100, collisionCallBack:true, minDamage=collisionDamage});
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
       if (!fixedRotation) {
-        mesh.rotationQuaternion.copyFrom(this.playerRotation);
+        mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
+        mesh.rotation.x -= Math.PI/3.5;
       }
     }
 
     buttonDown(i) {
-      // Capture the rotation of the player at the beginning
-      this.playerRotation.copyFrom(this.hero.mask.rotationQuaternion);
-      this.cursor = new DirectionCursor(this.game, this.hero, {direction: directionVec, speed: cursorSpeed});
+      this.cursor = new PointCursor(this.game, this.hero, {direction: directionVec, distance: distance, fixed:true});
       // Add an update function to the power
       this.timer = timerStart;
       registerBeforeSceneRender(this.cursor.mesh, () => this.update());

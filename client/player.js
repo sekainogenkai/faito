@@ -18,7 +18,7 @@ export class PlayerManager {
 
     addInput(input) {
         const i = this.players.concat(undefined).indexOf(undefined);
-        const player = this.players[i] = new LocalPlayer(`player ${i}`, input);
+        const player = this.players[i] = new LocalPlayer(`player ${i}`, input, i);
         console.log(`Added player ${player.name} (${input.name})`);
         player.endSignal.add(() => {
             this.players[i] = undefined;
@@ -103,12 +103,13 @@ export class ProxyInputTarget {
  * A local player.
  */
 export class LocalPlayer {
-    constructor(name, input) {
+    constructor(name, input, index) {
         this._inputTarget = dummyInputTarget;
         this.endSignal = new MiniSignal();
         this.menuSignal = new MiniSignal();
         this.name = name;
         this.input = input;
+        this.index = index;
         this._inputEventContext = new EventSubscriptionContext(input)
             .on('end', () => this.endSignal.dispatch())
             .on('joychanged', joy => this._inputTarget.joyChanged(joy))

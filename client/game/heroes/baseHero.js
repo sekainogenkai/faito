@@ -57,7 +57,7 @@ export default class Hero {
         // console.log("the player mesh", this.mesh);
         //this.mesh.isVisible = true;
 
-        var material = new BABYLON.StandardMaterial(id + 'playermaterial', this.game.scene);
+        let material = new BABYLON.StandardMaterial(id + 'playermaterial', this.game.scene);
         let colId = function (id, mult) {
           return Math.abs(((id * mult) % 255) / 255);
         }

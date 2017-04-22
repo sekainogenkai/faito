@@ -27,11 +27,9 @@ const styles = {
       padding: '5px 3em 5px 3em',
     },
     playerViewBabylon: {
-      minHeight: '150px',
-      maxWidth: '150px',
+      height: '1em',
+      width: '1em',
     },
-
-
 };
 
 
@@ -161,6 +159,7 @@ class StageMenuPlayer extends React.Component {
       <BabylonJS
       onEngineCreated={engine => this.onEngineCreated(engine)}
       onEngineAbandoned={engine => this.onEngineAbandoned(engine)}
+      handleResize={false}
       style={styles.playerViewBabylon}/>
       <p style={styles.playerViewBlockText}>{this.props.player.name} : {heroesContext(heroKeys[this.state.characterIndex]).heroName}.</p>
       {this.state.lockedIn &&

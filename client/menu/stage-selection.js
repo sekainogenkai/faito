@@ -4,6 +4,18 @@ import React from 'react';
 import {DummyInputTarget} from '../player';
 import mapList from './mapList';
 
+const styles = {
+  stageSelectionPage: {
+      padding: '0em 1em 0em 1em',
+  },
+  stageSelectionText: {
+    fontSize: '5em',
+    fontWeight: '800',
+    textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white'
+  }
+};
+
+
 class StageSelectInputHandler extends DummyInputTarget{
   constructor(stageSelectMenuPage) {
     super();
@@ -71,8 +83,8 @@ export default class StageSelectMenuPage extends React.Component {
   }
 
   render() {
-    return <div className="menu-page" style={{backgroundColor: 'white'}}>
-    <p>{mapList[this.state.selectedMap]}</p>
+    return <div className="menu-page" style={styles.stageSelectionPage}>
+    <p style={styles.stageSelectionText}>{mapList[this.state.selectedMap]}</p>
     </div>;
   }
 }

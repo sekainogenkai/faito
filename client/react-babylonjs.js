@@ -8,6 +8,7 @@ export class BabylonJS extends React.Component {
             options: {},
             onEngineCreated: () => {},
             onEngineAbandoned: () => {},
+            handleResize: true,
         };
     }
 

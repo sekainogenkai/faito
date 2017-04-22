@@ -149,7 +149,7 @@ export default class BasePowerObject {
     //console.log (destroyEndEvent)
     this.vectorStart = this.mesh.position;
     this.vectorEnd = this.mesh.position.clone();
-    this.vectorEnd.y = getHeightOfMeshAtCoordinates(this.groundMesh, this.vectorEnd.x, this.vectorEnd.z) - (this.dropHeight?this.dropHeight:this.mesh.getBoundingInfo().boundingBox.extendSize.y);
+    this.vectorEnd.y = getHeightAtCoordinates(this.game.scene, this.vectorEnd.x, this.vectorEnd.z) - (this.dropHeight?this.dropHeight:this.mesh.getBoundingInfo().boundingBox.extendSize.y);
 
     this.moveAnimation('destroy', [destroyStartEvent, destroyEndEvent]);
   }

@@ -3,7 +3,7 @@ import BABYLON from 'babylonjs';
 import {Buttons} from '../../../../input';
 
 import PsychBlock from './psychBlock';
-import JumpBall from '../baseHero/jumpBall';
+import JumpBall from './jumpBall';
 
 const manaCostFreeze = 20;
 

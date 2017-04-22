@@ -1,6 +1,6 @@
 import BABYLON from 'babylonjs';
 import {getHeightAtCoordinates, secondsToTicks} from '../../powerUtils/mainUtils';
-import BasePower from '../../base/basePower';
+import PowerRemember from '../../powerRememberObjects';
 import BasePowerObject from '../../powerObjects/basePowerObject';
 import DirectionCursor from '../../cursors/directionCursor';
 import PointCursor from '../../cursors/pointCursor';
@@ -8,7 +8,7 @@ import JoyCursor from '../../cursors/joyCursor';
 
 const manaCost = 1500; // mana cost of the power
 const collisionDamage = 10; // the amount of damage it does when it collides
-
+const maxItems = 2;
 const directionVec = new BABYLON.Vector3(0, 0, 1); // position of the cursor
 const distance = 10; // cursor scalar
 
@@ -18,9 +18,9 @@ const meshSize = 10;
 /*
 * Makes a block using joy cursor
 */
-export default class Power1 extends BasePower {
+export default class Power1 extends PowerRemember {
     constructor(game, hero) {
-      super(game, hero);
+      super(game, hero, maxItems);
     }
 
     createMesh () {
@@ -39,7 +39,8 @@ export default class Power1 extends BasePower {
       );
 
       // Create the mesh
-      const mesh = new BABYLON.Mesh.CreateBox('mesh', meshSize, this.game.scene);
+      const mesh = new BABYLON.Mesh.CreateBox('mesh', 1, this.game.scene);
+      mesh.scaling = new BABYLON.Vector3(meshSize, meshSize*3, 5);
       console.log(mesh.material);
       mesh.position.copyFrom(vectorStart);
 
@@ -49,22 +50,22 @@ export default class Power1 extends BasePower {
 
       mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:0.9}, this.game.scene);
       // run spawn
-      new BasePowerObject(this.game, this.hero,
+      this.addObject(new BasePowerObject(this.game, this.hero,
         // basePowerObject values
         {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(10),
-        dropHeight:50, dropRange:100, collisionCallBack:true, damageMult:collisionDamage});
+        dropHeight:10, dropRange:100, collisionCallBack:true, damageMult:collisionDamage}));
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
       if (!fixedRotation) {
         mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
-        mesh.rotation.x += Math.PI/4;
+        mesh.rotation.x += Math.PI/3.5;
       }
     }
 
     buttonDown(i) {
-      // Consume and check to see if there is enough mana
-      if (!this.hero.consumeMana(manaCost)){
+      // Consume and check to see if there is enough mana or if we have max items
+      if ( this.powerIsFull() || !this.hero.consumeMana(manaCost)){
         return;
       }
 

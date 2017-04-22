@@ -12,6 +12,29 @@ export const heroesContext = require.context('../game/heroes', false, /\.js$/);
 export const heroKeys = heroesContext.keys().filter(key => key !== './baseHero.js');
 
 
+const styles = {
+    viewBlock: {
+      border: '3px solid black',
+      backgroundColor: '#fefefe',
+      flexDirection: 'horizontal',
+    },
+    playerViewBlock: {
+      border: '3px solid black',
+      backgroundColor: '#fefefe',
+    },
+    playerViewBlockText: {
+      fontSize: '1.2em',
+      padding: '5px 3em 5px 3em',
+    },
+    playerViewBabylon: {
+      minHeight: '150px',
+      maxWidth: '150px',
+    },
+
+
+};
+
+
 class StageMenuPlayer extends React.Component {
   constructor(props) {
     super(props);
@@ -46,7 +69,6 @@ class StageMenuPlayer extends React.Component {
               let changeHeroNumber = 0;
               switch (button) {
                 case Buttons.JoyLeft:
-                console.log('missfits');
                   changeHeroNumber = -1;
                   break;
                 case Buttons.JoyRight:
@@ -68,7 +90,6 @@ class StageMenuPlayer extends React.Component {
         } else { // If not active
           switch (button) {
             case Buttons.A:
-            console.log('pressed button a');
             this.setState({
               active: true,
             });
@@ -136,18 +157,19 @@ class StageMenuPlayer extends React.Component {
 
   render() {
     if (this.state.active) {
-      return <div>
+      return <div style={styles.playerViewBlock}>
       <BabylonJS
       onEngineCreated={engine => this.onEngineCreated(engine)}
-      onEngineAbandoned={engine => this.onEngineAbandoned(engine)}/>
-      <p>{this.props.player.name} : {heroesContext(heroKeys[this.state.characterIndex]).heroName}.</p>
+      onEngineAbandoned={engine => this.onEngineAbandoned(engine)}
+      style={styles.playerViewBabylon}/>
+      <p style={styles.playerViewBlockText}>{this.props.player.name} : {heroesContext(heroKeys[this.state.characterIndex]).heroName}.</p>
       {this.state.lockedIn &&
         <p> LOCKED IN </p>
       }
       </div>;
     }
     return <div>
-    <p>{this.props.player.name} Press [attack1] to join.</p>
+    <p style={styles.playerViewBlockText}>{this.props.player.name} Press [attack1] to join.</p>
     </div>
   }
 }
@@ -185,7 +207,6 @@ export default class CharacterSelectMenuPage extends React.Component {
         }
         return acc;
       }, {});
-      console.log('playerInfo', playerInfo);
       this.props.menu.pushMenuPage(<StageSelectMenuPage game={this.props.game} playerInfo={playerInfo}/>);
     }
   }
@@ -216,9 +237,9 @@ export default class CharacterSelectMenuPage extends React.Component {
   }
 
   render() {
-    return <div className="menu-page" style={{backgroundColor: 'white'}}>
-    <div className="menu-item">Press [Attack] to join.</div>
-    {this.state.players.filter(player => player)}
+    return <div className="menu-page" style={styles.viewBlock}>
+      <div className="menu-item">Press [Attack] to join.</div>
+      {this.state.players.filter(player => player)}
     </div>;
   }
 }

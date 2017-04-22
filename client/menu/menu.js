@@ -20,7 +20,16 @@ const styles = {
     },
     mainMenuItem: {
         padding: '10px 40px 10px 40px',
+        fontSize: '4em',
     },
+    selected: {
+      color: '#eeffff',
+      backgroundColor: 'red',
+      border: '5px dotted black',
+    },
+    nonSelected: {
+      backgroundColor: 'white',
+    }
 };
 
 class DummyMenuInputTarget {
@@ -205,7 +214,7 @@ export class MenuItem extends React.Component {
 
     render() {
         return <div className="menu-item" style={{
-          ...{backgroundColor: this.props.active ? 'red' : 'white', },
+          ...(this.props.active ? styles.selected : styles.nonSelected),
           ...styles.mainMenuItem  }}>
             {this.props.children}
             </div>;

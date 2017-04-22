@@ -162,16 +162,20 @@ class StageMenuPlayer extends React.Component {
     this.engine = engine;
     engine.runRenderLoop(this.handleRenderLoop = () => this.doRenderLoop());
     this.scene = new BABYLON.Scene(this.engine);
-    let camera = new MenuCamera(this, {min:8, max:11});
-    let dirLight = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(.5, -1, 0), this.scene);
+
+    let camera = new MenuCamera(this, {min:7, max:9});
+
+    let dirLight = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(1, -.7, 0), this.scene);
     let dirLightStrength = 1;
     dirLight.diffuse = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
     dirLight.specular = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
 
-    dirLightStrength = .5;
-    let dirLight2 = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(-.5, -1, .2), this.scene);
+    dirLightStrength = .8;
+    let dirLight2 = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(-1, -.3, .4), this.scene);
     dirLight2.diffuse = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
     dirLight2.specular = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
+
+    this.scene.clearColor = new BABYLON.Color3(.7, .7, .7);
 
     this.loadDiffScene();
   }

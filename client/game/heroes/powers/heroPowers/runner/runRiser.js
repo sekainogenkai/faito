@@ -51,7 +51,7 @@ export default class WallRiser extends BasePower {
       new BasePowerObject(this.game, this.hero,
         // basePowerObject values
         {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(3),
-        dropHeight:50, dropRange:100, collisionCallBack:true, minDamage=collisionDamage});
+        dropHeight:50, dropRange:100, collisionCallBack:true, minDamage:collisionDamage});
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;

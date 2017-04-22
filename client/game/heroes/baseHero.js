@@ -517,9 +517,10 @@ export default class Hero {
     }
 
     takeDynamicDamage(damageMult, contact, min, max) {
-      console.log(min, max);
+        console.log(min, max);
         var dynamicDamage = damageMult * contact;
-        var damage = Math.max(Math.min(dynamicDamage, max), min);
+        console.log('dino', dynamicDamage);
+        var damage = !isNaN(dynamicDamage)?Math.max(Math.min(dynamicDamage, max), min):min;
         //uvar damage = (dynamicDamage) ? Math.min(dynamicDamage, max) : min;
         // If there is damage, take it if its under the max, else take min damage
         this.takeDamage(damage);

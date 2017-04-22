@@ -227,6 +227,7 @@ export default class BasePowerObject {
 
         let cannonContactVelocity = this.babylonToCannonVector(contactVelocity);
         // apply the damage
+        console.log('min damage', this.minDamage, this.maxDamage);
         e.body.parent.takeDynamicDamage(this.damageMult, Math.abs(cannonContactVelocity.dot(e.contact.ni)), this.minDamage, this.maxDamage);
 
         if (this.checkHeroAlreadyCollidedWith(e.body.parent.name) == 'newHero') {

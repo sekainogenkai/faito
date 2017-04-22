@@ -506,8 +506,6 @@ export default class Hero {
             this._health = 0;
             this.onDeath();
             return false;
-        } else {
-
         }
         this._health -= amount;
         //effects

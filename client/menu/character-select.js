@@ -14,22 +14,24 @@ export const heroKeys = heroesContext.keys().filter(key => key !== './baseHero.j
 
 const styles = {
     viewBlock: {
-      border: '3px solid black',
-      backgroundColor: '#fefefe',
       display: 'flex',
       flexDirection: 'row',
     },
     playerViewBlock: {
       border: '3px solid black',
       backgroundColor: '#fefefe',
+      height: '220px',
+      width: '220px',
     },
     playerViewBlockText: {
       fontSize: '1.2em',
-      padding: '5px 3em 5px 3em',
+      fontWeight: '700',
+      padding: '10px 5px 10px 5px',
+      backgroundColor: '#fefefe',
+      border: '4px solid black',
     },
     playerViewBabylon: {
-      height: '1em',
-      width: '1em',
+      border: '4px solid'
     },
 };
 
@@ -130,6 +132,20 @@ class StageMenuPlayer extends React.Component {
     require(`../../models/heroes/${heroesContext(heroKeys[this.state.characterIndex]).heroName}.blend`).ImportMesh(BABYLON.SceneLoader, null, this.scene, loadedMeshes => {
       this.mesh = loadedMeshes[0];//.clone(this.name);
       this.mesh.position.y -= 3;
+
+      console.log('props', this.props);
+      let id = this.props.player.index;
+      console.log(id);
+      let material = new BABYLON.StandardMaterial(id + 'playermaterialscene', this.scene);
+      let colId = function (id, mult) {
+        return Math.abs(((id * mult) % 255) / 255);
+      }
+      let color = new BABYLON.Color3(colId(id + .1, 50), colId(id + .2, -100), colId(id + 1, 200));
+      console.log(color);
+      material.diffuseColor = color;
+      material.specularColor = new BABYLON.Color3(1, 1, 1);
+      this.mesh.material = material;
+
       let idleAnimation = this.mesh.skeleton.getAnimationRange('idle');
       this.scene.beginAnimation(this.mesh.skeleton, idleAnimation.from+1, idleAnimation.to, true, 1);
     });
@@ -145,6 +161,11 @@ class StageMenuPlayer extends React.Component {
     dirLight.diffuse = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
     dirLight.specular = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
 
+    dirLightStrength = .5;
+    let dirLight2 = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(-.5, -1, .2), this.scene);
+    dirLight2.diffuse = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
+    dirLight2.specular = new BABYLON.Color3(dirLightStrength,dirLightStrength,dirLightStrength);
+
     this.loadDiffScene();
   }
 
@@ -156,20 +177,23 @@ class StageMenuPlayer extends React.Component {
 
   render() {
     if (this.state.active) {
-      return <div style={styles.playerViewBlock}>
+      return <div>
+      <p style={styles.playerViewBlockText}> {this.props.player.name} </p>
+      <div style={styles.playerViewBlock}>
       <BabylonJS
       onEngineCreated={engine => this.onEngineCreated(engine)}
       onEngineAbandoned={engine => this.onEngineAbandoned(engine)}
       handleResize={false}
       style={styles.playerViewBabylon}/>
-      <p style={styles.playerViewBlockText}>{this.props.player.name} : {heroesContext(heroKeys[this.state.characterIndex]).heroName}.</p>
+      <p style={styles.playerViewBlockText}> {heroesContext(heroKeys[this.state.characterIndex]).heroName} </p>
       {this.state.lockedIn &&
         <p> LOCKED IN </p>
       }
+      </div>
       </div>;
     }
     return <div>
-    <p style={styles.playerViewBlockText}>{this.props.player.name} Press [attack1] to join.</p>
+    <p style={styles.playerViewBlockText}>{this.props.player.name} <br/>Press [attack1] to join.</p>
     </div>
   }
 }
@@ -227,7 +251,6 @@ export default class CharacterSelectMenuPage extends React.Component {
           ref={playerRef => this.playerRefs[i] = playerRef}
           wantsBack={() => this.playerAskedForBack()}
           stateChanged={() => this.playerStateChanged()} />;
-        console.log(newPlayers);
         return {
           players: newPlayers,
         };

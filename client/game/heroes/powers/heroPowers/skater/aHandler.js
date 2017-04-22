@@ -116,6 +116,8 @@ export default class BasePowerHandler {
   }
 
   update() {
+    // must be called for all powers that remember objects
+    this.powerRamp.deleteObjectsOnDeleteAnimation();
     this.powerBallThrow.update(!!this.powerSkateBoard.object);
     this.powerSkateBoard.update();
     // must be called for all powers that remember objects

@@ -298,6 +298,7 @@ export default class Hero {
 
     //console.log(this.mask.physicsImpostor.physicsBody.world.contacts);
     this.checkGround();
+    this.checkOffStage();
 
     if (this.moveBool) {
         this.move();
@@ -526,6 +527,12 @@ export default class Hero {
         this.takeDamage(damage);
     }
 
+    checkOffStage() {
+      // If player is below the death plane, kill it
+      if (this.game.scene.getMeshesByTags("deathPlane")[0].position.y > this.mask.position.y) {
+        this.takeDamage(this._health + 1);
+      }
+    }
     /**
      * function accepting a Vector2. If null the hero will start
      * responding to joy again.

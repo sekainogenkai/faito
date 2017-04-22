@@ -68,10 +68,12 @@ export default class PowerHandler {
   }
 
   detachObjects() {
-    for (let object of this.psychBlock.objects) {
+    this.psychBlock.objects.forEach(function(object, i) {
       // Remove the joint on all objects
       object.removeJoint();
-    }
+      // Remove objects from the psychBlock's list
+      this.psychBlock.objects.splice(i,1);
+    }, this);
   }
 
   update() {

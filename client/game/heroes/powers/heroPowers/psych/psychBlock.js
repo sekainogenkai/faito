@@ -9,6 +9,7 @@ const manaCostFreeze = 20;
 const collisionDamage = 5; // the amount of damage it does when it collides
 const chainLength = 20;
 const mass = 1;
+const maxItems = 3;
 
 const directionVec = new BABYLON.Vector3(0, 0, -1);  // point spawn for the cursor
 
@@ -20,8 +21,7 @@ const meshSize = 5;
 */
 export default class BlockChain extends PowerRemember {
     constructor(game, hero) {
-      super(game, hero);
-      this.powerObjects = [];
+      super(game, hero, maxItems);
     }
 
     createMesh () {
@@ -66,8 +66,8 @@ export default class BlockChain extends PowerRemember {
     }
 
     buttonDown(i) {
-      // Consume and check to see if there is enough mana
-      if (!this.hero.consumeMana(manaCostCreate)){
+      // Consume and check to see if there is enough mana or see if we have max amount of objects
+      if (this.powerIsFull() || !this.hero.consumeMana(manaCostCreate)){
         return;
       }
       // Create three walls that protect the player

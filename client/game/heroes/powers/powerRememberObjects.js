@@ -2,9 +2,9 @@ import BABYLON from 'babylonjs';
 import BasePower from './basePower.js';
 
 export default class PowerRemember extends BasePower {
-  constructor(game, hero) {
+  constructor(game, hero, maxItems) {
     super(game, hero);
-
+    this.max = maxItems;
     this.objects = [];
   }
 
@@ -24,6 +24,10 @@ export default class PowerRemember extends BasePower {
 
   checkDead(object) {
     return object._currentState == 2;
+  }
+
+  powerIsFull() {
+    return this.objects.length >= this.max;
   }
 
 }

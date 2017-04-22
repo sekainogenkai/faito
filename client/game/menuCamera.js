@@ -11,7 +11,7 @@ export default class MenuCamera {
     };
     this.cameraTarget = new BABYLON.Vector3.Zero()
     this.camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 0, 0.1, this.radius.max, this.cameraTarget, this.game.scene);
-    this.camera.setPosition(new BABYLON.Vector3(0, 40, -40));
+    this.camera.setPosition(new BABYLON.Vector3(0, 0, 0));
 
     // add animations
     this.setAnimation("alpha", 0, 12, 2500, "relative");

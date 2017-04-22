@@ -16,7 +16,8 @@ const styles = {
     viewBlock: {
       border: '3px solid black',
       backgroundColor: '#fefefe',
-      flexDirection: 'horizontal',
+      display: 'flex',
+      flexDirection: 'row',
     },
     playerViewBlock: {
       border: '3px solid black',
@@ -237,7 +238,6 @@ export default class CharacterSelectMenuPage extends React.Component {
 
   render() {
     return <div className="menu-page" style={styles.viewBlock}>
-      <div className="menu-item">Press [Attack] to join.</div>
       {this.state.players.filter(player => player)}
     </div>;
   }

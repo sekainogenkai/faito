@@ -20,8 +20,8 @@ export default class PowerHandler {
 
   buttonDown(button) {
     switch (button) {
-        case Buttons.A: this.jumpBall.buttonDown(0); this.hero.animatePower=true; break;
-        case Buttons.X: this.psychBlock.buttonDown(0); this.hero.animatePower=true; break;
+        case Buttons.X: this.jumpBall.buttonDown(0); this.hero.animatePower=true; break;
+        case Buttons.A: this.psychBlock.buttonDown(0); this.hero.animatePower=true; break;
         case Buttons.B:
           this.powerFreezeBool = true;
           this.toggleFreeze();
@@ -29,7 +29,7 @@ export default class PowerHandler {
           break;
 
         case Buttons.Y:
-          this.detachObjects();
+          this.detachObject();
           this.hero.animatePower = true;
           break;
     }
@@ -38,8 +38,8 @@ export default class PowerHandler {
 
   buttonUp(button) {
     switch (button) {
-        case Buttons.A: this.jumpBall.buttonUp(0); this.hero.animatePower=false; break;
-        case Buttons.X: this.psychBlock.buttonUp(0); this.hero.animatePower=false; break;
+        case Buttons.X: this.jumpBall.buttonUp(0); this.hero.animatePower=false; break;
+        case Buttons.A: this.psychBlock.buttonUp(0); this.hero.animatePower=false; break;
         case Buttons.B:
           this.powerFreezeBool = false;
           this.toggleFreeze();
@@ -67,19 +67,20 @@ export default class PowerHandler {
     }
   }
 
-  detachObjects() {
-    this.psychBlock.objects.forEach(function(object, i) {
-      // Remove the joint on all objects
-      object.removeJoint();
-      // Remove objects from the psychBlock's list
-      this.psychBlock.objects.splice(i,1);
-    }, this);
+  detachObject() {
+    // Check if we have blocks
+    if (this.psychBlock.objects.length) {
+      // Remove the first object in our list
+      this.psychBlock.objects[0].removeJoint();
+      this.psychBlock.objects.splice(0, 1);
+    }
   }
 
   update() {
     // must be called for all powers that remember objects
     this.psychBlock.deleteObjectsOnDeleteAnimation();
-    if (this.powerFreezeBool) {
+    // If the freeze bool is true, and we have some blocks
+    if (this.powerFreezeBool && this.psychBlock.objects.length) {
       // Constantly consume mana until there is none left
       if (!this.hero.consumeMana(manaCostFreeze)){
         this.powerFreezeBool = false;
@@ -87,7 +88,7 @@ export default class PowerHandler {
         this.hero.animatePower = false;
       }
       // Update player movement so that hero moves fast when attached to frozen object
-      if (this.hero.mask.physicsImpostor._joints.length) {
+      if (this.psychBlock.objects[0].mesh.physicsImpostor.physicsBody.type === 0) {
         this.hero.slowDown = 0.5;
       } else {
         this.hero.slowDown = 1;

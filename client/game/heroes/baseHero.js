@@ -507,7 +507,6 @@ export default class Hero {
             this.onDeath();
             return false;
         }
-
         this._health -= amount;
         //effects
         // Emit
@@ -551,8 +550,6 @@ export default class Hero {
     onDeath() {
         this.moveBool = false;
         this.dead = true;
-        // effects
-        this.game.scene.sound.hurt3.play();
     }
 
     freezeHero() {

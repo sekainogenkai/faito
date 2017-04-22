@@ -17,6 +17,9 @@ const styles = {
       display: 'flex',
       flexDirection: 'row',
     },
+    playerViewFullBlock: {
+      margin: '20px',
+    },
     playerViewBlock: {
       border: '3px solid black',
       backgroundColor: '#fefefe',
@@ -30,8 +33,12 @@ const styles = {
       backgroundColor: '#fefefe',
       border: '4px solid black',
     },
-    playerViewBabylon: {
-      border: '4px solid'
+    lockedInText: {
+      fontSize: '1.5em',
+      fontWeight: '800',
+      padding: '10px 5px 10px 5px',
+      backgroundColor: '#66ff66',
+      border: '4px solid black',
     },
 };
 
@@ -177,17 +184,15 @@ class StageMenuPlayer extends React.Component {
 
   render() {
     if (this.state.active) {
-      return <div>
+      return <div style={styles.playerViewFullBlock}>
       <p style={styles.playerViewBlockText}> {this.props.player.name} </p>
       <div style={styles.playerViewBlock}>
       <BabylonJS
       onEngineCreated={engine => this.onEngineCreated(engine)}
-      onEngineAbandoned={engine => this.onEngineAbandoned(engine)}
-      handleResize={false}
-      style={styles.playerViewBabylon}/>
+      onEngineAbandoned={engine => this.onEngineAbandoned(engine)}/>
       <p style={styles.playerViewBlockText}> {heroesContext(heroKeys[this.state.characterIndex]).heroName} </p>
       {this.state.lockedIn &&
-        <p> LOCKED IN </p>
+        <p style={styles.lockedInText}> LOCKED IN </p>
       }
       </div>
       </div>;

@@ -11,6 +11,7 @@ import MenuCamera from '../game/menuCamera';
 export const heroesContext = require.context('../game/heroes', false, /\.js$/);
 export const heroKeys = heroesContext.keys().filter(key => key !== './baseHero.js');
 
+
 class StageMenuPlayer extends React.Component {
   constructor(props) {
     super(props);
@@ -102,7 +103,6 @@ class StageMenuPlayer extends React.Component {
   }
 
   loadDiffScene() {
-    console.log('loadDiffScene');
     if (this.mesh) {
       this.mesh.dispose();
     }
@@ -110,7 +110,6 @@ class StageMenuPlayer extends React.Component {
     require(`../../models/heroes/${heroesContext(heroKeys[this.state.characterIndex]).heroName}.blend`).ImportMesh(BABYLON.SceneLoader, null, this.scene, loadedMeshes => {
       this.mesh = loadedMeshes[0];//.clone(this.name);
       this.mesh.position.y -= 3;
-      console.log('loadedMeshes', loadedMeshes);
       let idleAnimation = this.mesh.skeleton.getAnimationRange('idle');
       this.scene.beginAnimation(this.mesh.skeleton, idleAnimation.from+1, idleAnimation.to, true, 1);
     });
@@ -120,7 +119,6 @@ class StageMenuPlayer extends React.Component {
     this.engine = engine;
     engine.runRenderLoop(this.handleRenderLoop = () => this.doRenderLoop());
     this.scene = new BABYLON.Scene(this.engine);
-    console.log("the new scene-------------------------------", this.scene);
     let camera = new MenuCamera(this, {min:8, max:11});
     let dirLight = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(.5, -1, 0), this.scene);
     let dirLightStrength = 1;

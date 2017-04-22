@@ -85,4 +85,15 @@ export default function loadGameScene (game, players, map='test1') {
 
   //load map
   game.mapLoader = new MapLoader(map, game);
+
+  // Make the death plane loaded in mapLoader kill the player
+  console.log('Death Plane ')
+  console.log(game.scene.getMeshesByTags("deathPlane"))
+  game.scene.getMeshesByTags("deathPlane")[0].physicsImpostor.onCollide = function (e) {
+    console.log('sadf');
+    if (BABYLON.Tags.HasTags(e.body) && e.body.matchesTagsQuery("hero")) {
+      // Take away the rest of the players health so they die
+      e.body.parent.takeDamage(e.body.parent._health);
+    }
+  }
 }

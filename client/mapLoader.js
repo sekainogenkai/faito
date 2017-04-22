@@ -10,6 +10,7 @@ export default class MapLoader {
       this.setImpostors('heightFieldImpostor', BABYLON.PhysicsImpostor.HeightmapImpostor);
       this.setImpostors('sphereImpostor', BABYLON.PhysicsImpostor.SphereImpostor);
       this.setImpostors('cylinderImpostor', BABYLON.PhysicsImpostor.CylinderImpostor);
+      this.setImpostors('deathPlane', BABYLON.PhysicsImpostor.BoxImpostor, false);
     } catch (e) {
       console.error(e);
     }

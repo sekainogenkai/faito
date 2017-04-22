@@ -50,8 +50,8 @@ export default class BasePowerObject {
 
     if (options.collisionCallBack) {
       this.damageMult = options.damageMult;
-      this.minDamage = options.minDamage;
-      this.maxDamage = options.maxDamage;
+      this.minDamage = options.minDamage?options.minDamage:10;
+      this.maxDamage = options.maxDamage?options.maxDamage:1000;
       this.mesh.physicsImpostor.onCollide = this.onPowerCollide.bind(this);
       mesh.physicsImpostor.forceUpdate();
     }

@@ -69,7 +69,7 @@ export const configureAutoRemove = (mesh, delay, length=0.25) => {
 export const getHeightAtCoordinates = function(scene, x=0, z=0) {
   var maxHeight = 256;
   var ray = new BABYLON.Ray(new BABYLON.Vector3(x, maxHeight, z), new BABYLON.Vector3(0, -1, 0), 2*maxHeight);
-  var res = scene.pickWithRay(ray, (mesh) => { return mesh._tags && mesh.matchesTagsQuery("isGround")});
+  var res = scene.pickWithRay(ray, (mesh) => { return BABYLON.Tags.HasTags(mesh) && mesh.matchesTagsQuery("isGround")});
   if ( res.pickedPoint ) {
     return res.pickedPoint.y;
   }

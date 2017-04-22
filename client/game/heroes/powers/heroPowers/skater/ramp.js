@@ -52,7 +52,7 @@ export default class Power1 extends PowerRemember {
       // run spawn
       this.addObject(new BasePowerObject(this.game, this.hero,
         // basePowerObject values
-        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(10),
+        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:20, lifeSpan:secondsToTicks(10),
         dropHeight:10, dropRange:100, collisionCallBack:true, damageMult:collisionDamage}));
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;

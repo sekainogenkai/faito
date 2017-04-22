@@ -13,7 +13,7 @@ const directionVec = new BABYLON.Vector3(0, 0, 1); // position of the cursor
 
 const fixedRotation = true;
 const meshSize = 3;
-const powerImpulseVec = new BABYLON.Vector3(0, 350, 2200); // impulse applied to projectile on spawn
+const powerImpulseVec = new BABYLON.Vector3(0, 100, 2200); // impulse applied to projectile on spawn
 
 /**
 Shoots out a projectile at the enemy
@@ -48,7 +48,7 @@ export default class BallThrow extends BasePower {
       // run spawn
       new ProjectileObject(this.game, this.hero,
         // basePowerObject values
-        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:15, lifeSpan:secondsToTicks(5),
+        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:15, lifeSpan:secondsToTicks(1),
         dropHeight:10, dropRange:100, collisionCallBack:true, damageMult:10},
         // projectileObject values
         {vectorImpulse:powerImpulseVec, mass:50} );

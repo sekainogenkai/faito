@@ -506,15 +506,17 @@ export default class Hero {
             this._health = 0;
             this.onDeath();
             return false;
+        } else {
+          // only play sound if we are alive
+          this.game.scene.sound.hurt[Math.floor((Math.random()*this.game.scene.sound.hurt.length))].play();
+          return true;
         }
 
         this._health -= amount;
         //effects
         // Emit
         this.hurtParticleEmitter.emitManual(6, new BABYLON.Vector3(this.mask.position.x, this.mask.position.y, this.mask.position.z));
-        // sound
-        this.game.scene.sound.hurt[Math.floor((Math.random()*this.game.scene.sound.hurt.length))].play();
-        return true;
+
     }
 
     takeDynamicDamage(damageMult, contact, min, max) {

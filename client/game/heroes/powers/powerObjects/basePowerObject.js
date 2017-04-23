@@ -32,7 +32,7 @@ export default class BasePowerObject {
   constructor(game, hero,
     // options
     options={mesh:null, vectorStart:null, vectorEnd:null, range:null, lifeSpan:null,
-      dropHeight:0, dropRange:0, collisionCallBack:true,
+      dropHeight:0, dropRange:0, collisionCallBack:true, collideSpawnOnly: false,
       damageMult:10, minDamage:10, maxDamage:1000, damageTimerMax:10, shadow:true} ) {
 
     let mesh = options.mesh;
@@ -47,8 +47,9 @@ export default class BasePowerObject {
 
     // Save the mass in case the state of an object is changed
     this.mass = this.mesh.mass;
-
-    if (options.collisionCallBack) {
+    this.collisionCallBack = options.collisionCallBack
+    if (this.collisionCallBack) {
+      this.collideSpawnOnly = options.collideSpawnOnly?options.collideSpawnOnly:false;
       this.damageMult = options.damageMult;
       this.minDamage = options.minDamage?options.minDamage:10;
       this.maxDamage = options.maxDamage?options.maxDamage:1000;
@@ -120,6 +121,11 @@ export default class BasePowerObject {
   spawn() {
     const spawnEndEvent = new BABYLON.AnimationEvent(this.range, () => {
       //this.dustParticleEmitter.stop();
+      // Turn of collisionCallBack if collideSpawnOnly is true
+      if (this.collideSpawnOnly) {
+        console.log('FASF')
+        this.collisionCallBack = false;
+      }
       // Switch to powerUpdate state
       this.onPowerSpawn();
       this._currentState = 1;
@@ -211,7 +217,7 @@ export default class BasePowerObject {
   onPowerCollide(e) {
     // Called when object collides
     // Uses Cannon.js vectors
-    if (BABYLON.Tags.HasTags(e.body) && e.body.matchesTagsQuery("hero") && e.body.parent.name != this.hero.name && this.checkHeroCollidedWith(e.body.parent.name)) {
+    if (this.collisionCallBack && BABYLON.Tags.HasTags(e.body) && e.body.matchesTagsQuery("hero") && e.body.parent.name != this.hero.name && this.checkHeroCollidedWith(e.body.parent.name)) {
         // e.body.parent is the hero that the object is colliding with
 
         let contactVelocity = new BABYLON.Vector3();
@@ -227,7 +233,6 @@ export default class BasePowerObject {
 
         let cannonContactVelocity = this.babylonToCannonVector(contactVelocity);
         // apply the damage
-        console.log('min damage', this.minDamage, this.maxDamage);
         e.body.parent.takeDynamicDamage(this.damageMult, Math.abs(cannonContactVelocity.dot(e.contact.ni)), this.minDamage, this.maxDamage);
 
         if (this.checkHeroAlreadyCollidedWith(e.body.parent.name) == 'newHero') {

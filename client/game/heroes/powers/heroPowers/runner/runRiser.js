@@ -6,7 +6,7 @@ import PointCursor from '../../cursors/pointCursor';
 import {registerBeforeSceneRender} from '../../../../mesh-util';
 
 const manaCost = 70; // mana cost of the power
-const collisionDamage = 100; // the amount of damage it does when it collides
+const collisionDamage = 50; // the amount of damage it does when it collides
 
 const directionVec = new BABYLON.Vector3(0, 0, -1); // direction of the cursor
 const distance = 4; // speed of the cursor
@@ -51,7 +51,7 @@ export default class WallRiser extends BasePower {
       new BasePowerObject(this.game, this.hero,
         // basePowerObject values
         {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(3),
-        dropHeight:50, dropRange:100, collisionCallBack:true, minDamage:collisionDamage});
+        dropHeight:50, dropRange:100, collisionCallBack:true, minDamage:collisionDamage, collideSpawnOnly:true});
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;

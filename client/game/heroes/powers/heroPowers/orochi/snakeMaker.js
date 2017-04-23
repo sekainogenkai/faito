@@ -14,8 +14,8 @@ const directionVec = new BABYLON.Vector3(0, 0, 1);  // point spawn for the curso
 
 const fixedRotation = false;
 const meshSize = 4;
-const duration = 10;
-const snakeLength = 10;
+const duration = 60;
+const snakeLength = 11;
 const powerImpulseVec = new BABYLON.Vector3(0, 0, 200); // impulse applied to projectile on spawn
 
 /*
@@ -89,7 +89,7 @@ export default class SnakeMaker extends PowerRemember {
       }
       // Create three walls that protect the player
       this.cursor = new PointCursor(this.game, this.hero,
-        {direction:directionVec, distance: 5, fixed: true} );
+        {direction:directionVec, distance: 8, fixed: true} );
     }
 
     buttonUp(i) {

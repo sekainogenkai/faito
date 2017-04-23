@@ -2,11 +2,8 @@ import BABYLON from 'babylonjs';
 
 import {getHeightAtCoordinates} from '../../powerUtils/mainUtils'
 
-
-//import WallDefense from './WallDefense';
-
 // Make the snake.
-import snakeMaker from './snakeMaker';
+import SnakeMaker from './snakeMaker';
 
 import {Buttons} from '../../../../input';
 
@@ -59,6 +56,7 @@ export default class PowerHandler {
   }
 
   update() {
-
+    // must be called for all powers that remember objects
+    this.snakeMaker.deleteObjectsOnDeleteAnimation();
   }
 }

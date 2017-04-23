@@ -2,16 +2,15 @@ import BABYLON from 'babylonjs';
 import {getHeightAtCoordinates, secondsToTicks} from '../../powerUtils/mainUtils';
 import PowerRemember from '../../powerRememberObjects';
 import JointObject from '../../powerObjects/jointObject';
+import BasePowerObject from '../../powerObjects/basePowerObject';
 import PointCursor from '../../cursors/pointCursor';
 
-const manaCostCreate = 2000; // mana cost of the power
-const manaCostFreeze = 20;
+const manaCostCreate = 4000; // mana cost of the power
 const collisionDamage = 5; // the amount of damage it does when it collides
-const chainLength = 20;
 const mass = 1;
-const maxItems = 3;
+const maxItems = 100;
 
-const directionVec = new BABYLON.Vector3(0, 0, -1);  // point spawn for the cursor
+const directionVec = new BABYLON.Vector3(0, 0, 1);  // point spawn for the cursor
 
 const fixedRotation = false;
 const meshSize = 5;
@@ -25,54 +24,65 @@ export default class SnakeMaker extends PowerRemember {
     }
 
     createMesh () {
-      // Set the spawn vector
-      const vectorStart = new BABYLON.Vector3(
-        this.cursor.mesh.position.x,
-        (getHeightAtCoordinates(this.game.scene, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - (meshSize/2) - 2,
-        this.cursor.mesh.position.z
-      );
+      for (let i = 0; i<8; i++) {
 
-      // Set the target vector
-      const vectorEnd = new BABYLON.Vector3(
-        this.cursor.mesh.position.x,
-        Math.max((getHeightAtCoordinates(this.game.scene, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + (meshSize/2) + 2,
-        this.hero.mask.position.y),
-        this.cursor.mesh.position.z
-      );
+        // Set the spawn vector
+        const vectorStart = new BABYLON.Vector3(
+          this.cursor.mesh.position.x,
+          (getHeightAtCoordinates(this.game.scene, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - (meshSize/2) - 2,
+          this.cursor.mesh.position.z
+        );
 
-      // Create the mesh
-      const mesh = new BABYLON.Mesh.CreateBox('mesh', meshSize, this.game.scene);
-      mesh.position.copyFrom(vectorStart);
-      BABYLON.Tags.EnableFor(mesh);
-      BABYLON.Tags.AddTagsTo(mesh, "checkJump");
-      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:1}, this.game.scene);
-      // run spawn
-      // Create a new joint, needs to be a new joint
-      var distJoint = new BABYLON.DistanceJoint( {maxDistance: chainLength} );
-      // Create the joint object that we will use for binding the power to the hero
-      //this.powerObjects.push(new JointObject(this.game, this.hero, mesh, vectorStart, vectorEnd, 10, secondsToTicks(10), 0, 150, this.hero.mask, joint, mass, collisionDamage));
-      this.addObject(new JointObject(this.game, this.hero,
-        // basePowerObject values
-        {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(10),
-        dropHeight:10, dropRange:150, collisionCallBack:true, damageMult:collisionDamage},
-        // projectileObject values
-        {target:this.hero.mask, joint:distJoint, mass:mass} ));
+        // Set the target vector
+        const vectorEnd = new BABYLON.Vector3(
+          this.cursor.mesh.position.x,
+          Math.max((getHeightAtCoordinates(this.game.scene, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + (meshSize/2) + 2 + i*20,
+          this.hero.mask.position.y),
+          this.cursor.mesh.position.z
+        );
 
-      mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
-      mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
-      if (!fixedRotation) {
+        // Create the mesh
+        const mesh = new BABYLON.Mesh.CreateBox('mesh', meshSize, this.game.scene);
+        mesh.position.copyFrom(vectorStart);
+        BABYLON.Tags.EnableFor(mesh);
+        BABYLON.Tags.AddTagsTo(mesh, "checkJump");
+        mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:1}, this.game.scene);
+        // run spawn
+
+        if (i!=0) {
+          // Create a new joint, needs to be a new joint
+          var distJoint = new BABYLON.DistanceJoint( {maxDistance: 10} );
+          // Create the joint object that we will use for binding the power to the hero
+          console.log('physics impostor', this.objects[i-1], 'length', this.objects.length);
+          this.addObject(new JointObject(this.game, this.hero,
+          // basePowerObject values
+          {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(30),
+          dropHeight:10, dropRange:150, collisionCallBack:true, damageMult:collisionDamage},
+          // projectileObject values
+          {target: this.objects[i-1].mesh, joint: distJoint, mass: mass} ));
+        } else {
+          this.addObject(new BasePowerObject(this.game, this.hero,
+            // basePowerObject values
+            {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(30),
+            dropHeight:10, dropRange:150, collisionCallBack:true, damageMult:collisionDamage}));
+        }
+
+        mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
+        mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
+
         mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
       }
     }
 
     buttonDown(i) {
       // Consume and check to see if there is enough mana or see if we have max amount of objects
-      if (this.powerIsFull() || !this.hero.consumeMana(manaCostCreate)){
+      // only make a snake if there are no snake objects
+      if (this.objects.length != 0 && (this.powerIsFull() || !this.hero.consumeMana(manaCostCreate))){
         return;
       }
       // Create three walls that protect the player
       this.cursor = new PointCursor(this.game, this.hero,
-        {direction:directionVec, distance: chainLength, fixed: true} );
+        {direction:directionVec, distance: 20, fixed: true} );
     }
 
     buttonUp(i) {

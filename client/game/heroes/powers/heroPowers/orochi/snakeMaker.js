@@ -62,14 +62,14 @@ export default class SnakeMaker extends PowerRemember {
           this.addObject(new JointObject(this.game, this.hero,
           // basePowerObject values
           {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(duration),
-          dropHeight:10, dropRange:5, collisionCallBack:true, damageMult:collisionDamage},
+          dropHeight:10, dropRange:50, collisionCallBack:true, damageMult:collisionDamage},
           // projectileObject values
           {target: this.objects[i-1].mesh, joint: distJoint, mass: mass} ));
         } else {
           this.addObject(new ProjectileObject(this.game, this.hero,
             // basePowerObject values
             {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(duration),
-            dropHeight:10, dropRange:5, collisionCallBack:true, damageMult:collisionDamage},
+            dropHeight:10, dropRange:50, collisionCallBack:true, damageMult:collisionDamage},
             {vectorImpulse:powerImpulseVec, mass:10, usePlayerRot:true}));
         }
 

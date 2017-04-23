@@ -1,14 +1,64 @@
 import BABYLON from 'babylonjs';
 
-import BasePowerHandler from '../../basePowerHandler';
+import {getHeightAtCoordinates} from '../../powerUtils/mainUtils'
 
-import WallDefense from './wallDefense';
-import WallRiser from './wallRiser';
-import HeavyBall from './heavyBall';
-import WallPush from './wallPush';
 
-export default class PowerHandler extends BasePowerHandler {
+//import WallDefense from './WallDefense';
+
+// Make the snake.
+import snakeMaker from './snakeMaker';
+
+import {Buttons} from '../../../../input';
+
+
+export default class PowerHandler {
   constructor(game, hero) {
-    super(game, hero, WallDefense, WallRiser, HeavyBall, WallPush)
+    this.game = game;
+    this.hero = hero;
+
+    //this.spikeThrow = new SpikeThrow(game, hero);
+    this.snakeMaker = new SnakeMaker(game, hero);
+
+  }
+
+  buttonDown(button) {
+    switch (button) {
+        case Buttons.A:
+          this.snakeMaker.buttonDown(0);
+          break;
+        case Buttons.B:
+
+        break;
+        case Buttons.X:
+
+          break;
+
+        case Buttons.Y:
+
+          break;
+    }
+  }
+
+
+  buttonUp(button) {
+    switch (button) {
+        case Buttons.A:
+          this.snakeMaker.buttonUp(0);
+          break;
+        case Buttons.B:
+
+          break;
+
+        case Buttons.X:
+
+          break;
+        case Buttons.Y:
+
+          break;
+    }
+  }
+
+  update() {
+
   }
 }

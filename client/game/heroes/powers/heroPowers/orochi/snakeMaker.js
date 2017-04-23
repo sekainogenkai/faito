@@ -2,7 +2,7 @@ import BABYLON from 'babylonjs';
 import {getHeightAtCoordinates, secondsToTicks} from '../../powerUtils/mainUtils';
 import PowerRemember from '../../powerRememberObjects';
 import JointObject from '../../powerObjects/jointObject';
-import BasePowerObject from '../../powerObjects/basePowerObject';
+import ProjectileObject from '../../powerObjects/projectileObject';
 import PointCursor from '../../cursors/pointCursor';
 
 const manaCostCreate = 4000; // mana cost of the power
@@ -13,7 +13,10 @@ const maxItems = 100;
 const directionVec = new BABYLON.Vector3(0, 0, 1);  // point spawn for the cursor
 
 const fixedRotation = false;
-const meshSize = 5;
+const meshSize = 2;
+const duration = 10;
+const snakeLength = 10;
+const powerImpulseVec = new BABYLON.Vector3(0, 0, 200); // impulse applied to projectile on spawn
 
 /*
 * Creates a box that is chained to the character
@@ -24,7 +27,7 @@ export default class SnakeMaker extends PowerRemember {
     }
 
     createMesh () {
-      for (let i = 0; i<8; i++) {
+      for (let i = 0; i<snakeLength; i++) {
 
         // Set the spawn vector
         const vectorStart = new BABYLON.Vector3(
@@ -36,13 +39,15 @@ export default class SnakeMaker extends PowerRemember {
         // Set the target vector
         const vectorEnd = new BABYLON.Vector3(
           this.cursor.mesh.position.x,
-          Math.max((getHeightAtCoordinates(this.game.scene, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + (meshSize/2) + 2 + i*20,
+          Math.max((getHeightAtCoordinates(this.game.scene, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) + (meshSize/2) + 2 + i*meshSize,
           this.hero.mask.position.y),
           this.cursor.mesh.position.z
         );
 
         // Create the mesh
-        const mesh = new BABYLON.Mesh.CreateBox('mesh', meshSize, this.game.scene);
+        const mesh = new BABYLON.Mesh.CreateSphere('mesh', 5, meshSize-(.1*i), this.game.scene);
+
+
         mesh.position.copyFrom(vectorStart);
         BABYLON.Tags.EnableFor(mesh);
         BABYLON.Tags.AddTagsTo(mesh, "checkJump");
@@ -51,20 +56,21 @@ export default class SnakeMaker extends PowerRemember {
 
         if (i!=0) {
           // Create a new joint, needs to be a new joint
-          var distJoint = new BABYLON.DistanceJoint( {maxDistance: 10} );
+          var distJoint = new BABYLON.DistanceJoint( {maxDistance: 2-(.1*i) } );
           // Create the joint object that we will use for binding the power to the hero
           console.log('physics impostor', this.objects[i-1], 'length', this.objects.length);
           this.addObject(new JointObject(this.game, this.hero,
           // basePowerObject values
-          {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(30),
+          {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(duration),
           dropHeight:10, dropRange:150, collisionCallBack:true, damageMult:collisionDamage},
           // projectileObject values
           {target: this.objects[i-1].mesh, joint: distJoint, mass: mass} ));
         } else {
-          this.addObject(new BasePowerObject(this.game, this.hero,
+          this.addObject(new ProjectileObject(this.game, this.hero,
             // basePowerObject values
-            {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(30),
-            dropHeight:10, dropRange:150, collisionCallBack:true, damageMult:collisionDamage}));
+            {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(duration),
+            dropHeight:10, dropRange:150, collisionCallBack:true, damageMult:collisionDamage},
+            {vectorImpulse:powerImpulseVec, mass:10, usePlayerRot:true}));
         }
 
         mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
@@ -77,12 +83,13 @@ export default class SnakeMaker extends PowerRemember {
     buttonDown(i) {
       // Consume and check to see if there is enough mana or see if we have max amount of objects
       // only make a snake if there are no snake objects
-      if (this.objects.length != 0 && (this.powerIsFull() || !this.hero.consumeMana(manaCostCreate))){
+      console.log('objects length', this.objects.length, this.objects.length != 0);
+      if (this.objects.length != 0 || this.powerIsFull() || !this.hero.consumeMana(manaCostCreate)){
         return;
       }
       // Create three walls that protect the player
       this.cursor = new PointCursor(this.game, this.hero,
-        {direction:directionVec, distance: 20, fixed: true} );
+        {direction:directionVec, distance: 5, fixed: true} );
     }
 
     buttonUp(i) {

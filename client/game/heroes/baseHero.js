@@ -323,9 +323,9 @@ export default class Hero {
 
   move () {
     // get normalized vector
-    var movementVector = new BABYLON.Vector3(this.Input.AXIS_X,0,this.Input.AXIS_Y);
+    let movementVector = new BABYLON.Vector3(this.Input.AXIS_X,0,this.Input.AXIS_Y);
       //console.log('xbox move:', this.Input.AXIS_X, ', ', this.Input.AXIS_Y, ', scaleSpeed:', Math.min(1, movementVector.length()));
-    var normalizedMovementVector = movementVector.clone().normalize();
+    let normalizedMovementVector = movementVector.clone().normalize();
     //console.log('scale speed:', this.getScaleSpeed(movementVector, this.speed));
 
     // Rolling is very important

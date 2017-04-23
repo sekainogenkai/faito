@@ -13,7 +13,7 @@ const maxItems = 100;
 const directionVec = new BABYLON.Vector3(0, 0, 1);  // point spawn for the cursor
 
 const fixedRotation = false;
-const meshSize = 2;
+const meshSize = 4;
 const duration = 10;
 const snakeLength = 10;
 const powerImpulseVec = new BABYLON.Vector3(0, 0, 200); // impulse applied to projectile on spawn
@@ -56,20 +56,20 @@ export default class SnakeMaker extends PowerRemember {
 
         if (i!=0) {
           // Create a new joint, needs to be a new joint
-          var distJoint = new BABYLON.DistanceJoint( {maxDistance: 2-(.1*i) } );
+          var distJoint = new BABYLON.DistanceJoint( {maxDistance: meshSize-(.1*i) } );
           // Create the joint object that we will use for binding the power to the hero
           console.log('physics impostor', this.objects[i-1], 'length', this.objects.length);
           this.addObject(new JointObject(this.game, this.hero,
           // basePowerObject values
           {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(duration),
-          dropHeight:10, dropRange:150, collisionCallBack:true, damageMult:collisionDamage},
+          dropHeight:10, dropRange:5, collisionCallBack:true, damageMult:collisionDamage},
           // projectileObject values
           {target: this.objects[i-1].mesh, joint: distJoint, mass: mass} ));
         } else {
           this.addObject(new ProjectileObject(this.game, this.hero,
             // basePowerObject values
             {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(duration),
-            dropHeight:10, dropRange:150, collisionCallBack:true, damageMult:collisionDamage},
+            dropHeight:10, dropRange:5, collisionCallBack:true, damageMult:collisionDamage},
             {vectorImpulse:powerImpulseVec, mass:10, usePlayerRot:true}));
         }
 

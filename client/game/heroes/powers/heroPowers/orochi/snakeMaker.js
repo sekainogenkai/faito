@@ -15,7 +15,7 @@ const directionVec = new BABYLON.Vector3(0, 0, 1);  // point spawn for the curso
 const fixedRotation = false;
 const meshSize = 4;
 const duration = 60;
-const snakeLength = 11;
+const snakeLength = 20;
 const powerImpulseVec = new BABYLON.Vector3(0, 0, 200); // impulse applied to projectile on spawn
 
 /*
@@ -58,7 +58,7 @@ export default class SnakeMaker extends PowerRemember {
           // Create a new joint, needs to be a new joint
           var distJoint = new BABYLON.DistanceJoint( {maxDistance: meshSize-(.1*i) } );
           // Create the joint object that we will use for binding the power to the hero
-          console.log('physics impostor', this.objects[i-1], 'length', this.objects.length);
+          //console.log('physics impostor', this.objects[i-1], 'length', this.objects.length);
           this.addObject(new JointObject(this.game, this.hero,
           // basePowerObject values
           {mesh:mesh, vectorStart:vectorStart, vectorEnd:vectorEnd, range:10, lifeSpan:secondsToTicks(duration),
@@ -83,7 +83,7 @@ export default class SnakeMaker extends PowerRemember {
     buttonDown(i) {
       // Consume and check to see if there is enough mana or see if we have max amount of objects
       // only make a snake if there are no snake objects
-      console.log('objects length', this.objects.length, this.objects.length != 0);
+      //console.log('objects length', this.objects.length, this.objects.length != 0);
       if (this.objects.length != 0 || this.powerIsFull() || !this.hero.consumeMana(manaCostCreate)){
         return;
       }

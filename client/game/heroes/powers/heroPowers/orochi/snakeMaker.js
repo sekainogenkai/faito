@@ -6,7 +6,7 @@ import ProjectileObject from '../../powerObjects/projectileObject';
 import PointCursor from '../../cursors/pointCursor';
 
 const manaCostCreate = 4000; // mana cost of the power
-const collisionDamage = 5; // the amount of damage it does when it collides
+const collisionDamage = 1; // the amount of damage it does when it collides
 const mass = 1;
 const maxItems = 100;
 

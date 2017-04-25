@@ -14,8 +14,8 @@ const directionVec = new BABYLON.Vector3(0, 0, 1);  // point spawn for the curso
 
 const fixedRotation = false;
 const meshSize = 4;
-const duration = 60;
-const snakeLength = 20;
+const duration = 10000;
+const snakeLength = 10;
 const powerImpulseVec = new BABYLON.Vector3(0, 0, 200); // impulse applied to projectile on spawn
 
 /*
@@ -101,5 +101,10 @@ export default class SnakeMaker extends PowerRemember {
       this.createMesh();
       this.cursor.destroy();
       this.cursor = undefined;
+    }
+
+
+    snakeExists() {
+      return this.objects[0] && this.objects[0].lifeSpan > 0;
     }
 }

@@ -42,6 +42,6 @@ export default class JointObject extends BasePowerObject {
       if (joint.joint.physicsJoint.id = this.joint.physicsJoint.id) {
         this.target.physicsImpostor._joints.splice(i, 1);
       }
-    }, this)
+    }, this);
   }
 }

@@ -13,7 +13,7 @@ const directionVec = new BABYLON.Vector3(0, 0, 1); // position of the cursor
 
 const fixedRotation = true;
 const meshSize = 3;
-const powerImpulseVec = new BABYLON.Vector3(0, -1, 300); // impulse applied to projectile on spawn
+const powerImpulseVec = new BABYLON.Vector3(0, -1, 200); // impulse applied to projectile on spawn
 
 /**
 Shoots out a projectile at the enemy

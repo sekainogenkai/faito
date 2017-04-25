@@ -6,10 +6,11 @@ import PointCursor from '../../cursors/pointCursor';
 import {registerBeforeSceneRender} from '../../../../mesh-util';
 
 const manaCost = 70; // mana cost of the power
-const collisionDamage = 50; // the amount of damage it does when it collides
+const collisionDamage = 100; // the amount of damage it does when it collides
 
-const directionVec = new BABYLON.Vector3(0, 0, -1); // direction of the cursor
-const distance = 4; // speed of the cursor
+const directionVec = new BABYLON.Vector3(0, 0, 1); // direction of the cursor
+const distance = 10;
+const distance2 = -4;
 const fixedRotation = false;
 
 const timerStart = 10;
@@ -20,9 +21,16 @@ const meshHeight = 20;
 * Makes a line of things fly out!
 */
 
-export default class WallRiser extends BasePower {
+export default class RunRiser extends BasePower {
     constructor(game, hero) {
       super(game, hero);
+      // store the distance of the last created wall so we dont create them in the same spot
+      // cursor
+      this.xPrev = 0;
+      this.zPrev = 0;
+      // hero previos position
+      this.xPrevPlayer = 0;
+      this.zPrevPlayer = 0;
     }
 
     createMesh () {
@@ -35,9 +43,9 @@ export default class WallRiser extends BasePower {
 
       // Set the target vector
       const vectorEnd = new BABYLON.Vector3(
-        this.cursor.mesh.position.x,
-        (getHeightAtCoordinates(this.game.scene, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - (meshHeight/10),
-        this.cursor.mesh.position.z
+        this.cursor2.mesh.position.x,
+        (getHeightAtCoordinates(this.game.scene, this.cursor2.mesh.position.x, this.cursor2.mesh.position.z)) - (meshHeight/10),
+        this.cursor2.mesh.position.z
       );
 
       // Create the mesh
@@ -63,6 +71,7 @@ export default class WallRiser extends BasePower {
 
     buttonDown(i) {
       this.cursor = new PointCursor(this.game, this.hero, {direction: directionVec, distance: distance, fixed:true});
+      this.cursor2 = new PointCursor(this.game, this.hero, {direction: directionVec, distance: distance2, fixed:true});
       // Add an update function to the power
       this.timer = timerStart;
       registerBeforeSceneRender(this.cursor.mesh, () => this.update());
@@ -73,14 +82,17 @@ export default class WallRiser extends BasePower {
       if (this.timer == 0) {
         if (!this.hero.consumeMana(manaCost)){
           this.cursor.destroy();
+          this.cursor2.destroy();
         } else {
           this.createMesh();
           this.timer = timerStart2;
         }
       }
+
     }
 
     buttonUp(i) {
       this.cursor.destroy();
+      this.cursor2.destroy();
     }
 }

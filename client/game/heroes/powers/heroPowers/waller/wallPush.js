@@ -5,7 +5,7 @@ import BasePowerObject from '../../powerObjects/basePowerObject';
 import DirectionCursor from '../../cursors/directionCursor';
 import PointCursor from '../../cursors/pointCursor';
 
-const manaCost = 1000; // mana cost of the power
+const manaCost = 1800; // mana cost of the power
 const collisionDamage = 10; // the amount of damage it does when it collides
 
 const directionVec = new BABYLON.Vector3(0, 0, 1); // direction of the cursor
@@ -85,6 +85,7 @@ export default class WallPush extends BasePower {
 
       this.cursor = new PointCursor(this.game, this.hero, {direction: directionVec, distance: distance, fixed:false});
       this.cursor2 = new DirectionCursor(this.game, this.hero, {direction: directionVec, speed: cursorSpeed});
+      this.cursor2.mesh.position.copyFrom(this.cursor.mesh.position);
     }
 
     buttonUp(i) {

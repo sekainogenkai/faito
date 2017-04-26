@@ -7,6 +7,7 @@ import SnakeMaker from './snakeMaker';
 import {Buttons} from '../../../../input';
 
 const snakeSpeed = 30;
+const rideManaCost = 70;
 
 
 export default class PowerHandler {
@@ -16,7 +17,7 @@ export default class PowerHandler {
     this.Input = {MOVEUP: false, MOVEDOWN: false};
     //this.spikeThrow = new SpikeThrow(game, hero);
     this.snakeMaker = new SnakeMaker(game, hero);
-
+    this.rideSnakeBool = false;
   }
 
   buttonDown(button) {
@@ -70,7 +71,7 @@ export default class PowerHandler {
           break;
 
         case Buttons.X:
-          this.deleteJointClosest();
+          if (this.rideSnakeBool) { this.deleteJointClosest() };
           break;
         case Buttons.Y:
           this.snakeMaker.buttonUp(0);
@@ -105,9 +106,12 @@ export default class PowerHandler {
       console.log('index closest', indexClosest);
       // now attach closes to the player by the distance it got
       console.log('closest Distance = ', closestDistance);
-      this.joint = new BABYLON.DistanceJoint( {maxDistance: closestDistance });
-      this.hero.mask.physicsImpostor.addJoint(this.snakeMaker.objects[indexClosest].mesh.physicsImpostor, this.joint);
-      this.indexClosest = indexClosest;
+      if (closestDistance < 10) {
+        this.joint = new BABYLON.DistanceJoint( {maxDistance: closestDistance });
+        this.hero.mask.physicsImpostor.addJoint(this.snakeMaker.objects[indexClosest].mesh.physicsImpostor, this.joint);
+        this.indexClosest = indexClosest;
+        this.rideSnakeBool = true;
+      }
     }
   }
 
@@ -124,6 +128,7 @@ export default class PowerHandler {
 
       // Remove the joint from the targets list of joints
       this.hero.mask.physicsImpostor._joints = [];
+      this.rideSnakeBool = false;
       /*.forEach(function(joint, i) {
         // Remove the joint if ids are similar
         if (joint.joint.physicsJoint.id = this.joint.physicsJoint.id) {
@@ -174,6 +179,9 @@ export default class PowerHandler {
       this.deleteJointClosest();
     }
 
+    if (this.rideSnakeBool && !this.hero.consumeMana(rideManaCost)) {
+      this.deleteJointClosest();
+    }
     // must be called for all powers that remember objects
     this.snakeMaker.deleteObjectsOnDeleteAnimation();
 

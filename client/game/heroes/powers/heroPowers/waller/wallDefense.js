@@ -54,6 +54,9 @@ export default class WallDefense extends BasePower {
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
+      mesh.physicsImpostor.physicsBody.linearDamping = 0.9;
+      //mesh.physicsImpostor.physicsBody.angularDamping = 0.99;
+      mesh.physicsImpostor.physicsBody.updateMassProperties();
       if (!fixedRotation) {
         mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
       }

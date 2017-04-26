@@ -7,11 +7,11 @@ import PointCursor from '../../cursors/pointCursor';
 
 const manaCostCreate = 50; // mana cost of the power
 const manaCostHold = 20; // mana cost of the power
-const chargeIncrement = 10;
-const maxCharge = 1000;
+const chargeIncrement = 40;
+const maxCharge = 4000;
 const collisionDamage = 5; // the amount of damage it does when it collides
 const jointLength = 5;
-const mass = 1;
+const mass = 50;
 const maxItems = 3;
 
 const directionVec = new BABYLON.Vector3(0, 0, 1);  // point spawn for the cursor
@@ -27,6 +27,7 @@ export default class RunCharge extends BasePower {
       super(game, hero, maxItems);
       this.vectorImpulse = new BABYLON.Vector3(0, 0, 0);
       this.wallObject = undefined;
+      this.releaseTimer = 0;
     }
 
     createMesh () {
@@ -47,11 +48,11 @@ export default class RunCharge extends BasePower {
 
       // Create the mesh
       const mesh = new BABYLON.Mesh.CreateBox('mesh', 1, this.game.scene);
-      mesh.scaling = new BABYLON.Vector3(meshSize*1.5, meshSize*1.5, 2);
+      mesh.scaling = new BABYLON.Vector3(meshSize*1.5, meshSize*2, 2);
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
-      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:1, linearDamping: 0.0001}, this.game.scene);
+      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:1}, this.game.scene);
       // run spawn
       // Create a new joint, needs to be a new joint
       var distJoint = new BABYLON.DistanceJoint( {maxDistance: jointLength} );
@@ -66,6 +67,9 @@ export default class RunCharge extends BasePower {
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
+      mesh.physicsImpostor.physicsBody.linearDamping = 1;
+      mesh.physicsImpostor.physicsBody.angularDamping = 0.99;
+      mesh.physicsImpostor.physicsBody.updateMassProperties();
       if (!fixedRotation) {
         mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
       }
@@ -97,8 +101,10 @@ export default class RunCharge extends BasePower {
       if (!this.cursor || !this.wallObject) {
         return;
       }
-      // reset his movement speed
+      // reset movement speed
       this.hero.slowDown = 1;
+      this.wallObject.mesh.physicsImpostor.physicsBody.linearDamping = 0.001;
+      this.wallObject.mesh.physicsImpostor.physicsBody.updateMassProperties();
       // Apply the force to the wallObject
       console.log(this.vectorImpulse);
       let directionVec = rotateFromHero(this.hero, this.vectorImpulse);

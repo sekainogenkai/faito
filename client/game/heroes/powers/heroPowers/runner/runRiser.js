@@ -5,16 +5,16 @@ import BasePowerObject from '../../powerObjects/basePowerObject';
 import PointCursor from '../../cursors/pointCursor';
 import {registerBeforeSceneRender} from '../../../../mesh-util';
 
-const manaCost = 70; // mana cost of the power
+const manaCost = 200; // mana cost of the power
 const collisionDamage = 100; // the amount of damage it does when it collides
 
-const directionVec = new BABYLON.Vector3(0, 0, 1); // direction of the cursor
-const distance = 10;
-const distance2 = -4;
+const directionVec = new BABYLON.Vector3(0, 0, -1); // direction of the cursor
+const distance = 4;
+const distance2 = -10;
 const fixedRotation = false;
 
 const timerStart = 10;
-const timerStart2 = 2;
+const timerUpdate = 4;
 const meshHeight = 20;
 
 /*
@@ -25,27 +25,25 @@ export default class RunRiser extends BasePower {
     constructor(game, hero) {
       super(game, hero);
       // store the distance of the last created wall so we dont create them in the same spot
-      // cursor
-      this.xPrev = 0;
-      this.zPrev = 0;
-      // hero previos position
-      this.xPrevPlayer = 0;
-      this.zPrevPlayer = 0;
+      // cursor previous position
+      this.cursorPrev = new BABYLON.Vector3(0, 0, 0);
+      this.playerPrev = new BABYLON.Vector3(0, 0, 0);
+
     }
 
     createMesh () {
       // Set the spawn vector
       const vectorStart = new BABYLON.Vector3(
-        this.cursor.mesh.position.x,
-        (getHeightAtCoordinates(this.game.scene, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - (meshHeight/2) - 2,
-        this.cursor.mesh.position.z
+        this.cursor2.mesh.position.x,
+        (getHeightAtCoordinates(this.game.scene, this.cursor2.mesh.position.x, this.cursor2.mesh.position.z)) - (meshHeight/2) - 2,
+        this.cursor2.mesh.position.z
       );
 
       // Set the target vector
       const vectorEnd = new BABYLON.Vector3(
-        this.cursor2.mesh.position.x,
-        (getHeightAtCoordinates(this.game.scene, this.cursor2.mesh.position.x, this.cursor2.mesh.position.z)) - (meshHeight/10),
-        this.cursor2.mesh.position.z
+        this.cursor.mesh.position.x,
+        (getHeightAtCoordinates(this.game.scene, this.cursor.mesh.position.x, this.cursor.mesh.position.z)) - (meshHeight/10),
+        this.cursor.mesh.position.z
       );
 
       // Create the mesh
@@ -78,6 +76,7 @@ export default class RunRiser extends BasePower {
     }
 
     update () {
+      var posDelta = BABYLON.Vector3.Distance(this.cursorPrev, this.cursor.mesh.position)/BABYLON.Vector3.Distance(this.playerPrev, this.hero.mask.position);
       this.timer--;
       if (this.timer == 0) {
         if (!this.hero.consumeMana(manaCost)){
@@ -85,10 +84,11 @@ export default class RunRiser extends BasePower {
           this.cursor2.destroy();
         } else {
           this.createMesh();
-          this.timer = timerStart2;
+          this.timer = Math.round(timerUpdate/posDelta);
         }
       }
-
+      this.cursorPrev.copyFrom(this.cursor.mesh.position);
+      this.playerPrev.copyFrom(this.hero.mask.position);
     }
 
     buttonUp(i) {

@@ -45,7 +45,7 @@ export default class BlockChain extends PowerRemember {
       mesh.position.copyFrom(vectorStart);
       BABYLON.Tags.EnableFor(mesh);
       BABYLON.Tags.AddTagsTo(mesh, "checkJump");
-      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:1}, this.game.scene);
+      mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.001, restitution:1.1}, this.game.scene);
       // run spawn
       // Create a new joint, needs to be a new joint
       var distJoint = new BABYLON.DistanceJoint( {maxDistance: jointLength} );
@@ -60,6 +60,9 @@ export default class BlockChain extends PowerRemember {
 
       mesh.physicsImpostor.physicsBody.collisionFilterGroup = this.game.scene.collisionGroupGround;
       mesh.physicsImpostor.physicsBody.collisionFilterMask = this.game.scene.collisionGroupNormal | this.game.scene.collisionGroupGround;
+      mesh.physicsImpostor.physicsBody.linearDamping = 0.0001;
+      mesh.physicsImpostor.physicsBody.angularDamping = 0.0001;
+      mesh.physicsImpostor.physicsBody.updateMassProperties();
       if (!fixedRotation) {
         mesh.rotationQuaternion.copyFrom(this.hero.mask.rotationQuaternion);
       }

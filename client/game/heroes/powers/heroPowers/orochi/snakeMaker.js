@@ -45,13 +45,13 @@ export default class SnakeMaker extends PowerRemember {
         );
 
         // Create the mesh
-        const mesh = new BABYLON.Mesh.CreateSphere('mesh', 5, meshSize-(.1*i), this.game.scene);
+        const mesh = new BABYLON.Mesh.CreateBox('mesh', meshSize-(.1*i), this.game.scene);
 
 
         mesh.position.copyFrom(vectorStart);
         BABYLON.Tags.EnableFor(mesh);
         BABYLON.Tags.AddTagsTo(mesh, "checkJump");
-        mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.BoxImpostor, {mass:0, friction:0.1, restitution:1}, this.game.scene);
+        mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.SphereImpostor, {mass:0, friction:0.1, restitution:1}, this.game.scene);
         // run spawn
 
         if (i!=0) {

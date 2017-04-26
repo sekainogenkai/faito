@@ -142,6 +142,7 @@ export default class PowerHandler {
     if (this.snakeMaker.snakeExists()) {//this.snakeMaker.objects[0] && this.snakeMaker.objects[0].lifeSpan > 0) {
       for(let snakeObj of this.snakeMaker.objects) {
         snakeObj.mesh.physicsImpostor.physicsBody.linearDamping = .9;
+        snakeObj.mesh.physicsImpostor.physicsBody.angularDamping = .9;
         snakeObj.mesh.physicsImpostor.physicsBody.updateMassProperties();
       }
     }
